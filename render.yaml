@@ -1,7 +1,8 @@
 services:
   - type: web
     name: rajbhog-backend
-    env: java
+
+    runtime: java
 
     rootDir: rajbhog-backend
 
