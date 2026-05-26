@@ -20,6 +20,11 @@ import {
   faLeaf,
   faHandshake,
   faTag,
+  faChevronLeft,
+  faLock,
+  faFire,
+  faCartShopping,
+  faBagShopping,
 } from "@fortawesome/free-solid-svg-icons";
 import "../styles/Login.css";
 import Navbar from "../components/Navbar";
@@ -41,17 +46,36 @@ export default function Login() {
 
   const handleSendOtp = async () => {
     if (!email) {
-      toast.error("Please enter your email");
+      toast.error("Please enter your email address", {
+        style: { background: "#1e1e1e", color: "#fff", fontWeight: 600 },
+        icon: "⚠️",
+      });
+      return;
+    }
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      toast.error("Please enter a valid email address", {
+        style: { background: "#1e1e1e", color: "#fff", fontWeight: 600 },
+        icon: "❌",
+      });
       return;
     }
     try {
       setLoading(true);
       await sendOtp(email);
-      toast.success("OTP sent to your email");
+      toast.success("OTP sent! Check your inbox 📬", {
+        style: { background: "#fff7ed", color: "#c2410c", fontWeight: 700 },
+        icon: "✅",
+        duration: 3000,
+      });
       setStep("OTP");
       setTimer(30);
     } catch {
-      toast.error("Failed to send OTP");
+      toast.error("Failed to send OTP. Please try again.", {
+        style: { background: "#1e1e1e", color: "#fff", fontWeight: 600 },
+        icon: "❌",
+        duration: 3000,
+      });
     } finally {
       setLoading(false);
     }
@@ -60,11 +84,15 @@ export default function Login() {
   const handleVerifyOtp = async () => {
     const otpValue = otp.join("");
     if (otpValue.length !== 6) {
-      toast.error("Enter complete OTP");
+      toast.error("Please enter the complete 6-digit OTP", {
+        style: { background: "#1e1e1e", color: "#fff", fontWeight: 600 },
+        icon: "⚠️",
+      });
       return;
     }
     try {
       const res = await verifyOtp(email, otpValue);
+      setOtpStatus("success");
 
       localStorage.setItem("token", res.data.token);
       localStorage.setItem("role", res.data.role);
@@ -72,37 +100,37 @@ export default function Login() {
       const isNewUser = res.data.isNewUser;
 
       if (isNewUser) {
-        toast.success(`Welcome ${name} 🎉\nLet's set up your profile 🚀`, {
+        toast.success(`Welcome, ${name}! Let's set up your profile 🚀`, {
+          style: { background: "#fff7ed", color: "#c2410c", fontWeight: 700 },
           icon: "✨",
-          duration: 3000,
+          duration: 3500,
         });
       } else {
-        toast.success(`Welcome back ${name} 👋`, {
+        toast.success(`Welcome back, ${name}! 👋`, {
+          style: { background: "#fff7ed", color: "#c2410c", fontWeight: 700 },
           icon: "🛒",
           duration: 2500,
         });
       }
-      // 🔍 CHECK IF CART EXISTS
-      const pendingCart = localStorage.getItem("pendingCart");
 
+      const pendingCart = localStorage.getItem("pendingCart");
       if (pendingCart) {
         try {
           const data = JSON.parse(pendingCart);
-
           await addToCart(data);
-
-          toast.success("Item added to cart 🛒");
+          toast.success("Item added to cart 🛒", {
+            style: { background: "#fff7ed", color: "#c2410c", fontWeight: 700 },
+          });
           localStorage.removeItem("pendingCart");
-
-          // ✅ REDIRECT TO CART (ONLY IF CART EXISTS)
           setTimeout(() => {
             window.location.href = "/user/cart";
           }, 800);
-
-          return; // 🔥 IMPORTANT (stop further execution)
+          return;
         } catch (err) {
           console.error(err);
-          toast.error("Failed to restore cart");
+          toast.error("Failed to restore cart", {
+            style: { background: "#1e1e1e", color: "#fff", fontWeight: 600 },
+          });
         }
       }
 
@@ -113,13 +141,20 @@ export default function Login() {
     } catch {
       setOtpStatus("error");
       setOtp(["", "", "", "", "", ""]);
-      toast.error("Invalid OTP");
-      setTimeout(() => setOtpStatus(""), 900);
+      toast.error("Invalid OTP. Please try again.", {
+        style: { background: "#1e1e1e", color: "#fff", fontWeight: 600 },
+        icon: "❌",
+        duration: 3000,
+      });
+      setTimeout(() => {
+        setOtpStatus("");
+        document.getElementById("otp-0")?.focus();
+      }, 900);
     }
   };
 
   const handleOtpChange = (index, value) => {
-    const v = value.slice(-1);
+    const v = value.replace(/\D/g, "").slice(-1);
     const n = [...otp];
     n[index] = v;
     setOtp(n);
@@ -134,238 +169,241 @@ export default function Login() {
       const prevInput = document.getElementById(`otp-${index - 1}`);
       if (prevInput) prevInput.focus();
     }
+    if (e.key === "Enter") handleVerifyOtp();
+  };
+
+  const handleOtpPaste = (e) => {
+    e.preventDefault();
+    const pasted = e.clipboardData
+      .getData("text")
+      .replace(/\D/g, "")
+      .slice(0, 6);
+    if (pasted.length === 6) {
+      setOtp(pasted.split(""));
+      document.getElementById("otp-5")?.focus();
+    }
   };
 
   return (
     <>
       <Navbar />
-
-      <div className="auth-page">
-        <div className="auth-card">
+      <div className="rb-auth-page">
+        <div className="rb-auth-card">
           {/* ── LEFT BRAND PANEL ── */}
-          <div className="auth-left">
-            <div className="brand-content">
-              {/* Logo + Name */}
-              <div className="brand-header">
-                <div className="logo-wrapper">
-                  <div className="logo-icon">
-                    <FontAwesomeIcon icon={faStore} />
-                  </div>
-                  <h1 className="brand-title">
-                    RAJ<span>BHOG</span>
-                  </h1>
+          <div className="rb-brand-panel">
+            <div className="rb-brand-inner">
+              {/* Logo */}
+              <div className="rb-logo-row">
+                <div className="rb-logo-icon">
+                  <FontAwesomeIcon icon={faStore} />
                 </div>
+                <div className="rb-logo-text">
+                  <span className="rb-logo-raj">RAJ</span>
+                  <span className="rb-logo-bhog">BHOG</span>
+                </div>
+              </div>
 
-                {/* Subtitle with spans */}
-                <p className="brand-subtitle">
-                  <span className="sub-hi">Your neighbourhood kirana,</span> now
-                  online. Get{" "}
-                  <span className="sub-fresh">
-                    <FontAwesomeIcon icon={faLeaf} className="sub-leaf" />
-                    fresh groceries
+              {/* Tagline */}
+              <p className="rb-brand-tagline">
+                Your neighbourhood kirana, now online.{" "}
+                <span className="rb-tag-highlight">
+                  <FontAwesomeIcon icon={faLeaf} /> Fresh groceries
+                </span>{" "}
+                delivered from your{" "}
+                <span className="rb-tag-pill">
+                  <FontAwesomeIcon icon={faLocationDot} /> local store
+                </span>
+              </p>
+
+              {/* Highlights */}
+              <div className="rb-highlights">
+                <div className="rb-highlight-item">
+                  <span className="rb-hl-icon rb-hl-bolt">
+                    <FontAwesomeIcon icon={faBolt} />
                   </span>
-                  <span className="sub-dot" /> daily staples{" "}
-                  <span className="sub-dot" /> &amp; more — delivered from your{" "}
-                  <span className="sub-loc">
-                    <FontAwesomeIcon icon={faLocationDot} />
-                    local store
-                  </span>{" "}
-                  fast &amp; trusted.
-                </p>
-
-                {/* Taglines */}
-                <div className="brand-taglines">
-                  <div className="tagline-item">
-                    <span className="tagline-icon tl-orange">
-                      <FontAwesomeIcon icon={faBolt} />
-                    </span>
-                    <span>Same-day delivery from nearby kiranas</span>
-                  </div>
-                  <div className="tagline-item">
-                    <span className="tagline-icon tl-yellow">
-                      <FontAwesomeIcon icon={faLeaf} />
-                    </span>
-                    <span>Fresh stock updated every morning</span>
-                  </div>
-                  <div className="tagline-item">
-                    <span className="tagline-icon tl-green">
-                      <FontAwesomeIcon icon={faHandshake} />
-                    </span>
-                    <span>Support your local store owner directly</span>
-                  </div>
+                  <span>Same-day delivery from nearby kiranas</span>
+                </div>
+                <div className="rb-highlight-item">
+                  <span className="rb-hl-icon rb-hl-leaf">
+                    <FontAwesomeIcon icon={faLeaf} />
+                  </span>
+                  <span>Fresh stock updated every morning</span>
+                </div>
+                <div className="rb-highlight-item">
+                  <span className="rb-hl-icon rb-hl-hand">
+                    <FontAwesomeIcon icon={faHandshake} />
+                  </span>
+                  <span>Support your local store owner directly</span>
                 </div>
               </div>
 
               {/* Feature cards */}
-              <div className="brand-features">
-                <Feature
+              <div className="rb-feature-grid">
+                <FeatureCard
                   icon={faStore}
-                  title="Local Kirana Network"
-                  desc="Shop from verified neighbourhood stores"
-                  gradient="fi-orange"
+                  color="orange"
+                  title="Local Kirana"
+                  desc="Verified nearby stores"
                 />
-                <Feature
+                <FeatureCard
                   icon={faTruck}
+                  color="blue"
                   title="Fast Delivery"
-                  desc="Groceries at your door within minutes"
-                  gradient="fi-blue"
+                  desc="At your door in minutes"
                 />
-                <Feature
+                <FeatureCard
                   icon={faShieldHalved}
-                  title="Secure & Safe"
-                  desc="OTP login with full data protection"
-                  gradient="fi-green"
+                  color="green"
+                  title="Safe & Secure"
+                  desc="OTP + data protection"
                 />
-                <Feature
+                <FeatureCard
                   icon={faTag}
+                  color="purple"
                   title="Best Prices"
-                  desc="Daily offers & local discounts always on"
-                  gradient="fi-purple"
+                  desc="Deals & local discounts"
                 />
               </div>
             </div>
           </div>
 
-          {/* ── RIGHT LOGIN PANEL ── */}
-          <div className="auth-right">
-            <div className="right-blob right-blob-1" />
-            <div className="right-blob right-blob-2" />
-
-            <div className="form-container">
-              {/* EMAIL STEP */}
+          {/* ── RIGHT FORM PANEL ── */}
+          <div className="rb-form-panel">
+            <div className="rb-form-inner">
               {step === "EMAIL" && (
-                <div className="form-card">
-                  <div className="form-header">
-                    <div className="welcome-badge">
-                      <FontAwesomeIcon icon={faStar} />
-                      <span>Welcome Back</span>
-                    </div>
-                    <h2 className="form-title">Login to continue</h2>
-                    <p className="form-description">
-                      Enter your email to receive a one-time verification code
-                      and access your account.
-                    </p>
+                <div className="rb-form-card">
+                  <div className="rb-form-badge">
+                    <FontAwesomeIcon icon={faStar} />
+                    <span>Trusted by thousands in your city</span>
                   </div>
 
-                  <div className="form-body">
-                    <label htmlFor="email">Email address</label>
-                    <div className="input-wrapper">
-                      <div className="input-icon">
+                  <h2 className="rb-form-title">Sign in to your account</h2>
+                  <p className="rb-form-sub">
+                    We'll send a verification code to your email — no password
+                    needed.
+                  </p>
+
+                  <div className="rb-field">
+                    <label className="rb-label" htmlFor="rb-email">
+                      Email address
+                    </label>
+                    <div className="rb-input-wrap">
+                      <span className="rb-input-icon">
                         <FontAwesomeIcon icon={faEnvelope} />
-                      </div>
+                      </span>
                       <input
-                        id="email"
+                        id="rb-email"
                         type="email"
                         placeholder="you@example.com"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         onKeyPress={(e) => e.key === "Enter" && handleSendOtp()}
+                        className="rb-input"
+                        autoComplete="email"
                       />
                     </div>
-
-                    <button
-                      className="primary-btn"
-                      disabled={loading}
-                      onClick={handleSendOtp}>
-                      <span>{loading ? "Sending OTP..." : "Continue"}</span>
-                      <FontAwesomeIcon icon={faArrowRight} />
-                    </button>
                   </div>
 
-                  {/* Trust chips */}
-                  <div className="trust-row">
-                    <div className="trust-chip">
-                      <FontAwesomeIcon icon={faShieldHalved} />
-                      <span>Secure Login</span>
-                    </div>
-                    <div className="trust-chip">
-                      <FontAwesomeIcon icon={faBolt} />
-                      <span>Instant OTP</span>
-                    </div>
-                    <div className="trust-chip">
-                      <FontAwesomeIcon icon={faCheckCircle} />
-                      <span>Verified</span>
-                    </div>
+                  <button
+                    className="rb-btn-primary"
+                    disabled={loading}
+                    onClick={handleSendOtp}>
+                    <span>{loading ? "Sending OTP…" : "Continue"}</span>
+                    {!loading && <FontAwesomeIcon icon={faArrowRight} />}
+                    {loading && <span className="rb-spinner" />}
+                  </button>
+
+                  <div className="rb-trust-row">
+                    <span className="rb-trust-chip">
+                      <FontAwesomeIcon icon={faShieldHalved} /> Secure Login
+                    </span>
+                    <span className="rb-trust-chip">
+                      <FontAwesomeIcon icon={faBolt} /> Instant OTP
+                    </span>
+                    <span className="rb-trust-chip">
+                      <FontAwesomeIcon icon={faCheckCircle} /> Verified
+                    </span>
                   </div>
                 </div>
               )}
 
-              {/* OTP STEP */}
               {step === "OTP" && (
-                <div className="form-card">
-                  <div className="form-header">
-                    <div className="welcome-badge">
-                      <FontAwesomeIcon icon={faShieldHalved} />
-                      <span>Verification</span>
-                    </div>
-                    <h2 className="form-title">Enter OTP</h2>
-                    <p className="form-description">
-                      Enter the 6-digit code sent to <strong>{email}</strong>
-                    </p>
+                <div className="rb-form-card">
+                  <div className="rb-form-badge rb-form-badge--verify">
+                    <FontAwesomeIcon icon={faLock} />
+                    <span>Verification Step</span>
                   </div>
 
-                  <div className="form-body">
-                    <div className={`otp-container ${otpStatus}`}>
-                      {otp.map((digit, index) => (
-                        <input
-                          key={index}
-                          id={`otp-${index}`}
-                          type="text"
-                          inputMode="numeric"
-                          maxLength={1}
-                          value={digit}
-                          onChange={(e) =>
-                            handleOtpChange(index, e.target.value)
-                          }
-                          onKeyDown={(e) => handleOtpKeyDown(index, e)}
-                          className="otp-input"
-                        />
-                      ))}
-                    </div>
+                  <h2 className="rb-form-title">Enter OTP</h2>
+                  <p className="rb-form-sub">
+                    6-digit code sent to{" "}
+                    <strong className="rb-email-highlight">{email}</strong>
+                  </p>
 
-                    {otpStatus === "error" && (
-                      <div className="error-message">
-                        <FontAwesomeIcon icon={faCircleExclamation} />
-                        <span>Invalid OTP. Please try again.</span>
-                      </div>
-                    )}
-
-                    {otpStatus === "success" && (
-                      <div className="success-message">
-                        <FontAwesomeIcon icon={faCheckCircle} />
-                        <span>OTP verified successfully!</span>
-                      </div>
-                    )}
-
-                    <button className="primary-btn" onClick={handleVerifyOtp}>
-                      <span>Verify &amp; Continue</span>
-                      <FontAwesomeIcon icon={faArrowRight} />
-                    </button>
-
-                    <div className="resend-section">
-                      {timer > 0 ? (
-                        <div className="timer-display">
-                          <FontAwesomeIcon icon={faClock} />
-                          <span>&nbsp;Resend code in {timer}s</span>
-                        </div>
-                      ) : (
-                        <button className="link-btn" onClick={handleSendOtp}>
-                          <FontAwesomeIcon icon={faArrowRotateRight} />
-                          &nbsp;<span>Resend OTP</span>
-                        </button>
-                      )}
-                    </div>
-
-                    <button
-                      className="back-btn"
-                      onClick={() => {
-                        setStep("EMAIL");
-                        setOtp(["", "", "", "", "", ""]);
-                        setOtpStatus("");
-                      }}>
-                      ← Change Email
-                    </button>
+                  <label className="rb-label rb-otp-label">
+                    Enter 6-digit code
+                  </label>
+                  <div
+                    className={`rb-otp-row ${otpStatus === "error" ? "rb-otp-error" : ""} ${otpStatus === "success" ? "rb-otp-success" : ""}`}
+                    onPaste={handleOtpPaste}>
+                    {otp.map((digit, index) => (
+                      <input
+                        key={index}
+                        id={`otp-${index}`}
+                        type="text"
+                        inputMode="numeric"
+                        maxLength={1}
+                        value={digit}
+                        onChange={(e) => handleOtpChange(index, e.target.value)}
+                        onKeyDown={(e) => handleOtpKeyDown(index, e)}
+                        className="rb-otp-box"
+                        autoComplete="one-time-code"
+                      />
+                    ))}
                   </div>
+
+                  {otpStatus === "error" && (
+                    <div className="rb-msg rb-msg--error">
+                      <FontAwesomeIcon icon={faCircleExclamation} />
+                      <span>Invalid OTP. Please check and try again.</span>
+                    </div>
+                  )}
+                  {otpStatus === "success" && (
+                    <div className="rb-msg rb-msg--success">
+                      <FontAwesomeIcon icon={faCheckCircle} />
+                      <span>OTP verified! Redirecting…</span>
+                    </div>
+                  )}
+
+                  <button className="rb-btn-primary" onClick={handleVerifyOtp}>
+                    <span>Verify &amp; Continue</span>
+                    <FontAwesomeIcon icon={faArrowRight} />
+                  </button>
+
+                  <div className="rb-resend-row">
+                    {timer > 0 ? (
+                      <span className="rb-timer">
+                        <FontAwesomeIcon icon={faClock} />
+                        &nbsp;Resend code in <strong>{timer}s</strong>
+                      </span>
+                    ) : (
+                      <button className="rb-link-btn" onClick={handleSendOtp}>
+                        <FontAwesomeIcon icon={faArrowRotateRight} />
+                        &nbsp;Resend OTP
+                      </button>
+                    )}
+                  </div>
+
+                  <button
+                    className="rb-back-btn"
+                    onClick={() => {
+                      setStep("EMAIL");
+                      setOtp(["", "", "", "", "", ""]);
+                      setOtpStatus("");
+                    }}>
+                    <FontAwesomeIcon icon={faChevronLeft} />
+                    &nbsp;Change Email
+                  </button>
                 </div>
               )}
             </div>
@@ -376,14 +414,14 @@ export default function Login() {
   );
 }
 
-const Feature = ({ icon, title, desc, gradient }) => (
-  <div className="feature-card">
-    <div className={`feature-icon-wrapper ${gradient}`}>
+const FeatureCard = ({ icon, color, title, desc }) => (
+  <div className={`rb-feat-card rb-feat-${color}`}>
+    <span className="rb-feat-icon">
       <FontAwesomeIcon icon={icon} />
-    </div>
-    <div className="feature-content">
-      <h4>{title}</h4>
-      <p>{desc}</p>
+    </span>
+    <div>
+      <p className="rb-feat-title">{title}</p>
+      <p className="rb-feat-desc">{desc}</p>
     </div>
   </div>
 );
