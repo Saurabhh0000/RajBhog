@@ -27,6 +27,8 @@ jwt:
 
 brevo:
   api-key: ${BREVO_API_KEY}
+  sender-email: ${BREVO_SENDER_EMAIL}
+  sender-name: RajBhog
 
 springdoc:
   swagger-ui:

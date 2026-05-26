@@ -19,13 +19,19 @@ public class BrevoEmailServiceImpl implements BrevoEmailService {
                         .baseUrl("https://api.brevo.com/v3/smtp/email")
                         .build();
 
+        @Value("${brevo.sender-email}")
+        private String senderEmail;
+
+        @Value("${brevo.sender-name}")
+        private String senderName;
+
         @Override
         public void sendEmail(String to, String subject, String htmlContent) {
 
                 Map<String, Object> body = Map.of(
                                 "sender", Map.of(
-                                                "name", "RajBhog",
-                                                "email", "rajbhogstore@gmail.com"),
+                                                "name", senderName,
+                                                "email", senderEmail),
                                 "to", new Object[] {
                                                 Map.of("email", to)
                                 },
