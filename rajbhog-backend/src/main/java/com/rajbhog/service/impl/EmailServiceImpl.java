@@ -42,7 +42,10 @@ public class EmailServiceImpl implements EmailService {
 
         } catch (Exception ex) {
 
-            throw new EmailSendException();
+            ex.printStackTrace();
+
+            throw new RuntimeException(
+                    "OTP EMAIL FAILED: " + ex.getMessage());
         }
     }
 
@@ -57,16 +60,20 @@ public class EmailServiceImpl implements EmailService {
             sendHtmlEmail(toEmail, "Welcome to Rajbhog 🎉", html);
 
         } catch (Exception ex) {
-            throw new EmailSendException();
+
+            ex.printStackTrace();
+
+            throw new RuntimeException(
+                    "WELCOME EMAIL FAILED: " + ex.getMessage());
         }
     }
-    
+
     // --------------- TICKETS EMAIL -------------
-    
+
     @Override
     public void sendTicketUpdateEmail(String to, String name, String subject,
-                                      String ticketSubject, String resolutionMessage,
-                                      String status) {
+            String ticketSubject, String resolutionMessage,
+            String status) {
 
         try {
             MimeMessage message = mailSender.createMimeMessage();
@@ -74,27 +81,27 @@ public class EmailServiceImpl implements EmailService {
             String statusColor = status.equals("RESOLVED") ? "#16a34a" : "#dc2626";
 
             String htmlContent = """
-                <div style="font-family:Arial,sans-serif; padding:20px;">
-                    <h2 style="color:#16a34a;">Rajbhog Support</h2>
-                    
-                    <p>Hi <b>%s</b>,</p>
-                    
-                    <p>Your support request regarding 
-                    <b>"%s"</b> has been 
-                    <span style="color:%s;"><b>%s</b></span>.</p>
-                    
-                    <div style="background:#f0fdf4; padding:12px; border-radius:8px; border:1px solid #bbf7d0;">
-                        <b>Resolution:</b><br/>
-                        %s
+                    <div style="font-family:Arial,sans-serif; padding:20px;">
+                        <h2 style="color:#16a34a;">Rajbhog Support</h2>
+
+                        <p>Hi <b>%s</b>,</p>
+
+                        <p>Your support request regarding
+                        <b>"%s"</b> has been
+                        <span style="color:%s;"><b>%s</b></span>.</p>
+
+                        <div style="background:#f0fdf4; padding:12px; border-radius:8px; border:1px solid #bbf7d0;">
+                            <b>Resolution:</b><br/>
+                            %s
+                        </div>
+
+                        <p style="margin-top:20px;">
+                            If you still need help, feel free to contact us again.
+                        </p>
+
+                        <p>Regards,<br/><b>Rajbhog Support Team</b></p>
                     </div>
-
-                    <p style="margin-top:20px;">
-                        If you still need help, feel free to contact us again.
-                    </p>
-
-                    <p>Regards,<br/><b>Rajbhog Support Team</b></p>
-                </div>
-                """.formatted(name, ticketSubject, statusColor, status, resolutionMessage);
+                    """.formatted(name, ticketSubject, statusColor, status, resolutionMessage);
 
             helper.setTo(to);
             helper.setSubject(subject);
@@ -106,8 +113,8 @@ public class EmailServiceImpl implements EmailService {
             throw new RuntimeException("Failed to send email", e);
         }
     }
-    
- // --------------- ORDER PLACED EMAIL -------------
+
+    // --------------- ORDER PLACED EMAIL -------------
 
     @Override
     @Async
@@ -137,15 +144,14 @@ public class EmailServiceImpl implements EmailService {
                     "Order Confirmed 🎉 | Invoice Attached",
                     html,
                     pdf,
-                    "Invoice-" + dto.getOrderNumber() + ".pdf"
-            );
+                    "Invoice-" + dto.getOrderNumber() + ".pdf");
 
         } catch (Exception ex) {
             throw new EmailSendException("Failed to send order email");
         }
     }
-    
- // --------------- ORDER DELIVERED EMAIL ----------------------
+
+    // --------------- ORDER DELIVERED EMAIL ----------------------
 
     @Override
     @Async
@@ -162,8 +168,7 @@ public class EmailServiceImpl implements EmailService {
             sendHtmlEmail(
                     dto.getCustomerEmail(),
                     "Order Delivered ✅",
-                    html
-            );
+                    html);
 
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -176,8 +181,7 @@ public class EmailServiceImpl implements EmailService {
             throws MessagingException, MailException {
 
         MimeMessage message = mailSender.createMimeMessage();
-        MimeMessageHelper helper =
-                new MimeMessageHelper(message, true, StandardCharsets.UTF_8.name());
+        MimeMessageHelper helper = new MimeMessageHelper(message, true, StandardCharsets.UTF_8.name());
 
         helper.setTo(to);
         helper.setSubject(subject);
@@ -185,19 +189,17 @@ public class EmailServiceImpl implements EmailService {
 
         mailSender.send(message);
     }
-    
+
     private void sendHtmlEmailWithAttachment(
             String to,
             String subject,
             String html,
             byte[] attachment,
-            String fileName
-    ) throws MessagingException {
+            String fileName) throws MessagingException {
 
         MimeMessage message = mailSender.createMimeMessage();
 
-        MimeMessageHelper helper =
-                new MimeMessageHelper(message, true, StandardCharsets.UTF_8.name());
+        MimeMessageHelper helper = new MimeMessageHelper(message, true, StandardCharsets.UTF_8.name());
 
         helper.setTo(to);
         helper.setSubject(subject);
@@ -208,7 +210,6 @@ public class EmailServiceImpl implements EmailService {
 
         mailSender.send(message);
     }
-    
 
     // ---------- TEMPLATE LOADER ----------
     private String loadTemplate(String path) {
@@ -219,7 +220,7 @@ public class EmailServiceImpl implements EmailService {
             throw new EmailSendException();
         }
     }
-    
+
     private String buildItemsHtml(OrderEmailDto dto) {
 
         StringBuilder items = new StringBuilder();
@@ -230,18 +231,17 @@ public class EmailServiceImpl implements EmailService {
 
         dto.getItems().forEach(item -> {
             items.append("""
-                <tr>
-                    <td>%s</td>
-                    <td>%s</td>
-                    <td>%d</td>
-                    <td>₹%.2f</td>
-                </tr>
-            """.formatted(
+                        <tr>
+                            <td>%s</td>
+                            <td>%s</td>
+                            <td>%d</td>
+                            <td>₹%.2f</td>
+                        </tr>
+                    """.formatted(
                     item.getName(),
                     item.getUnit(),
                     item.getQuantity(),
-                    item.getPrice()
-            ));
+                    item.getPrice()));
         });
 
         return items.toString();
