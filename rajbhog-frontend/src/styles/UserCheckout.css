@@ -1,283 +1,291 @@
-/* =============================================
-   UserCheckout.css — RAJBHOG Checkout Page
-   Scoped to .uck-* — zero leakage to other pages
-   Font: DM Sans | No animations | Mobile-first
-   ============================================= */
+/* =================================================================
+   UserCheckout.css  ·  RAJBHOG  ·  Scoped: .uck-*
+   Design: "Warm Market Receipt" — premium kirana checkout feel
+   Font: Plus Jakarta Sans  ·  No keyframe animations  ·  Hover only
+   Mobile-first, desktop sidebar layout at ≥ 900px
+   ================================================================= */
 
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700;9..40,800&family=DM+Mono:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=DM+Mono:wght@400;500&display=swap');
 
-/* ── TOKENS ── */
-:root {
-  --uck-bg:         #f7f4f0;
-  --uck-surface:    #ffffff;
-  --uck-border:     #e8ddd5;
-  --uck-border-lt:  #f2ede8;
+/* ── Design tokens ─────────────────────────────────────────────── */
+.uck-root {
+  /* Brand */
+  --uck-orange:       #ff6200;
+  --uck-orange-deep:  #d44d00;
+  --uck-orange-glow:  #ff8540;
+  --uck-orange-lt:    #fff7ed;
+  --uck-orange-mid:   #fdd9b0;
+  --uck-orange-soft:  #ffedd5;
+  --uck-orange-border:rgba(255,140,50,0.3);
 
-  --uck-text:       #1a0d04;
-  --uck-sub:        #6b4c3b;
-  --uck-muted:      #9c7a60;
+  /* Neutrals */
+  --uck-bg:           #fdf8f3;
+  --uck-bg-2:         #f9f3ec;
+  --uck-surface:      #ffffff;
+  --uck-dark:         #1a0800;
+  --uck-body:         #3d1f0d;
+  --uck-sub:          #6b3f22;
+  --uck-muted:        #9e7255;
+  --uck-border:       #e8d5bf;
+  --uck-border-lt:    #f3ece3;
 
-  /* Brand — warm brown */
-  --uck-brand:      #6f3b18;
-  --uck-brand-dk:   #4b240b;
-  --uck-brand-lt:   #fdf0e6;
-  --uck-brand-mid:  #fde8d0;
-  --uck-brand-bdr:  #e8c9a8;
+  /* Status */
+  --uck-green:        #16a34a;
+  --uck-green-lt:     #f0fdf4;
+  --uck-green-mid:    #bbf7d0;
+  --uck-green-deep:   #14532d;
 
-  /* Green */
-  --uck-green:      #15803d;
-  --uck-green-lt:   #f0fdf4;
-  --uck-green-mid:  #bbf7d0;
+  --uck-blue:         #2563eb;
+  --uck-blue-lt:      #eff6ff;
+  --uck-blue-mid:     #bfdbfe;
 
-  /* Blue */
-  --uck-blue:       #1d4ed8;
-  --uck-blue-lt:    #eff6ff;
-  --uck-blue-mid:   #bfdbfe;
+  --uck-violet:       #7c3aed;
+  --uck-violet-lt:    #f5f3ff;
+  --uck-violet-mid:   #ddd6fe;
 
-  /* Violet */
-  --uck-violet:     #6d28d9;
-  --uck-violet-lt:  #f5f3ff;
-  --uck-violet-mid: #ddd6fe;
+  --uck-amber:        #d97706;
+  --uck-amber-lt:     #fffbeb;
+  --uck-amber-mid:    #fde68a;
 
-  /* Amber */
-  --uck-amber:      #b45309;
-  --uck-amber-lt:   #fffbeb;
-  --uck-amber-mid:  #fde68a;
+  --uck-red:          #dc2626;
+  --uck-red-lt:       #fef2f2;
+  --uck-red-mid:      #fecaca;
 
-  /* Red */
-  --uck-red:        #dc2626;
-  --uck-red-lt:     #fef2f2;
-  --uck-red-mid:    #fecaca;
+  /* Shadows */
+  --uck-shadow-xs:  0 1px 2px rgba(100,50,0,0.05);
+  --uck-shadow-sm:  0 1px 4px rgba(100,50,0,0.07), 0 2px 8px rgba(100,50,0,0.05);
+  --uck-shadow:     0 4px 16px rgba(180,90,0,0.09), 0 1px 4px rgba(0,0,0,0.05);
+  --uck-shadow-lg:  0 16px 48px rgba(180,90,0,0.13), 0 4px 12px rgba(0,0,0,0.07);
+  --uck-shadow-btn: 0 6px 24px rgba(255,98,0,0.35);
 
-  /* Disc green */
-  --uck-disc:       #15803d;
-  --uck-disc-lt:    #f0fdf4;
+  /* Shape */
+  --r-xs: 6px;
+  --r-sm: 9px;
+  --r:    13px;
+  --r-lg: 17px;
+  --r-xl: 22px;
 
-  --r-sm:  6px;
-  --r:     10px;
-  --r-lg:  14px;
-  --r-xl:  18px;
-
-  --shadow-xs: 0 1px 2px rgba(0,0,0,.04);
-  --shadow-sm: 0 1px 3px rgba(0,0,0,.07), 0 1px 2px rgba(0,0,0,.04);
-  --shadow:    0 4px 12px rgba(0,0,0,.07), 0 1px 4px rgba(0,0,0,.04);
-  --shadow-lg: 0 16px 48px rgba(0,0,0,.12);
-
-  --font: 'DM Sans', system-ui, sans-serif;
-  --mono: 'DM Mono', 'Courier New', monospace;
+  --uck-font: 'Plus Jakarta Sans', system-ui, sans-serif;
+  --uck-mono: 'DM Mono', 'Courier New', monospace;
 }
 
+/* ── Reset (scoped) ────────────────────────────────────────────── */
 .uck-root *, .uck-root *::before, .uck-root *::after {
   box-sizing: border-box; margin: 0; padding: 0;
 }
 
-/* =============================================
-   ROOT
-   ============================================= */
+/* =================================================================
+   ROOT SHELL
+   ================================================================= */
 .uck-root {
   min-height: 100vh;
-  background: var(--uck-bg);
-  padding: 1.25rem 1.5rem 5rem;
-  font-family: var(--font);
-  color: var(--uck-text);
+  background:
+    radial-gradient(ellipse 55% 40% at 10% 20%, rgba(255,140,30,0.07) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 35% at 90% 80%, rgba(255,90,0,0.05)  0%, transparent 60%),
+    linear-gradient(170deg, #fdf8f2 0%, #faf3ea 50%, #fdf6ee 100%);
+  padding: 20px 16px 80px;
+  font-family: var(--uck-font);
+  color: var(--uck-dark);
   display: flex;
   flex-direction: column;
-  gap: 1.1rem;
-  max-width: 1200px;
-  margin: 0 auto;
+  gap: 14px;
 }
 
-/* =============================================
-   BACK BUTTON ROW — above header
-   ============================================= */
-.uck-back-row {
-  display: flex;
-  align-items: center;
-}
+/* =================================================================
+   BACK BUTTON
+   ================================================================= */
+.uck-back-row { display: flex; }
 
 .uck-back-btn {
   display: inline-flex;
   align-items: center;
-  gap: 0.45rem;
+  gap: 6px;
   background: var(--uck-surface);
   border: 1.5px solid var(--uck-border);
   border-radius: 100px;
-  padding: 0.5rem 1.1rem 0.5rem 0.85rem;
-  font-family: var(--font);
-  font-size: 0.82rem;
+  padding: 8px 16px 8px 12px;
+  font-family: var(--uck-font);
+  font-size: 13px;
   font-weight: 700;
   color: var(--uck-sub);
   cursor: pointer;
-  box-shadow: var(--shadow-xs);
+  box-shadow: var(--uck-shadow-xs);
+  transition: background 0.18s, border-color 0.18s, color 0.18s, transform 0.18s, box-shadow 0.18s;
 }
-
 .uck-back-btn:hover {
-  background: var(--uck-brand-lt);
-  border-color: var(--uck-brand-bdr);
-  color: var(--uck-brand);
+  background: var(--uck-orange-soft);
+  border-color: var(--uck-orange-mid);
+  color: var(--uck-orange-deep);
+  transform: translateX(-2px);
+  box-shadow: var(--uck-shadow-sm);
 }
 
-/* =============================================
+/* =================================================================
    PAGE HEADER
-   ============================================= */
+   ================================================================= */
 .uck-header {
-  background: var(--uck-surface);
-  border: 1px solid var(--uck-border);
-  border-radius: var(--r-xl);
-  border-top: 3px solid var(--uck-brand);
-  padding: 1.25rem 1.5rem;
-  box-shadow: var(--shadow-sm);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 1rem;
+  gap: 12px;
   flex-wrap: wrap;
+  background: var(--uck-surface);
+  border: 1.5px solid var(--uck-border);
+  border-top: 3.5px solid var(--uck-orange);
+  border-radius: var(--r-xl);
+  padding: 18px 20px;
+  box-shadow: var(--uck-shadow);
 }
 
 .uck-header-left {
   display: flex;
   align-items: center;
-  gap: 0.9rem;
+  gap: 14px;
 }
 
 .uck-header-icon {
-  width: 46px; height: 46px;
-  background: var(--uck-brand);
+  width: 50px; height: 50px;
+  background: linear-gradient(135deg, var(--uck-orange), var(--uck-orange-deep));
   border-radius: var(--r-lg);
   display: flex; align-items: center; justify-content: center;
   color: #fff;
   flex-shrink: 0;
-  box-shadow: 0 4px 12px rgba(111,59,24,.28);
+  box-shadow: var(--uck-shadow-btn);
 }
 
 .uck-header-title {
-  font-size: 1.25rem;
-  font-weight: 800;
-  color: var(--uck-text);
-  letter-spacing: -0.3px;
+  font-size: 20px;
+  font-weight: 900;
+  color: var(--uck-dark);
+  letter-spacing: -0.5px;
+  line-height: 1.2;
 }
 
 .uck-header-sub {
-  font-size: 0.8rem;
+  font-size: 12.5px;
   color: var(--uck-muted);
   font-weight: 500;
-  margin-top: 2px;
+  margin-top: 3px;
+}
+
+.uck-header-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
 }
 
 .uck-item-badge {
   display: inline-flex;
   align-items: center;
-  padding: 0.35rem 0.9rem;
-  background: var(--uck-brand-lt);
-  border: 1px solid var(--uck-brand-bdr);
+  gap: 5px;
+  padding: 6px 14px;
+  background: var(--uck-orange-soft);
+  border: 1.5px solid var(--uck-orange-mid);
   border-radius: 100px;
-  font-size: 0.78rem;
-  font-weight: 700;
-  color: var(--uck-brand);
-  flex-shrink: 0;
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--uck-orange-deep);
 }
 
-/* =============================================
-   LAYOUT
-   ============================================= */
+.uck-secure-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 14px;
+  background: var(--uck-green-lt);
+  border: 1.5px solid var(--uck-green-mid);
+  border-radius: 100px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--uck-green);
+}
+
+/* =================================================================
+   LAYOUT GRID
+   ================================================================= */
 .uck-layout {
   display: flex;
   flex-direction: column;
-  gap: 1.25rem;
+  gap: 14px;
 }
 
-.uck-main    { display: flex; flex-direction: column; gap: 1.1rem; }
-.uck-sidebar { display: flex; flex-direction: column; gap: 1.1rem; }
+.uck-main    { display: flex; flex-direction: column; gap: 14px; }
+.uck-sidebar { display: flex; flex-direction: column; }
 
-/* =============================================
-   SHARED CARD
-   ============================================= */
+/* =================================================================
+   SHARED CARD BASE
+   ================================================================= */
 .uck-card {
   background: var(--uck-surface);
-  border: 1px solid var(--uck-border);
+  border: 1.5px solid var(--uck-border);
   border-radius: var(--r-xl);
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--uck-shadow-sm);
   overflow: hidden;
 }
 
+/* Card header */
 .uck-card-head {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 0.75rem;
-  padding: 1rem 1.25rem;
-  background: var(--uck-bg);
-  border-bottom: 1px solid var(--uck-border-lt);
+  gap: 10px;
   flex-wrap: wrap;
+  padding: 14px 18px;
+  background: var(--uck-bg);
+  border-bottom: 1.5px solid var(--uck-border-lt);
 }
 
 .uck-card-head-left {
   display: flex;
   align-items: center;
-  gap: 0.65rem;
+  gap: 10px;
 }
 
-.uck-card-head h3 {
-  font-size: 0.95rem;
-  font-weight: 700;
-  color: var(--uck-text);
+.uck-card-title {
+  font-size: 14.5px;
+  font-weight: 800;
+  color: var(--uck-dark);
   letter-spacing: -0.2px;
 }
 
-/* icon bubble */
+/* Icon bubble */
 .uck-card-icon {
-  width: 32px; height: 32px;
-  background: var(--uck-brand-lt);
-  border: 1px solid var(--uck-brand-bdr);
+  width: 34px; height: 34px;
   border-radius: var(--r-sm);
   display: flex; align-items: center; justify-content: center;
-  color: var(--uck-brand);
   flex-shrink: 0;
 }
+.uck-icon-orange { background: var(--uck-orange-soft); color: var(--uck-orange);  border: 1px solid var(--uck-orange-mid); }
+.uck-icon-violet { background: var(--uck-violet-lt);   color: var(--uck-violet);  border: 1px solid var(--uck-violet-mid); }
+.uck-icon-blue   { background: var(--uck-blue-lt);     color: var(--uck-blue);    border: 1px solid var(--uck-blue-mid);   }
+.uck-icon-green  { background: var(--uck-green-lt);    color: var(--uck-green);   border: 1px solid var(--uck-green-mid);  }
 
-.uck-card-icon--violet { background: var(--uck-violet-lt); border-color: var(--uck-violet-mid); color: var(--uck-violet); }
-.uck-card-icon--blue   { background: var(--uck-blue-lt);   border-color: var(--uck-blue-mid);   color: var(--uck-blue); }
-
-/* badges */
-.uck-default-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.3rem;
-  padding: 0.22rem 0.7rem;
-  background: var(--uck-green-lt);
-  border: 1px solid var(--uck-green-mid);
+/* Badge variants */
+.uck-badge {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 4px 11px;
   border-radius: 100px;
-  font-size: 0.72rem;
-  font-weight: 700;
-  color: var(--uck-green);
+  font-size: 11.5px; font-weight: 700;
 }
+.uck-badge-green { background: var(--uck-green-lt); border: 1px solid var(--uck-green-mid); color: var(--uck-green); }
+.uck-badge-muted { background: var(--uck-bg-2);     border: 1px solid var(--uck-border);     color: var(--uck-muted); font-weight: 600; }
 
-.uck-count-badge {
-  display: inline-flex;
-  align-items: center;
-  padding: 0.22rem 0.7rem;
-  background: var(--uck-bg);
-  border: 1px solid var(--uck-border);
-  border-radius: 100px;
-  font-size: 0.72rem;
-  font-weight: 700;
-  color: var(--uck-muted);
-}
+/* Card body */
+.uck-card-body    { padding: 18px; }
+.uck-card-body-np { padding: 0; }
 
-.uck-card-body { padding: 1.25rem; }
-.uck-card-body--np { padding: 0; }
-
-/* =============================================
-   ADDRESS
-   ============================================= */
-.uck-addr-row {
+/* =================================================================
+   DELIVERY ADDRESS
+   ================================================================= */
+.uck-addr-wrap {
   display: flex;
   align-items: flex-start;
-  gap: 0.85rem;
+  gap: 12px;
 }
 
-.uck-addr-pin {
-  width: 32px; height: 32px;
+.uck-addr-icon {
+  width: 36px; height: 36px;
   background: var(--uck-violet-lt);
   border: 1px solid var(--uck-violet-mid);
   border-radius: var(--r-sm);
@@ -287,151 +295,159 @@
   margin-top: 2px;
 }
 
-.uck-addr-text { flex: 1; }
+.uck-addr-content { flex: 1; min-width: 0; }
 
-.uck-addr-line {
-  font-size: 0.9rem;
-  font-weight: 600;
+.uck-addr-line1 {
+  font-size: 14px; font-weight: 700;
+  color: var(--uck-dark);
+  line-height: 1.5;
+}
+.uck-addr-line2 {
+  font-size: 13px; font-weight: 500;
   color: var(--uck-sub);
-  line-height: 1.55;
+  line-height: 1.5;
 }
-
 .uck-addr-city {
-  font-size: 0.82rem;
+  font-size: 12.5px; font-weight: 600;
   color: var(--uck-muted);
-  font-weight: 500;
-  margin-top: 0.3rem;
+  margin-top: 4px;
 }
 
-.uck-btn-change {
-  padding: 0.45rem 0.9rem;
-  border: 1.5px solid var(--uck-brand-bdr);
+.uck-change-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 7px 14px;
+  background: var(--uck-orange-soft);
+  border: 1.5px solid var(--uck-orange-mid);
   border-radius: var(--r);
-  background: var(--uck-brand-lt);
-  font-family: var(--font);
-  font-size: 0.78rem;
-  font-weight: 700;
-  color: var(--uck-brand);
+  font-family: var(--uck-font);
+  font-size: 12.5px; font-weight: 700;
+  color: var(--uck-orange-deep);
   cursor: pointer;
   white-space: nowrap;
   flex-shrink: 0;
+  transition: background 0.18s, color 0.18s, border-color 0.18s;
+}
+.uck-change-btn:hover {
+  background: var(--uck-orange);
+  color: #fff;
+  border-color: var(--uck-orange);
 }
 
-.uck-btn-change:hover { background: var(--uck-brand); color: #fff; border-color: var(--uck-brand); }
+.uck-delivery-eta {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 14px;
+  padding: 10px 14px;
+  background: var(--uck-orange-lt);
+  border: 1px solid var(--uck-orange-mid);
+  border-radius: var(--r);
+  font-size: 12.5px; font-weight: 600;
+  color: var(--uck-sub);
+}
+.uck-delivery-eta svg { color: var(--uck-orange); flex-shrink: 0; }
+.uck-delivery-eta strong { color: var(--uck-orange-deep); }
 
-/* =============================================
+/* =================================================================
    ORDER ITEMS
-   ============================================= */
+   ================================================================= */
 .uck-item {
   display: flex;
   align-items: center;
-  gap: 0.9rem;
-  padding: 1rem 1.25rem;
+  gap: 12px;
+  padding: 14px 18px;
 }
+.uck-item-border { border-bottom: 1px solid var(--uck-border-lt); }
 
-.uck-item--border { border-bottom: 1px solid var(--uck-border-lt); }
-
-.uck-item-icon {
-  width: 40px; height: 40px;
-  background: var(--uck-brand-lt);
-  border: 1px solid var(--uck-brand-bdr);
+.uck-item-ico {
+  width: 42px; height: 42px;
+  background: var(--uck-orange-soft);
+  border: 1px solid var(--uck-orange-mid);
   border-radius: var(--r);
   display: flex; align-items: center; justify-content: center;
-  color: var(--uck-brand);
+  color: var(--uck-orange);
   flex-shrink: 0;
 }
 
 .uck-item-info { flex: 1; min-width: 0; }
 
 .uck-item-name {
-  font-size: 0.9rem;
-  font-weight: 700;
-  color: var(--uck-text);
-  margin-bottom: 0.3rem;
+  font-size: 14px; font-weight: 700;
+  color: var(--uck-dark);
+  margin-bottom: 5px;
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
 
-.uck-item-meta {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
+.uck-item-meta { display: flex; align-items: center; gap: 6px; }
 
 .uck-item-unit {
-  padding: 0.18rem 0.6rem;
+  padding: 2px 8px;
   background: var(--uck-bg);
   border: 1px solid var(--uck-border);
-  border-radius: var(--r-sm);
-  font-size: 0.72rem;
-  font-weight: 600;
+  border-radius: var(--r-xs);
+  font-size: 11.5px; font-weight: 600;
   color: var(--uck-sub);
-  font-family: var(--mono);
+  font-family: var(--uck-mono);
 }
 
-.uck-item-qty {
-  font-size: 0.78rem;
-  font-weight: 700;
-  color: var(--uck-brand);
-}
+.uck-item-sep { color: var(--uck-muted); font-size: 11px; }
+
+.uck-item-qty { font-size: 12px; font-weight: 700; color: var(--uck-orange); }
 
 .uck-item-price {
-  font-size: 1rem;
-  font-weight: 800;
-  color: var(--uck-text);
+  font-size: 15px; font-weight: 800;
+  color: var(--uck-dark);
   letter-spacing: -0.3px;
   flex-shrink: 0;
+  font-family: var(--uck-mono);
 }
 
-/* =============================================
+/* =================================================================
    PAYMENT METHOD
-   ============================================= */
-.uck-payment-grid {
+   ================================================================= */
+.uck-pay-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 0.85rem;
+  gap: 10px;
 }
 
-.uck-pay-opt {
+.uck-pay-card {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  padding: 0.9rem 1rem;
+  gap: 10px;
+  padding: 14px 12px;
   border: 1.5px solid var(--uck-border);
   border-radius: var(--r-lg);
   cursor: pointer;
   background: var(--uck-bg);
   -webkit-tap-highlight-color: transparent;
+  transition: border-color 0.18s, background 0.18s, box-shadow 0.18s, transform 0.15s;
+}
+.uck-pay-card:hover:not(.uck-pay-active) {
+  border-color: var(--uck-orange-mid);
+  background: var(--uck-orange-lt);
+  transform: translateY(-1px);
 }
 
-.uck-pay-opt:hover:not(.uck-pay-opt--on) {
-  border-color: var(--uck-brand-bdr);
-  background: var(--uck-brand-lt);
-}
+/* Selected: color-coded border + glow */
+.uck-pay-active                              { background: var(--uck-surface) !important; }
+.uck-pay-active.uck-pay-green  { border-color: var(--uck-green);  box-shadow: 0 0 0 3px rgba(22,163,74,0.12);  }
+.uck-pay-active.uck-pay-blue   { border-color: var(--uck-blue);   box-shadow: 0 0 0 3px rgba(37,99,235,0.12);  }
+.uck-pay-active.uck-pay-violet { border-color: var(--uck-violet); box-shadow: 0 0 0 3px rgba(124,58,237,0.12); }
+.uck-pay-active.uck-pay-amber  { border-color: var(--uck-amber);  box-shadow: 0 0 0 3px rgba(217,119,6,0.12);  }
 
-/* Selected state colors per method */
-.uck-pay-opt--on         { background: var(--uck-surface); }
-.uck-pay-opt--on.uck-pay-opt--green  { border-color: var(--uck-green);  box-shadow: 0 0 0 3px rgba(21,128,61,.1); }
-.uck-pay-opt--on.uck-pay-opt--blue   { border-color: var(--uck-blue);   box-shadow: 0 0 0 3px rgba(29,78,216,.1); }
-.uck-pay-opt--on.uck-pay-opt--violet { border-color: var(--uck-violet); box-shadow: 0 0 0 3px rgba(109,40,217,.1); }
-.uck-pay-opt--on.uck-pay-opt--amber  { border-color: var(--uck-amber);  box-shadow: 0 0 0 3px rgba(180,83,9,.1); }
-
-/* Radio dot */
+/* Radio */
 .uck-pay-radio {
-  width: 18px; height: 18px; min-width: 18px;
+  width: 18px; height: 18px;
   border-radius: 50%;
   border: 2px solid var(--uck-border);
   display: flex; align-items: center; justify-content: center;
   flex-shrink: 0;
 }
-
-.uck-pay-radio-dot {
-  width: 8px; height: 8px;
-  border-radius: 50%;
-  background: var(--uck-brand);
-  opacity: 0;
-}
-
-.uck-pay-radio-dot--on { opacity: 1; }
+.uck-pay-dot { width: 8px; height: 8px; border-radius: 50%; opacity: 0; background: var(--uck-orange); }
+.uck-pay-dot-on { opacity: 1; }
 
 /* Icon per method */
 .uck-pay-ico {
@@ -440,41 +456,48 @@
   display: flex; align-items: center; justify-content: center;
   flex-shrink: 0;
 }
-
-.uck-pay-ico--green  { background: var(--uck-green-lt);  color: var(--uck-green); }
-.uck-pay-ico--blue   { background: var(--uck-blue-lt);   color: var(--uck-blue); }
-.uck-pay-ico--violet { background: var(--uck-violet-lt); color: var(--uck-violet); }
-.uck-pay-ico--amber  { background: var(--uck-amber-lt);  color: var(--uck-amber); }
+.uck-pay-ico-green  { background: var(--uck-green-lt);  color: var(--uck-green);  border: 1px solid var(--uck-green-mid);  }
+.uck-pay-ico-blue   { background: var(--uck-blue-lt);   color: var(--uck-blue);   border: 1px solid var(--uck-blue-mid);   }
+.uck-pay-ico-violet { background: var(--uck-violet-lt); color: var(--uck-violet); border: 1px solid var(--uck-violet-mid); }
+.uck-pay-ico-amber  { background: var(--uck-amber-lt);  color: var(--uck-amber);  border: 1px solid var(--uck-amber-mid);  }
 
 .uck-pay-info { flex: 1; min-width: 0; }
+.uck-pay-title { font-size: 12.5px; font-weight: 800; color: var(--uck-dark); margin-bottom: 2px; line-height: 1.2; }
+.uck-pay-desc  { font-size: 10.5px; color: var(--uck-muted); font-weight: 500; line-height: 1.3; }
 
-.uck-pay-title {
-  font-size: 0.85rem;
-  font-weight: 700;
-  color: var(--uck-text);
-  margin-bottom: 1px;
-  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-}
-
-.uck-pay-desc {
-  font-size: 0.72rem;
-  color: var(--uck-muted);
-  font-weight: 500;
-  line-height: 1.3;
-}
-
-/* Selected checkmark */
 .uck-pay-check { color: var(--uck-green); flex-shrink: 0; }
 
-/* =============================================
-   SIDEBAR — SUMMARY CARD
-   ============================================= */
+/* Wallet full-payment state */
+.uck-wallet-paid {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px;
+  background: var(--uck-green-lt);
+  border: 1.5px solid var(--uck-green-mid);
+  border-radius: var(--r-lg);
+}
+.uck-wallet-paid-icon {
+  width: 44px; height: 44px;
+  background: var(--uck-green);
+  border-radius: var(--r);
+  display: flex; align-items: center; justify-content: center;
+  color: #fff;
+  flex-shrink: 0;
+}
+.uck-wallet-paid-title { font-size: 14px; font-weight: 800; color: var(--uck-green-deep); }
+.uck-wallet-paid-sub   { font-size: 12px; font-weight: 500; color: var(--uck-green); margin-top: 2px; }
+.uck-wallet-paid-check { color: var(--uck-green); margin-left: auto; flex-shrink: 0; }
+
+/* =================================================================
+   SUMMARY CARD
+   ================================================================= */
 .uck-summary-card {
   background: var(--uck-surface);
-  border: 1px solid var(--uck-border);
+  border: 1.5px solid var(--uck-border);
+  border-top: 3.5px solid var(--uck-orange);
   border-radius: var(--r-xl);
-  border-top: 3px solid var(--uck-brand);
-  box-shadow: var(--shadow);
+  box-shadow: var(--uck-shadow);
   overflow: hidden;
 }
 
@@ -482,355 +505,428 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 1rem 1.25rem;
+  padding: 14px 18px;
   background: var(--uck-bg);
-  border-bottom: 1px solid var(--uck-border-lt);
+  border-bottom: 1.5px solid var(--uck-border-lt);
 }
-
-.uck-sum-head-left {
-  display: flex;
-  align-items: center;
-  gap: 0.65rem;
-}
-
-.uck-sum-head h3 {
-  font-size: 0.95rem;
-  font-weight: 700;
-  color: var(--uck-text);
-}
+.uck-sum-head-left { display: flex; align-items: center; gap: 10px; }
 
 .uck-sum-body {
-  padding: 1.25rem;
+  padding: 18px;
   display: flex;
   flex-direction: column;
-  gap: 0.9rem;
+  gap: 16px;
 }
 
-.uck-discount-label {
-  display: flex;
-  align-items: center;
-  gap: 6px; /* 🔥 clean spacing */
-}
-/* Summary rows */
-.uck-sum-rows {
-  display: flex;
-  flex-direction: column;
-  gap: 0.65rem;
-}
+/* Price rows */
+.uck-sum-rows { display: flex; flex-direction: column; gap: 10px; }
 
 .uck-sum-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  font-size: 0.875rem;
+  gap: 8px;
+  font-size: 13.5px;
+}
+.uck-sum-row > span:first-child { color: var(--uck-sub);  font-weight: 500; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.uck-sum-row > span:last-child  { color: var(--uck-dark); font-weight: 700; font-family: var(--uck-mono); white-space: nowrap; }
+
+.uck-sum-row-disc > span:first-child { color: var(--uck-green); }
+.uck-sum-row-disc > span:last-child  { color: var(--uck-green) !important; }
+
+.uck-sum-row-wallet > span:first-child { color: var(--uck-blue); }
+.uck-sum-row-wallet > span:last-child  { color: var(--uck-blue) !important; }
+
+.uck-coupon-inline-tag {
+  display: inline-flex;
+  padding: 2px 8px;
+  background: var(--uck-green-lt);
+  border: 1px solid var(--uck-green-mid);
+  border-radius: 100px;
+  font-size: 10.5px;
+  font-weight: 800;
+  color: var(--uck-green);
+  font-family: var(--uck-mono);
+  letter-spacing: 0.3px;
 }
 
-.uck-sum-row span:first-child { color: var(--uck-sub); font-weight: 500; }
-.uck-sum-row span:last-child  { color: var(--uck-text); font-weight: 700; }
-
-.uck-sum-row--disc span:first-child { color: var(--uck-disc); }
-.uck-sum-row--disc span:last-child  { color: var(--uck-disc) !important; font-weight: 700; }
-
-.uck-free { color: var(--uck-green) !important; font-weight: 700 !important;}
-
-.uck-divider {
-  height: 1px;
-  background: var(--uck-border);
+.uck-free-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--uck-green) !important;
+  font-weight: 800 !important;
+  font-family: var(--uck-font) !important;
 }
 
-/* Coupon */
-.uck-coupon-block {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
+.uck-hr { height: 1px; background: var(--uck-border-lt); }
+
+/* =================================================================
+   COUPON SECTION
+   ================================================================= */
+.uck-coupon-block { display: flex; flex-direction: column; gap: 8px; }
 
 .uck-coupon-label {
   display: inline-flex;
   align-items: center;
-  gap: 0.4rem;
-  font-size: 0.76rem;
-  font-weight: 700;
+  gap: 5px;
+  font-size: 11.5px; font-weight: 800;
   color: var(--uck-sub);
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.4px;
 }
-.uck-discount-label {
-  display: flex;
-  align-items: center;
-  gap: 6px; /* 🔥 clean spacing */
-}
-
 .uck-coupon-label svg { color: var(--uck-amber); }
 
 .uck-coupon-row {
   display: flex;
-  gap: 0.5rem;
+  gap: 8px;
   align-items: center;
 }
 
 .uck-coupon-input {
   flex: 1;
-  padding: 0.65rem 0.9rem;
+  padding: 11px 14px;
   border: 1.5px solid var(--uck-border);
   border-radius: var(--r-lg);
-  font-family: var(--mono);
-  font-size: 0.82rem;
-  font-weight: 600;
-  color: var(--uck-text);
+  font-family: var(--uck-mono);
+  font-size: 13px; font-weight: 600;
+  color: var(--uck-dark);
   background: var(--uck-bg);
   outline: none;
-  letter-spacing: 0.5px;
+  letter-spacing: 1px;
+  transition: border-color 0.18s, background 0.18s, box-shadow 0.18s;
 }
-
-.uck-coupon-input::placeholder { color: var(--uck-muted); font-family: var(--font); font-weight: 500; letter-spacing: 0; }
-
+.uck-coupon-input::placeholder {
+  color: var(--uck-muted);
+  font-family: var(--uck-font);
+  font-weight: 500;
+  letter-spacing: 0;
+}
 .uck-coupon-input:focus {
-  border-color: var(--uck-brand);
+  border-color: var(--uck-orange);
   background: var(--uck-surface);
-  box-shadow: 0 0 0 3px rgba(111,59,24,.1);
+  box-shadow: 0 0 0 3px rgba(255,98,0,0.1);
+}
+.uck-coupon-applied {
+  background: var(--uck-green-lt) !important;
+  border-color: var(--uck-green-mid) !important;
+  color: var(--uck-green) !important;
 }
 
-.uck-coupon-input--applied {
-  background: var(--uck-green-lt);
-  border-color: var(--uck-green-mid);
-  color: var(--uck-green);
-}
-
-.uck-btn-apply {
-  padding: 0.65rem 1.1rem;
-  background: var(--uck-brand);
+.uck-coupon-apply {
+  padding: 11px 18px;
+  background: linear-gradient(135deg, var(--uck-orange), var(--uck-orange-deep));
   color: #fff;
   border: none;
   border-radius: var(--r-lg);
-  font-family: var(--font);
-  font-size: 0.8rem;
-  font-weight: 700;
+  font-family: var(--uck-font);
+  font-size: 13px; font-weight: 800;
   cursor: pointer;
   white-space: nowrap;
   flex-shrink: 0;
+  box-shadow: 0 4px 14px rgba(255,98,0,0.28);
+  transition: opacity 0.18s, transform 0.18s, box-shadow 0.18s;
 }
+.uck-coupon-apply:hover:not(:disabled) {
+  opacity: 0.92;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(255,98,0,0.38);
+}
+.uck-coupon-apply:disabled { opacity: 0.45; cursor: not-allowed; }
 
-.uck-btn-apply:hover:not(:disabled) { background: var(--uck-brand-dk); }
-.uck-btn-apply:disabled { opacity: 0.5; cursor: not-allowed; }
-
-.uck-btn-clear {
-  width: 34px; height: 34px;
+.uck-coupon-clear {
+  width: 38px; height: 38px;
   display: flex; align-items: center; justify-content: center;
   background: var(--uck-red-lt);
-  border: 1px solid var(--uck-red-mid);
+  border: 1.5px solid var(--uck-red-mid);
   border-radius: var(--r);
   color: var(--uck-red);
   cursor: pointer;
   flex-shrink: 0;
+  transition: background 0.18s, color 0.18s;
 }
+.uck-coupon-clear:hover { background: var(--uck-red); color: #fff; border-color: var(--uck-red); }
 
-.uck-btn-clear:hover { background: var(--uck-red); color: #fff; }
-
-.uck-coupon-success {
+.uck-coupon-success-msg {
   display: inline-flex;
   align-items: center;
-  gap: 0.4rem;
-  font-size: 0.75rem;
-  font-weight: 600;
+  gap: 6px;
+  font-size: 12px; font-weight: 700;
   color: var(--uck-green);
   background: var(--uck-green-lt);
   border: 1px solid var(--uck-green-mid);
   border-radius: var(--r);
-  padding: 0.35rem 0.75rem;
+  padding: 7px 12px;
 }
 
-/* Total row */
-.uck-total-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0.9rem 1rem;
-  background: var(--uck-brand-lt);
-  border: 1px solid var(--uck-brand-bdr);
+/* =================================================================
+   WALLET SECTION
+   ================================================================= */
+.uck-wallet-block {
+  padding: 14px;
+  background: var(--uck-blue-lt);
+  border: 1.5px solid var(--uck-blue-mid);
   border-radius: var(--r-lg);
-}
-
-.uck-total-label {
-  font-size: 0.78rem;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  color: var(--uck-brand);
-  margin-bottom: 2px;
-}
-
-.uck-total-note {
-  font-size: 0.68rem;
-  color: var(--uck-muted);
-  font-weight: 500;
-}
-
-.uck-total-val {
-  font-family: var(--mono);
-  font-size: 1.6rem;
-  font-weight: 700;
-  color: var(--uck-brand-dk);
-  letter-spacing: -0.5px;
-}
-
-/* Delivery chip */
-.uck-delivery-chip {
   display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.65rem 0.9rem;
-  background: var(--uck-green-lt);
-  border: 1px solid var(--uck-green-mid);
-  border-radius: var(--r-lg);
-  font-size: 0.78rem;
-  font-weight: 600;
-  color: var(--uck-green);
-}
-
-.uck-delivery-chip svg { flex-shrink: 0; }
-
-/* Place order button */
-.uck-btn-order {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  padding: 0.95rem;
-  background: var(--uck-brand);
-  color: #fff;
-  border: none;
-  border-radius: var(--r-lg);
-  font-family: var(--font);
-  font-size: 0.95rem;
-  font-weight: 800;
-  cursor: pointer;
-  box-shadow: 0 4px 14px rgba(111,59,24,.3);
-  letter-spacing: 0.1px;
-}
-
-.uck-btn-order:hover:not(:disabled) { background: var(--uck-brand-dk); }
-
-.uck-btn-order:disabled { opacity: 0.6; cursor: not-allowed; }
-
-/* Spinner */
-.uck-spinner {
-  width: 18px; height: 18px;
-  border: 2.5px solid rgba(255,255,255,0.35);
-  border-top-color: #fff;
-  border-radius: 50%;
-  animation: uck-spin 0.7s linear infinite;
-  flex-shrink: 0;
-}
-
-@keyframes uck-spin { to { transform: rotate(360deg); } }
-
-/* Secure note */
-.uck-secure {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.4rem;
-  font-size: 0.75rem;
-  color: var(--uck-muted);
-  font-weight: 600;
-}
-
-.uck-secure svg { color: var(--uck-green); }
-
-/* =============================================
-   RESPONSIVE
-   ============================================= */
-@media (min-width: 900px) {
-  .uck-root { padding: 1.5rem 2rem 5rem; }
-
-  .uck-layout {
-    flex-direction: row;
-    align-items: flex-start;
-    gap: 1.5rem;
-  }
-
-  .uck-main    { flex: 1; min-width: 0; }
-  .uck-sidebar {
-    flex: 0 0 340px;
-    position: sticky;
-    top: 1.5rem;
-    align-self: flex-start;
-  }
-}
-
-@media (min-width: 1100px) {
-  .uck-sidebar { flex: 0 0 375px; }
-}
-
-@media (max-width: 640px) {
-  /* Payment options: stack to 1 column */
-  .uck-payment-grid { grid-template-columns: 1fr; }
-
-  /* Address row stacks */
-  .uck-addr-row { flex-direction: column; align-items: flex-start; }
-  .uck-btn-change { width: 100%; justify-content: center; }
-}
-
-@media (max-width: 480px) {
-  .uck-root { padding: 0.85rem 0.85rem 4rem; gap: 0.85rem; }
-
-  .uck-header { padding: 1rem; }
-  .uck-header-icon { width: 40px; height: 40px; }
-  .uck-header-title { font-size: 1.05rem; }
-
-  .uck-card-body { padding: 1rem; }
-  .uck-card-head { padding: 0.85rem 1rem; }
-
-  .uck-total-val { font-size: 1.3rem; }
-
-  /* items don't wrap on tiny screens */
-  .uck-item { flex-wrap: wrap; }
-  .uck-item-price { flex-basis: 100%; border-top: 1px solid var(--uck-border-lt); padding-top: 0.6rem; }
-
-  .uck-sum-body { padding: 1rem; }
-}
-
-.uck-wallet-box {
-  margin-top: 12px;
-  padding: 10px;
-  border: 1px dashed #22c55e;
-  border-radius: 10px;
-  background: #f0fdf4;
+  flex-direction: column;
+  gap: 8px;
 }
 
 .uck-wallet-row {
   display: flex;
+  align-items: center;
   justify-content: space-between;
-  align-items: center;
-  font-size: 14px;
-}
-
-.uck-wallet-used {
-  margin-top: 6px;
-  font-size: 13px;
-  color: #16a34a;
-}
-.uck-wallet-full {
-  padding: 14px;
-  border-radius: 12px;
-  background: #ecfdf5;
-  border: 1px solid #bbf7d0;
-}
-
-.uck-wallet-full-box {
-  display: flex;
-  align-items: center;
   gap: 10px;
 }
 
-.uck-wallet-full-title {
-  font-weight: 600;
-  color: #065f46;
+.uck-wallet-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
 }
 
-.uck-wallet-full-desc {
-  font-size: 12px;
-  color: #047857;
+.uck-wallet-checkbox-wrap {
+  display: flex;
+  align-items: center;
+}
+
+.uck-wallet-checkbox {
+  width: 17px; height: 17px;
+  accent-color: var(--uck-blue);
+  cursor: pointer;
+}
+.uck-wallet-checkbox:disabled { cursor: not-allowed; opacity: 0.5; }
+
+.uck-wallet-label-content {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13.5px; font-weight: 700;
+  color: var(--uck-blue);
+}
+
+.uck-wallet-balance {
+  font-size: 14px; font-weight: 800;
+  color: var(--uck-blue);
+  font-family: var(--uck-mono);
+}
+.uck-wallet-empty { color: var(--uck-muted) !important; }
+
+.uck-wallet-deduct {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px; font-weight: 700;
+  color: var(--uck-green);
+  background: var(--uck-green-lt);
+  border: 1px solid var(--uck-green-mid);
+  border-radius: var(--r-sm);
+  padding: 6px 10px;
+}
+
+.uck-wallet-empty-note {
+  font-size: 11.5px; font-weight: 600;
+  color: var(--uck-muted);
+  font-style: italic;
+}
+
+/* =================================================================
+   ORDER TOTAL
+   ================================================================= */
+.uck-total-box {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 18px;
+  background: var(--uck-orange-lt);
+  border: 1.5px solid var(--uck-orange-mid);
+  border-radius: var(--r-lg);
+}
+
+.uck-total-label {
+  font-size: 11px; font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: var(--uck-orange-deep);
+  margin-bottom: 3px;
+}
+.uck-total-note {
+  font-size: 11px; font-weight: 500;
+  color: var(--uck-muted);
+}
+.uck-total-amount {
+  font-size: 28px; font-weight: 800;
+  color: var(--uck-orange-deep);
+  letter-spacing: -1px;
+  font-family: var(--uck-mono);
+  line-height: 1;
+}
+
+/* Free delivery chip */
+.uck-delivery-chip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 14px;
+  background: var(--uck-green-lt);
+  border: 1px solid var(--uck-green-mid);
+  border-radius: var(--r-lg);
+  font-size: 12.5px; font-weight: 700;
+  color: var(--uck-green);
+}
+.uck-delivery-chip svg { flex-shrink: 0; }
+
+/* =================================================================
+   PLACE ORDER BUTTON
+   ================================================================= */
+.uck-place-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 16px 20px;
+  background: linear-gradient(135deg, #ff7800 0%, #ff3d00 100%);
+  color: #fff;
+  border: none;
+  border-radius: var(--r-lg);
+  font-family: var(--uck-font);
+  font-size: 16px; font-weight: 900;
+  cursor: pointer;
+  box-shadow: var(--uck-shadow-btn);
+  letter-spacing: 0.2px;
+  transition: opacity 0.18s, transform 0.18s, box-shadow 0.18s;
+  position: relative;
+  overflow: hidden;
+}
+.uck-place-btn::before {
+  content: "";
+  position: absolute;
+  top: 0; left: -100%;
+  width: 60%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.14), transparent);
+  transition: left 0.42s ease;
+}
+.uck-place-btn:hover:not(:disabled)::before { left: 160%; }
+.uck-place-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 32px rgba(255,98,0,0.46);
+}
+.uck-place-btn:active:not(:disabled) { transform: translateY(0); }
+.uck-place-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+/* Button spinner */
+.uck-btn-spinner {
+  width: 18px; height: 18px;
+  border: 2.5px solid rgba(255,255,255,0.35);
+  border-top-color: #fff;
+  border-radius: 50%;
+  flex-shrink: 0;
+  animation: uck-spin 0.75s linear infinite;
+}
+@keyframes uck-spin { to { transform: rotate(360deg); } }
+
+/* Secure note */
+.uck-secure-note {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-size: 12px; font-weight: 600;
+  color: var(--uck-muted);
+}
+.uck-secure-note svg { color: var(--uck-green); flex-shrink: 0; }
+
+/* =================================================================
+   RESPONSIVE — DESKTOP  ≥ 900px
+   ================================================================= */
+@media (min-width: 900px) {
+  .uck-root { padding: 28px 28px 60px; gap: 18px; }
+
+  .uck-layout {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 20px;
+  }
+
+  .uck-main { flex: 1; min-width: 0; }
+
+  .uck-sidebar {
+    flex: 0 0 360px;
+    position: sticky;
+    top: 24px;
+    align-self: flex-start;
+  }
+
+  .uck-header-title { font-size: 22px; }
+}
+
+@media (min-width: 1140px) {
+  .uck-root    { padding: 32px 40px 60px; }
+  .uck-sidebar { flex: 0 0 390px; }
+}
+
+/* =================================================================
+   RESPONSIVE — TABLET  ≤ 760px
+   ================================================================= */
+@media (max-width: 760px) {
+  .uck-pay-grid { grid-template-columns: 1fr 1fr; }
+}
+
+/* =================================================================
+   RESPONSIVE — MOBILE  ≤ 560px
+   ================================================================= */
+@media (max-width: 560px) {
+  .uck-root { padding: 14px 13px 72px; gap: 12px; }
+
+  /* Header compact */
+  .uck-header { padding: 14px 15px; }
+  .uck-header-icon { width: 44px; height: 44px; border-radius: var(--r); }
+  .uck-header-title { font-size: 17px; }
+  .uck-header-sub   { font-size: 11.5px; }
+
+  /* Payment: single column on small screens */
+  .uck-pay-grid { grid-template-columns: 1fr; }
+
+  .uck-pay-card { padding: 13px 12px; }
+
+  /* Address: keep inline but reduce */
+  .uck-addr-wrap { gap: 10px; }
+  .uck-addr-icon { width: 32px; height: 32px; }
+
+  /* Items */
+  .uck-item { padding: 12px 14px; gap: 10px; }
+  .uck-item-ico { width: 38px; height: 38px; }
+  .uck-item-name { font-size: 13.5px; }
+
+  /* Card */
+  .uck-card-body { padding: 14px; }
+  .uck-card-head { padding: 12px 14px; }
+
+  /* Summary */
+  .uck-sum-body { padding: 14px; gap: 14px; }
+  .uck-total-amount { font-size: 24px; }
+
+  /* Place order button: large thumb target */
+  .uck-place-btn { padding: 17px 20px; font-size: 15px; border-radius: var(--r-xl); }
+
+  /* Change btn */
+  .uck-change-btn { padding: 7px 12px; font-size: 12px; }
+}
+
+/* =================================================================
+   RESPONSIVE — SMALL MOBILE  ≤ 400px
+   ================================================================= */
+@media (max-width: 400px) {
+  .uck-root         { padding: 12px 11px 68px; }
+  .uck-card-body    { padding: 12px; }
+  .uck-card-head    { padding: 11px 12px; }
+  .uck-sum-body     { padding: 12px; }
+  .uck-total-amount { font-size: 22px; }
+  .uck-item-name    { font-size: 13px; }
+  .uck-header-title { font-size: 16px; }
+  .uck-header-icon  { width: 40px; height: 40px; }
+  .uck-place-btn    { font-size: 14.5px; padding: 15px; }
+  .uck-coupon-apply { padding: 11px 14px; font-size: 12.5px; }
 }
