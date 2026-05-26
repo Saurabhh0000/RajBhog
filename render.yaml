@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: rajbhog-backend
+    env: java
+
+    rootDir: rajbhog-backend
+
+    buildCommand: "./mvnw clean package -DskipTests"
+    startCommand: "java -jar target/*.jar"
+
+    plan: free
+
+    envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: prod
