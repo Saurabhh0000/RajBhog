@@ -4,10 +4,7 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.time.Year;
 
-import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
@@ -17,14 +14,12 @@ import com.rajbhog.service.BrevoEmailService;
 import com.rajbhog.service.EmailService;
 import com.rajbhog.service.InvoiceService;
 
-import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
 public class EmailServiceImpl implements EmailService {
 
-    private final JavaMailSender mailSender;
     private final InvoiceService invoiceService;
     private final BrevoEmailService brevoEmailService;
 
@@ -33,11 +28,16 @@ public class EmailServiceImpl implements EmailService {
     public void sendOtpEmail(String toEmail, String otp) {
 
         try {
+
             String html = loadTemplate("email/otp-email.html")
                     .replace("{{OTP}}", otp)
-                    .replace("{{YEAR}}", String.valueOf(Year.now().getValue()));
+                    .replace("{{YEAR}}",
+                            String.valueOf(Year.now().getValue()));
 
-            sendHtmlEmail(toEmail, "Rajbhog OTP Verification", html);
+            sendHtmlEmail(
+                    toEmail,
+                    "Rajbhog OTP Verification",
+                    html);
 
         } catch (Exception ex) {
 
@@ -53,10 +53,15 @@ public class EmailServiceImpl implements EmailService {
     public void sendWelcomeEmail(String toEmail) {
 
         try {
-            String html = loadTemplate("email/welcome-email.html")
-                    .replace("{{YEAR}}", String.valueOf(Year.now().getValue()));
 
-            sendHtmlEmail(toEmail, "Welcome to Rajbhog 🎉", html);
+            String html = loadTemplate("email/welcome-email.html")
+                    .replace("{{YEAR}}",
+                            String.valueOf(Year.now().getValue()));
+
+            sendHtmlEmail(
+                    toEmail,
+                    "Welcome to Rajbhog 🎉",
+                    html);
 
         } catch (Exception ex) {
 
@@ -67,17 +72,21 @@ public class EmailServiceImpl implements EmailService {
         }
     }
 
-    // --------------- TICKETS EMAIL -------------
-
+    // ---------- TICKET UPDATE EMAIL ----------
     @Override
-    public void sendTicketUpdateEmail(String to, String name, String subject,
-            String ticketSubject, String resolutionMessage,
+    public void sendTicketUpdateEmail(
+            String to,
+            String name,
+            String subject,
+            String ticketSubject,
+            String resolutionMessage,
             String status) {
 
         try {
-            MimeMessage message = mailSender.createMimeMessage();
-            MimeMessageHelper helper = new MimeMessageHelper(message, true);
-            String statusColor = status.equals("RESOLVED") ? "#16a34a" : "#dc2626";
+
+            String statusColor = status.equals("RESOLVED")
+                    ? "#16a34a"
+                    : "#dc2626";
 
             String htmlContent = """
                     <div style="font-family:Arial,sans-serif; padding:20px;">
@@ -89,69 +98,91 @@ public class EmailServiceImpl implements EmailService {
                         <b>"%s"</b> has been
                         <span style="color:%s;"><b>%s</b></span>.</p>
 
-                        <div style="background:#f0fdf4; padding:12px; border-radius:8px; border:1px solid #bbf7d0;">
+                        <div style="background:#f0fdf4;
+                        padding:12px;
+                        border-radius:8px;
+                        border:1px solid #bbf7d0;">
+
                             <b>Resolution:</b><br/>
                             %s
                         </div>
 
                         <p style="margin-top:20px;">
-                            If you still need help, feel free to contact us again.
+                            If you still need help,
+                            feel free to contact us again.
                         </p>
 
-                        <p>Regards,<br/><b>Rajbhog Support Team</b></p>
+                        <p>
+                            Regards,<br/>
+                            <b>Rajbhog Support Team</b>
+                        </p>
                     </div>
-                    """.formatted(name, ticketSubject, statusColor, status, resolutionMessage);
+                    """.formatted(
+                    name,
+                    ticketSubject,
+                    statusColor,
+                    status,
+                    resolutionMessage);
 
-            helper.setTo(to);
-            helper.setSubject(subject);
-            helper.setText(htmlContent, true); // ✅ TRUE = HTML
+            sendHtmlEmail(
+                    to,
+                    subject,
+                    htmlContent);
 
-            mailSender.send(message);
+        } catch (Exception ex) {
 
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to send email", e);
+            ex.printStackTrace();
+
+            throw new RuntimeException(
+                    "TICKET EMAIL FAILED: " + ex.getMessage());
         }
     }
 
-    // --------------- ORDER PLACED EMAIL -------------
-
+    // ---------- ORDER PLACED EMAIL ----------
     @Override
     @Async
     public void sendOrderPlacedEmail(OrderEmailDto dto) {
 
         try {
 
-            // ✅ PAYMENT METHOD (FROM DTO - NO DB CALL)
-            String paymentMethod = "Online"; // or pass in DTO if needed
+            String paymentMethod = "Online";
 
             String html = loadTemplate("email/order-placed.html")
                     .replace("{{ORDER_NUMBER}}", dto.getOrderNumber())
                     .replace("{{PAYMENT_METHOD}}", paymentMethod)
                     .replace("{{ITEMS}}", buildItemsHtml(dto))
-                    .replace("{{SUBTOTAL}}", dto.getSubtotal().toString())
-                    .replace("{{DELIVERY}}", dto.getDelivery().toString())
-                    .replace("{{DISCOUNT}}", dto.getDiscount().toString())
-                    .replace("{{TOTAL}}", dto.getTotal().toString())
+                    .replace("{{SUBTOTAL}}",
+                            dto.getSubtotal().toString())
+                    .replace("{{DELIVERY}}",
+                            dto.getDelivery().toString())
+                    .replace("{{DISCOUNT}}",
+                            dto.getDiscount().toString())
+                    .replace("{{TOTAL}}",
+                            dto.getTotal().toString())
                     .replace("{{ADDRESS}}", dto.getAddress())
-                    .replace("{{YEAR}}", String.valueOf(Year.now().getValue()));
+                    .replace("{{YEAR}}",
+                            String.valueOf(Year.now().getValue()));
 
-            // 🔥 GENERATE PDF USING DTO (FIX BELOW)
-            byte[] pdf = invoiceService.generateInvoiceFromDto(dto);
+            // Invoice generation still works
+            invoiceService.generateInvoiceFromDto(dto);
 
-            sendHtmlEmailWithAttachment(
+            // TEMPORARY:
+            // Sending without PDF attachment
+            sendHtmlEmail(
                     dto.getCustomerEmail(),
-                    "Order Confirmed 🎉 | Invoice Attached",
-                    html,
-                    pdf,
-                    "Invoice-" + dto.getOrderNumber() + ".pdf");
+                    "Order Confirmed 🎉",
+                    html);
 
         } catch (Exception ex) {
-            throw new EmailSendException("Failed to send order email");
+
+            ex.printStackTrace();
+
+            throw new EmailSendException(
+                    "Failed to send order email");
         }
     }
 
-    // --------------- ORDER DELIVERED EMAIL ----------------------
-
+    // ---------- ORDER DELIVERED EMAIL ----------
     @Override
     @Async
     public void sendOrderDeliveredEmail(OrderEmailDto dto) {
@@ -159,10 +190,14 @@ public class EmailServiceImpl implements EmailService {
         try {
 
             String html = loadTemplate("email/order-delivered.html")
-                    .replace("{{ORDER_NUMBER}}", dto.getOrderNumber())
-                    .replace("{{TOTAL}}", dto.getTotal().toString())
-                    .replace("{{ITEMS}}", buildItemsHtml(dto))
-                    .replace("{{YEAR}}", String.valueOf(Year.now().getValue()));
+                    .replace("{{ORDER_NUMBER}}",
+                            dto.getOrderNumber())
+                    .replace("{{TOTAL}}",
+                            dto.getTotal().toString())
+                    .replace("{{ITEMS}}",
+                            buildItemsHtml(dto))
+                    .replace("{{YEAR}}",
+                            String.valueOf(Year.now().getValue()));
 
             sendHtmlEmail(
                     dto.getCustomerEmail(),
@@ -170,59 +205,54 @@ public class EmailServiceImpl implements EmailService {
                     html);
 
         } catch (Exception ex) {
+
             ex.printStackTrace();
-            throw new EmailSendException("Failed to send delivered email");
+
+            throw new EmailSendException(
+                    "Failed to send delivered email");
         }
     }
 
-    // ---------- COMMON HTML EMAIL METHOD ----------
-    private void sendHtmlEmail(String to, String subject, String html) {
-
-        brevoEmailService.sendEmail(to, subject, html);
-    }
-
-    private void sendHtmlEmailWithAttachment(
+    // ---------- COMMON EMAIL METHOD ----------
+    private void sendHtmlEmail(
             String to,
             String subject,
-            String html,
-            byte[] attachment,
-            String fileName) {
+            String html) {
 
-        // MimeMessage message = mailSender.createMimeMessage();
-
-        // MimeMessageHelper helper = new MimeMessageHelper(message, true,
-        // StandardCharsets.UTF_8.name());
-
-        // helper.setTo(to);
-        // helper.setSubject(subject);
-        // helper.setText(html, true);
-
-        // // 🔥 ATTACH FILE
-        // helper.addAttachment(fileName, new ByteArrayResource(attachment));
-
-        // mailSender.send(message);
-        brevoEmailService.sendEmail(to, subject, html);
+        brevoEmailService.sendEmail(
+                to,
+                subject,
+                html);
     }
 
     // ---------- TEMPLATE LOADER ----------
     private String loadTemplate(String path) {
 
         try (InputStream is = new ClassPathResource(path).getInputStream()) {
-            return new String(is.readAllBytes(), StandardCharsets.UTF_8);
+
+            return new String(
+                    is.readAllBytes(),
+                    StandardCharsets.UTF_8);
+
         } catch (Exception ex) {
+
             throw new EmailSendException();
         }
     }
 
+    // ---------- ITEMS HTML BUILDER ----------
     private String buildItemsHtml(OrderEmailDto dto) {
 
         StringBuilder items = new StringBuilder();
 
-        if (dto.getItems() == null || dto.getItems().isEmpty()) {
+        if (dto.getItems() == null
+                || dto.getItems().isEmpty()) {
+
             return "<tr><td colspan='4'>No items found</td></tr>";
         }
 
         dto.getItems().forEach(item -> {
+
             items.append("""
                         <tr>
                             <td>%s</td>
