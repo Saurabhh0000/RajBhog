@@ -30,7 +30,7 @@ import "../styles/Login.css";
 import Navbar from "../components/Navbar";
 
 /* ──────────────────────────────────────────────────────────
-   Inline message — replaces toast for form feedback
+   Inline alert
 ────────────────────────────────────────────────────────── */
 function InlineAlert({ type, message, onDismiss }) {
   if (!message) return null;
@@ -70,34 +70,30 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   const [timer, setTimer] = useState(30);
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
-  const [otpStatus, setOtpStatus] = useState(""); // "" | "error" | "success"
-
-  /* Inline alert state */
-  const [alert, setAlert] = useState({ type: "", message: "" }); // type: "error" | "success" | "info"
+  const [otpStatus, setOtpStatus] = useState("");
+  const [alert, setAlert] = useState({ type: "", message: "" });
 
   const firstOtpRef = useRef(null);
 
-  /* ── Timer countdown ─────────────────────────────────── */
+  /* Timer countdown */
   useEffect(() => {
     if (step === "OTP" && timer > 0) {
-      const t = setTimeout(() => setTimer((prev) => prev - 1), 1000);
+      const t = setTimeout(() => setTimer((p) => p - 1), 1000);
       return () => clearTimeout(t);
     }
   }, [step, timer]);
 
-  /* Auto-focus first OTP box when step changes */
+  /* Auto-focus first OTP box */
   useEffect(() => {
     if (step === "OTP") {
-      setTimeout(() => {
-        document.getElementById("otp-0")?.focus();
-      }, 80);
+      setTimeout(() => document.getElementById("otp-0")?.focus(), 80);
     }
   }, [step]);
 
   const showAlert = (type, message) => setAlert({ type, message });
   const clearAlert = () => setAlert({ type: "", message: "" });
 
-  /* ── Send OTP ─────────────────────────────────────────── */
+  /* Send OTP */
   const handleSendOtp = async () => {
     clearAlert();
     if (!email.trim()) {
@@ -112,7 +108,7 @@ export default function Login() {
     try {
       setLoading(true);
       await sendOtp(email);
-      showAlert("success", "OTP sent! Please check your inbox.");
+      showAlert("success", "OTP sent! Check your inbox.");
       setStep("OTP");
       setTimer(30);
     } catch {
@@ -122,7 +118,7 @@ export default function Login() {
     }
   };
 
-  /* ── Verify OTP ───────────────────────────────────────── */
+  /* Verify OTP */
   const handleVerifyOtp = async () => {
     clearAlert();
     const otpValue = otp.join("");
@@ -134,24 +130,20 @@ export default function Login() {
       setLoading(true);
       const res = await verifyOtp(email, otpValue);
       setOtpStatus("success");
-      showAlert("success", "OTP verified! Redirecting you now…");
-
+      const name = email.split("@")[0];
+      showAlert(
+        "success",
+        res.data.isNewUser
+          ? `Welcome, ${name}! Setting up your profile…`
+          : `Welcome back, ${name}!`,
+      );
       localStorage.setItem("token", res.data.token);
       localStorage.setItem("role", res.data.role);
-      const name = email.split("@")[0];
-      const isNewUser = res.data.isNewUser;
-
-      if (isNewUser) {
-        showAlert("success", `Welcome, ${name}! Setting up your profile…`);
-      } else {
-        showAlert("success", `Welcome back, ${name}!`);
-      }
 
       const pendingCart = localStorage.getItem("pendingCart");
       if (pendingCart) {
         try {
-          const data = JSON.parse(pendingCart);
-          await addToCart(data);
+          await addToCart(JSON.parse(pendingCart));
           localStorage.removeItem("pendingCart");
           setTimeout(() => {
             window.location.href = "/user/cart";
@@ -162,7 +154,6 @@ export default function Login() {
           showAlert("error", "Failed to restore cart item.");
         }
       }
-
       setTimeout(() => {
         window.location.href =
           res.data.role === "ADMIN" ? "/admin/dashboard" : "/user/dashboard";
@@ -181,24 +172,19 @@ export default function Login() {
     }
   };
 
-  /* ── OTP input handlers ───────────────────────────────── */
+  /* OTP handlers */
   const handleOtpChange = (index, value) => {
     const v = value.replace(/\D/g, "").slice(-1);
     const n = [...otp];
     n[index] = v;
     setOtp(n);
-    if (v && index < 5) {
-      document.getElementById(`otp-${index + 1}`)?.focus();
-    }
+    if (v && index < 5) document.getElementById(`otp-${index + 1}`)?.focus();
   };
-
   const handleOtpKeyDown = (index, e) => {
-    if (e.key === "Backspace" && !otp[index] && index > 0) {
+    if (e.key === "Backspace" && !otp[index] && index > 0)
       document.getElementById(`otp-${index - 1}`)?.focus();
-    }
     if (e.key === "Enter") handleVerifyOtp();
   };
-
   const handleOtpPaste = (e) => {
     e.preventDefault();
     const pasted = e.clipboardData
@@ -211,7 +197,6 @@ export default function Login() {
     }
   };
 
-  /* ── Go back to email step ────────────────────────────── */
   const handleBack = () => {
     setStep("EMAIL");
     setOtp(["", "", "", "", "", ""]);
@@ -323,7 +308,7 @@ export default function Login() {
           <div className="rb-form-panel">
             <div className="rb-form-panel-bg" aria-hidden="true" />
             <div className="rb-form-inner">
-              {/* Mobile logo — shown only ≤600px */}
+              {/* Mobile logo — ≤600px only */}
               <div className="rb-mobile-logo">
                 <div className="rb-logo-icon-sm" aria-hidden="true">
                   <FontAwesomeIcon icon={faStore} />
@@ -352,13 +337,22 @@ export default function Login() {
                     <span>Trusted by thousands in your city</span>
                   </div>
 
-                  <h1 className="rb-form-title">Sign in to RajBhog</h1>
+                  {/* Ornament line */}
+                  <div className="rb-form-ornament" aria-hidden="true">
+                    <span className="rb-form-ornament-line" />
+                    <span className="rb-form-ornament-dot" />
+                  </div>
+
+                  <h1 className="rb-form-title">
+                    Sign in to
+                    <br />
+                    RajBhog
+                  </h1>
                   <p className="rb-form-sub">
                     No password needed — we'll send a one-time code straight to
                     your inbox.
                   </p>
 
-                  {/* Inline alert */}
                   <InlineAlert
                     type={alert.type}
                     message={alert.message}
@@ -409,14 +403,12 @@ export default function Login() {
                     )}
                   </button>
 
-                  {/* Divider */}
                   <div className="rb-divider">
                     <span className="rb-divider-line" />
-                    <span className="rb-divider-text">secured login</span>
+                    <span className="rb-divider-text">secured by rajbhog</span>
                     <span className="rb-divider-line" />
                   </div>
 
-                  {/* Trust chips */}
                   <div className="rb-trust-row">
                     <span className="rb-trust-chip">
                       <FontAwesomeIcon icon={faShieldHalved} /> Secure Login
@@ -463,9 +455,18 @@ export default function Login() {
                     <span>Verification Step</span>
                   </div>
 
-                  <h1 className="rb-form-title">Enter your OTP</h1>
+                  {/* Ornament line */}
+                  <div className="rb-form-ornament" aria-hidden="true">
+                    <span className="rb-form-ornament-line" />
+                    <span className="rb-form-ornament-dot" />
+                  </div>
 
-                  {/* OTP info card */}
+                  <h1 className="rb-form-title">
+                    Enter your
+                    <br />
+                    OTP
+                  </h1>
+
                   <div className="rb-otp-info-card">
                     <div className="rb-otp-info-icon" aria-hidden="true">
                       <FontAwesomeIcon icon={faKey} />
@@ -476,14 +477,12 @@ export default function Login() {
                     </div>
                   </div>
 
-                  {/* Inline alert */}
                   <InlineAlert
                     type={alert.type}
                     message={alert.message}
                     onDismiss={clearAlert}
                   />
 
-                  {/* OTP boxes */}
                   <label className="rb-otp-label" htmlFor="otp-0">
                     Enter 6-digit code
                   </label>
@@ -527,7 +526,6 @@ export default function Login() {
                     )}
                   </button>
 
-                  {/* Resend row */}
                   <div className="rb-resend-row">
                     {timer > 0 ? (
                       <span className="rb-timer">
@@ -542,7 +540,6 @@ export default function Login() {
                     )}
                   </div>
 
-                  {/* Back to email */}
                   <button className="rb-back-btn" onClick={handleBack}>
                     <FontAwesomeIcon icon={faChevronLeft} />
                     Change Email
