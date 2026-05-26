@@ -357,6 +357,7 @@
   display: flex;
   flex-direction: column;
   padding: 52px 48px;
+  margin-top: 36px;
 }
 
 /* Mobile logo — hidden on desktop */
@@ -826,7 +827,7 @@
     flex: 1;
     background: #ffffff;
     border-radius: 22px 22px 0 0;
-    margin-top: -2px;
+    margin-top: 14px;
     align-items: flex-start;
     min-height: 0;
   }
