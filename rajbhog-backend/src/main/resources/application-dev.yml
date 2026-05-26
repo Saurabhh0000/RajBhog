@@ -1,0 +1,61 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: rajbhog-backend
+
+  # ================= DATABASE =================
+  datasource:
+    url: jdbc:mysql://localhost:3306/rajbhog_db?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+    username: root
+    password: Ss@#1234
+
+  # ================= JPA / HIBERNATE =================
+  jpa:
+    hibernate:
+      ddl-auto: update   # auto create/update tables
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.MySQL8Dialect
+
+  # ================= MAIL (GMAIL SMTP) =================
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: rajbhogstore@gmail.com
+    password: dfsl ewbx kyyd uyjq
+
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+# ================= SWAGGER / OPENAPI =================
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+  api-docs:
+    path: /v3/api-docs
+
+# ================= ADMIN BOOTSTRAP =================
+admin:
+  email: saurabhkeshri074@gmail.com
+  name: Admin
+
+
+rajbhog:
+  store:
+    latitude: 25.102699       # example: Nokha
+    longitude: 84.123001
+    delivery-radius-km: 10
+
+razorpay:
+  keyId: rzp_test_SdPjHhxR9DivA1
+  keySecret: wa4n68lw7qUduPV3ZS8K8cVI
+
+
