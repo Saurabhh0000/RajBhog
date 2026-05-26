@@ -163,15 +163,14 @@ public class EmailServiceImpl implements EmailService {
                     .replace("{{YEAR}}",
                             String.valueOf(Year.now().getValue()));
 
-            // Invoice generation still works
-            invoiceService.generateInvoiceFromDto(dto);
+            byte[] pdf = invoiceService.generateInvoiceFromDto(dto);
 
-            // TEMPORARY:
-            // Sending without PDF attachment
-            sendHtmlEmail(
+            brevoEmailService.sendEmailWithAttachment(
                     dto.getCustomerEmail(),
-                    "Order Confirmed 🎉",
-                    html);
+                    "Order Confirmed 🎉 | Invoice Attached",
+                    html,
+                    pdf,
+                    "Invoice-" + dto.getOrderNumber() + ".pdf");
 
         } catch (Exception ex) {
 

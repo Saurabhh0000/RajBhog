@@ -1,7 +1,7 @@
 package com.rajbhog.service.impl;
 
 import java.util.Map;
-
+import java.util.Base64;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
@@ -39,5 +39,47 @@ public class BrevoEmailServiceImpl implements BrevoEmailService {
                                 .retrieve()
                                 .bodyToMono(String.class)
                                 .block();
+        }
+
+        @Override
+        public void sendEmailWithAttachment(
+                        String to,
+                        String subject,
+                        String htmlContent,
+                        byte[] attachment,
+                        String fileName) {
+
+                String base64File = Base64.getEncoder().encodeToString(attachment);
+
+                Map<String, Object> body = Map.of(
+
+                                "sender", Map.of(
+                                                "name", senderName,
+                                                "email", senderEmail),
+
+                                "to", new Object[] {
+                                                Map.of("email", to)
+                                },
+
+                                "subject", subject,
+
+                                "htmlContent", htmlContent,
+
+                                "attachment", new Object[] {
+                                                Map.of(
+                                                                "name", fileName,
+                                                                "content", base64File)
+                                });
+
+                webClient.post()
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .header("api-key", apiKey)
+                                .bodyValue(body)
+                                .retrieve()
+                                .bodyToMono(String.class)
+                                .block();
+
+                System.out.println(
+                                "Email with attachment sent to: " + to);
         }
 }
