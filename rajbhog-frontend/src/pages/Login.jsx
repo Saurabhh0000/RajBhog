@@ -21,9 +21,59 @@ import {
   faTag,
   faChevronLeft,
   faLock,
+  faWheatAwn,
+  faFire,
+  faBagShopping,
+  faCircleCheck,
 } from "@fortawesome/free-solid-svg-icons";
 import "../styles/Login.css";
 import Navbar from "../components/Navbar";
+
+/* ── Toast helper styles ─────────────────────────────────── */
+const toastStyle = {
+  success: {
+    style: {
+      background: "#fff7ed",
+      color: "#9a3412",
+      fontWeight: 700,
+      fontSize: "13.5px",
+      borderLeft: "4px solid #ff6a00",
+      padding: "12px 18px",
+      borderRadius: "12px",
+      boxShadow: "0 8px 24px rgba(255,106,0,0.18)",
+      fontFamily: "'Plus Jakarta Sans', sans-serif",
+    },
+    duration: 3000,
+  },
+  error: {
+    style: {
+      background: "#fff1f2",
+      color: "#9f1239",
+      fontWeight: 700,
+      fontSize: "13.5px",
+      borderLeft: "4px solid #f43f5e",
+      padding: "12px 18px",
+      borderRadius: "12px",
+      boxShadow: "0 8px 24px rgba(244,63,94,0.16)",
+      fontFamily: "'Plus Jakarta Sans', sans-serif",
+    },
+    duration: 3500,
+  },
+  info: {
+    style: {
+      background: "#f0f9ff",
+      color: "#075985",
+      fontWeight: 700,
+      fontSize: "13.5px",
+      borderLeft: "4px solid #0ea5e9",
+      padding: "12px 18px",
+      borderRadius: "12px",
+      boxShadow: "0 8px 24px rgba(14,165,233,0.14)",
+      fontFamily: "'Plus Jakarta Sans', sans-serif",
+    },
+    duration: 3000,
+  },
+};
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -43,15 +93,15 @@ export default function Login() {
   const handleSendOtp = async () => {
     if (!email) {
       toast.error("Please enter your email address", {
-        style: { background: "#1e1e1e", color: "#fff", fontWeight: 600 },
+        ...toastStyle.error,
         icon: "⚠️",
       });
       return;
     }
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
-      toast.error("Please enter a valid email address", {
-        style: { background: "#1e1e1e", color: "#fff", fontWeight: 600 },
+      toast.error("Enter a valid email address", {
+        ...toastStyle.error,
         icon: "❌",
       });
       return;
@@ -60,17 +110,15 @@ export default function Login() {
       setLoading(true);
       await sendOtp(email);
       toast.success("OTP sent! Check your inbox 📬", {
-        style: { background: "#fff7ed", color: "#c2410c", fontWeight: 700 },
+        ...toastStyle.success,
         icon: "✅",
-        duration: 3000,
       });
       setStep("OTP");
       setTimer(30);
     } catch {
       toast.error("Failed to send OTP. Please try again.", {
-        style: { background: "#1e1e1e", color: "#fff", fontWeight: 600 },
+        ...toastStyle.error,
         icon: "❌",
-        duration: 3000,
       });
     } finally {
       setLoading(false);
@@ -81,7 +129,7 @@ export default function Login() {
     const otpValue = otp.join("");
     if (otpValue.length !== 6) {
       toast.error("Please enter the complete 6-digit OTP", {
-        style: { background: "#1e1e1e", color: "#fff", fontWeight: 600 },
+        ...toastStyle.error,
         icon: "⚠️",
       });
       return;
@@ -97,13 +145,13 @@ export default function Login() {
 
       if (isNewUser) {
         toast.success(`Welcome, ${name}! Let's set up your profile 🚀`, {
-          style: { background: "#fff7ed", color: "#c2410c", fontWeight: 700 },
+          ...toastStyle.success,
           icon: "✨",
           duration: 3500,
         });
       } else {
         toast.success(`Welcome back, ${name}! 👋`, {
-          style: { background: "#fff7ed", color: "#c2410c", fontWeight: 700 },
+          ...toastStyle.success,
           icon: "🛒",
           duration: 2500,
         });
@@ -114,9 +162,7 @@ export default function Login() {
         try {
           const data = JSON.parse(pendingCart);
           await addToCart(data);
-          toast.success("Item added to cart 🛒", {
-            style: { background: "#fff7ed", color: "#c2410c", fontWeight: 700 },
-          });
+          toast.success("Item added to cart 🛒", { ...toastStyle.success });
           localStorage.removeItem("pendingCart");
           setTimeout(() => {
             window.location.href = "/user/cart";
@@ -124,9 +170,7 @@ export default function Login() {
           return;
         } catch (err) {
           console.error(err);
-          toast.error("Failed to restore cart", {
-            style: { background: "#1e1e1e", color: "#fff", fontWeight: 600 },
-          });
+          toast.error("Failed to restore cart", { ...toastStyle.error });
         }
       }
 
@@ -138,9 +182,8 @@ export default function Login() {
       setOtpStatus("error");
       setOtp(["", "", "", "", "", ""]);
       toast.error("Invalid OTP. Please try again.", {
-        style: { background: "#1e1e1e", color: "#fff", fontWeight: 600 },
+        ...toastStyle.error,
         icon: "❌",
-        duration: 3000,
       });
       setTimeout(() => {
         setOtpStatus("");
@@ -184,11 +227,16 @@ export default function Login() {
     <>
       <Navbar />
       <div className="rb-auth-page">
-        <div className="rb-auth-card">
-          {/* ══ LEFT BRAND PANEL (desktop) / TOP HEADER (mobile) ══ */}
+        <div className="rb-auth-shell">
+          {/* ══ LEFT BRAND PANEL ══ */}
           <div className="rb-brand-panel">
+            {/* Decorative blobs */}
+            <span className="rb-blob rb-blob-1" />
+            <span className="rb-blob rb-blob-2" />
+            <span className="rb-blob rb-blob-3" />
+
             <div className="rb-brand-inner">
-              {/* Logo — always visible */}
+              {/* Logo */}
               <div className="rb-logo-row">
                 <div className="rb-logo-icon">
                   <FontAwesomeIcon icon={faStore} />
@@ -197,70 +245,80 @@ export default function Login() {
                   <span className="rb-logo-raj">RAJ</span>
                   <span className="rb-logo-bhog">BHOG</span>
                 </div>
-                {/* Mobile-only tagline next to logo */}
-                <p className="rb-mobile-tagline">जो भी खाए, दोस्त बन जाए</p>
               </div>
 
-              {/* Desktop tagline — hidden on mobile */}
-              <p className="rb-brand-tagline rb-desktop-only">
-                Your neighbourhood kirana, now online.{" "}
-                <span className="rb-tag-highlight">
-                  <FontAwesomeIcon icon={faLeaf} /> Fresh groceries
-                </span>{" "}
-                delivered from your{" "}
-                <span className="rb-tag-pill">
-                  <FontAwesomeIcon icon={faLocationDot} /> local store
-                </span>
-              </p>
-
-              {/* Highlights — hidden on mobile */}
-              <div className="rb-highlights rb-desktop-only">
-                <div className="rb-highlight-item">
-                  <span className="rb-hl-icon rb-hl-bolt">
-                    <FontAwesomeIcon icon={faBolt} />
-                  </span>
-                  <span>Same-day delivery from nearby kiranas</span>
-                </div>
-                <div className="rb-highlight-item">
-                  <span className="rb-hl-icon rb-hl-leaf">
-                    <FontAwesomeIcon icon={faLeaf} />
-                  </span>
-                  <span>Fresh stock updated every morning</span>
-                </div>
-                <div className="rb-highlight-item">
-                  <span className="rb-hl-icon rb-hl-hand">
-                    <FontAwesomeIcon icon={faHandshake} />
-                  </span>
-                  <span>Support your local store owner directly</span>
-                </div>
+              {/* Tagline */}
+              <div className="rb-brand-headline">
+                <p className="rb-brand-tag">जो भी खाए, दोस्त बन जाए</p>
+                <p className="rb-brand-desc">
+                  Your neighbourhood kirana, now online. Fresh groceries
+                  delivered straight from your local store.
+                </p>
               </div>
 
-              {/* Feature grid — hidden on mobile */}
-              <div className="rb-feature-grid rb-desktop-only">
-                <FeatureCard
+              {/* Highlights */}
+              <div className="rb-highlights">
+                <HighlightRow
+                  icon={faBolt}
+                  color="amber"
+                  text="Same-day delivery from nearby kiranas"
+                />
+                <HighlightRow
+                  icon={faLeaf}
+                  color="green"
+                  text="Fresh stock updated every morning"
+                />
+                <HighlightRow
+                  icon={faHandshake}
+                  color="sky"
+                  text="Support your local store owner directly"
+                />
+                <HighlightRow
+                  icon={faLocationDot}
+                  color="rose"
+                  text="Hyperlocal — your pin, your store"
+                />
+              </div>
+
+              {/* Feature grid */}
+              <div className="rb-feat-grid">
+                <FeatCard
                   icon={faStore}
                   color="orange"
-                  title="Local Kirana"
-                  desc="Verified nearby stores"
+                  label="Local Kirana"
+                  sub="Verified stores"
                 />
-                <FeatureCard
+                <FeatCard
                   icon={faTruck}
-                  color="blue"
-                  title="Fast Delivery"
-                  desc="At your door in minutes"
+                  color="sky"
+                  label="Fast Delivery"
+                  sub="Door-to-door"
                 />
-                <FeatureCard
+                <FeatCard
                   icon={faShieldHalved}
                   color="green"
-                  title="Safe & Secure"
-                  desc="OTP + data protection"
+                  label="Safe & Secure"
+                  sub="OTP protected"
                 />
-                <FeatureCard
+                <FeatCard
                   icon={faTag}
-                  color="purple"
-                  title="Best Prices"
-                  desc="Deals & local discounts"
+                  color="violet"
+                  label="Best Prices"
+                  sub="Local deals"
                 />
+              </div>
+
+              {/* Bottom brand strip */}
+              <div className="rb-brand-footer">
+                <span className="rb-brand-footer-pill">
+                  <FontAwesomeIcon icon={faWheatAwn} /> Fresh Groceries
+                </span>
+                <span className="rb-brand-footer-pill">
+                  <FontAwesomeIcon icon={faBagShopping} /> Easy Checkout
+                </span>
+                <span className="rb-brand-footer-pill">
+                  <FontAwesomeIcon icon={faFire} /> Hot Deals
+                </span>
               </div>
             </div>
           </div>
@@ -268,19 +326,32 @@ export default function Login() {
           {/* ══ RIGHT FORM PANEL ══ */}
           <div className="rb-form-panel">
             <div className="rb-form-inner">
+              {/* Mobile logo header — visible only on small screens */}
+              <div className="rb-mobile-logo">
+                <div className="rb-logo-icon-sm">
+                  <FontAwesomeIcon icon={faStore} />
+                </div>
+                <div className="rb-logo-text">
+                  <span className="rb-logo-raj">RAJ</span>
+                  <span className="rb-logo-bhog">BHOG</span>
+                </div>
+              </div>
+
               {step === "EMAIL" && (
                 <div className="rb-form-card">
-                  <div className="rb-form-badge">
+                  {/* Header badge */}
+                  <div className="rb-badge">
                     <FontAwesomeIcon icon={faStar} />
                     <span>Trusted by thousands in your city</span>
                   </div>
 
-                  <h2 className="rb-form-title">Sign in to your account</h2>
+                  <h2 className="rb-form-title">Sign in to RajBhog</h2>
                   <p className="rb-form-sub">
-                    We'll send a verification code to your email — no password
-                    needed.
+                    No password needed — we'll send a one-time code straight to
+                    your inbox.
                   </p>
 
+                  {/* Email field */}
                   <div className="rb-field">
                     <label className="rb-label" htmlFor="rb-email">
                       Email address
@@ -306,9 +377,17 @@ export default function Login() {
                     className="rb-btn-primary"
                     disabled={loading}
                     onClick={handleSendOtp}>
-                    <span>{loading ? "Sending OTP…" : "Continue"}</span>
-                    {!loading && <FontAwesomeIcon icon={faArrowRight} />}
-                    {loading && <span className="rb-spinner" />}
+                    {loading ? (
+                      <>
+                        <span className="rb-spinner" />
+                        <span>Sending OTP…</span>
+                      </>
+                    ) : (
+                      <>
+                        <span>Continue</span>
+                        <FontAwesomeIcon icon={faArrowRight} />
+                      </>
+                    )}
                   </button>
 
                   {/* Trust chips */}
@@ -320,58 +399,56 @@ export default function Login() {
                       <FontAwesomeIcon icon={faBolt} /> Instant OTP
                     </span>
                     <span className="rb-trust-chip">
-                      <FontAwesomeIcon icon={faCheckCircle} /> Verified
+                      <FontAwesomeIcon icon={faCircleCheck} /> Verified
                     </span>
                   </div>
 
-                  {/* Mobile-only feature icon strip */}
-                  <div className="rb-mobile-feat-strip">
-                    <div className="rb-mf-item">
-                      <span className="rb-mf-icon rb-mf-orange">
-                        <FontAwesomeIcon icon={faStore} />
-                      </span>
-                      <span>Local Kirana</span>
-                    </div>
-                    <div className="rb-mf-item">
-                      <span className="rb-mf-icon rb-mf-blue">
-                        <FontAwesomeIcon icon={faTruck} />
-                      </span>
-                      <span>Fast Delivery</span>
-                    </div>
-                    <div className="rb-mf-item">
-                      <span className="rb-mf-icon rb-mf-green">
-                        <FontAwesomeIcon icon={faShieldHalved} />
-                      </span>
-                      <span>Safe & Secure</span>
-                    </div>
-                    <div className="rb-mf-item">
-                      <span className="rb-mf-icon rb-mf-purple">
-                        <FontAwesomeIcon icon={faTag} />
-                      </span>
-                      <span>Best Prices</span>
-                    </div>
+                  {/* Mobile feature strip */}
+                  <div className="rb-mobile-strip">
+                    <MobileFeature
+                      icon={faStore}
+                      color="orange"
+                      label="Local Kirana"
+                    />
+                    <MobileFeature
+                      icon={faTruck}
+                      color="sky"
+                      label="Fast Delivery"
+                    />
+                    <MobileFeature
+                      icon={faShieldHalved}
+                      color="green"
+                      label="Safe & Secure"
+                    />
+                    <MobileFeature
+                      icon={faTag}
+                      color="violet"
+                      label="Best Prices"
+                    />
                   </div>
                 </div>
               )}
 
               {step === "OTP" && (
                 <div className="rb-form-card">
-                  <div className="rb-form-badge rb-form-badge--verify">
+                  {/* Verification badge */}
+                  <div className="rb-badge rb-badge--blue">
                     <FontAwesomeIcon icon={faLock} />
                     <span>Verification Step</span>
                   </div>
 
-                  <h2 className="rb-form-title">Enter OTP</h2>
+                  <h2 className="rb-form-title">Enter your OTP</h2>
                   <p className="rb-form-sub">
-                    6-digit code sent to{" "}
-                    <strong className="rb-email-highlight">{email}</strong>
+                    A 6-digit code was sent to{" "}
+                    <strong className="rb-email-hl">{email}</strong>
                   </p>
 
+                  {/* OTP boxes */}
                   <label className="rb-label rb-otp-label">
                     Enter 6-digit code
                   </label>
                   <div
-                    className={`rb-otp-row ${otpStatus === "error" ? "rb-otp-error" : ""} ${otpStatus === "success" ? "rb-otp-success" : ""}`}
+                    className={`rb-otp-row${otpStatus === "error" ? " rb-otp-error" : ""}${otpStatus === "success" ? " rb-otp-success" : ""}`}
                     onPaste={handleOtpPaste}>
                     {otp.map((digit, index) => (
                       <input
@@ -389,14 +466,15 @@ export default function Login() {
                     ))}
                   </div>
 
+                  {/* Inline feedback */}
                   {otpStatus === "error" && (
-                    <div className="rb-msg rb-msg--error">
+                    <div className="rb-inline-msg rb-inline-error">
                       <FontAwesomeIcon icon={faCircleExclamation} />
                       <span>Invalid OTP. Please check and try again.</span>
                     </div>
                   )}
                   {otpStatus === "success" && (
-                    <div className="rb-msg rb-msg--success">
+                    <div className="rb-inline-msg rb-inline-success">
                       <FontAwesomeIcon icon={faCheckCircle} />
                       <span>OTP verified! Redirecting…</span>
                     </div>
@@ -407,11 +485,12 @@ export default function Login() {
                     <FontAwesomeIcon icon={faArrowRight} />
                   </button>
 
+                  {/* Resend row */}
                   <div className="rb-resend-row">
                     {timer > 0 ? (
                       <span className="rb-timer">
                         <FontAwesomeIcon icon={faClock} />
-                        &nbsp;Resend code in <strong>{timer}s</strong>
+                        &nbsp;Resend in <strong>{timer}s</strong>
                       </span>
                     ) : (
                       <button className="rb-link-btn" onClick={handleSendOtp}>
@@ -421,6 +500,7 @@ export default function Login() {
                     )}
                   </div>
 
+                  {/* Change email */}
                   <button
                     className="rb-back-btn"
                     onClick={() => {
@@ -441,14 +521,33 @@ export default function Login() {
   );
 }
 
-const FeatureCard = ({ icon, color, title, desc }) => (
-  <div className={`rb-feat-card rb-feat-${color}`}>
-    <span className="rb-feat-icon">
+/* ── Sub-components ──────────────────────────────────────── */
+const HighlightRow = ({ icon, color, text }) => (
+  <div className="rb-hl-item">
+    <span className={`rb-hl-dot rb-hl-${color}`}>
       <FontAwesomeIcon icon={icon} />
     </span>
-    <div>
-      <p className="rb-feat-title">{title}</p>
-      <p className="rb-feat-desc">{desc}</p>
+    <span className="rb-hl-text">{text}</span>
+  </div>
+);
+
+const FeatCard = ({ icon, color, label, sub }) => (
+  <div className={`rb-feat-card rb-feat-${color}`}>
+    <span className="rb-feat-ico">
+      <FontAwesomeIcon icon={icon} />
+    </span>
+    <div className="rb-feat-body">
+      <p className="rb-feat-label">{label}</p>
+      <p className="rb-feat-sub">{sub}</p>
     </div>
+  </div>
+);
+
+const MobileFeature = ({ icon, color, label }) => (
+  <div className="rb-mf-item">
+    <span className={`rb-mf-ico rb-mf-${color}`}>
+      <FontAwesomeIcon icon={icon} />
+    </span>
+    <span className="rb-mf-label">{label}</span>
   </div>
 );
