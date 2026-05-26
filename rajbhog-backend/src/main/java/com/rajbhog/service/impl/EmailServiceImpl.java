@@ -6,8 +6,6 @@ import java.time.Year;
 
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.mail.MailException;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
@@ -19,7 +17,6 @@ import com.rajbhog.service.BrevoEmailService;
 import com.rajbhog.service.EmailService;
 import com.rajbhog.service.InvoiceService;
 
-import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 
@@ -179,8 +176,7 @@ public class EmailServiceImpl implements EmailService {
     }
 
     // ---------- COMMON HTML EMAIL METHOD ----------
-    private void sendHtmlEmail(String to, String subject, String html)
-            throws MessagingException, MailException {
+    private void sendHtmlEmail(String to, String subject, String html) {
 
         brevoEmailService.sendEmail(to, subject, html);
     }
@@ -190,7 +186,7 @@ public class EmailServiceImpl implements EmailService {
             String subject,
             String html,
             byte[] attachment,
-            String fileName) throws MessagingException {
+            String fileName) {
 
         // MimeMessage message = mailSender.createMimeMessage();
 

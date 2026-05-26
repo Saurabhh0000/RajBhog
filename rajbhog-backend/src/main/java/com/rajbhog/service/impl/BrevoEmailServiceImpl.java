@@ -12,32 +12,32 @@ import com.rajbhog.service.BrevoEmailService;
 @Service
 public class BrevoEmailServiceImpl implements BrevoEmailService {
 
-    @Value("${BREVO_API_KEY}")
-    private String apiKey;
+        @Value("${brevo.api-key}")
+        private String apiKey;
 
-    private final WebClient webClient = WebClient.builder()
-            .baseUrl("https://api.brevo.com/v3/smtp/email")
-            .build();
+        private final WebClient webClient = WebClient.builder()
+                        .baseUrl("https://api.brevo.com/v3/smtp/email")
+                        .build();
 
-    @Override
-    public void sendEmail(String to, String subject, String htmlContent) {
+        @Override
+        public void sendEmail(String to, String subject, String htmlContent) {
 
-        Map<String, Object> body = Map.of(
-                "sender", Map.of(
-                        "name", "RajBhog",
-                        "email", "rajbhogstore@gmail.com"),
-                "to", new Object[] {
-                        Map.of("email", to)
-                },
-                "subject", subject,
-                "htmlContent", htmlContent);
+                Map<String, Object> body = Map.of(
+                                "sender", Map.of(
+                                                "name", "RajBhog",
+                                                "email", "rajbhogstore@gmail.com"),
+                                "to", new Object[] {
+                                                Map.of("email", to)
+                                },
+                                "subject", subject,
+                                "htmlContent", htmlContent);
 
-        webClient.post()
-                .contentType(MediaType.APPLICATION_JSON)
-                .header("api-key", apiKey)
-                .bodyValue(body)
-                .retrieve()
-                .bodyToMono(String.class)
-                .block();
-    }
+                webClient.post()
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .header("api-key", apiKey)
+                                .bodyValue(body)
+                                .retrieve()
+                                .bodyToMono(String.class)
+                                .block();
+        }
 }

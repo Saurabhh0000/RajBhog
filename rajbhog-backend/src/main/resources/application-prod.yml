@@ -25,6 +25,9 @@ spring:
 jwt:
   secret: ${JWT_SECRET}
 
+brevo:
+  api-key: ${BREVO_API_KEY}
+
 springdoc:
   swagger-ui:
     path: /swagger-ui.html
