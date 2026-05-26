@@ -1,0 +1,38 @@
+/* ================= USER LAYOUT ================= */
+.app-layout {
+  min-height: 100vh;
+  background: #f8fafc;
+  display: flex;
+}
+
+/* USER MAIN WRAPPER */
+.user-main {
+  flex: 1;
+  margin-left: 72px; /* collapsed sidebar */
+    margin-top: 72px;   /* ✅ THIS FIXES OVERLAP */
+
+  transition: margin-left 0.3s ease;
+}
+
+/* SIDEBAR EXPANDED */
+.user-main.expanded {
+  margin-left: 280px;
+}
+
+
+/* MAIN CONTENT */
+.main-content {
+  padding: 24px;
+}
+
+/* MOBILE */
+@media (max-width: 768px) {
+  .user-main {
+    margin-left: 0 !important;
+    margin-top: 72px;
+  }
+    .navbar {
+    left: 0 !important;
+    padding-left: 0 !important;
+  }
+}

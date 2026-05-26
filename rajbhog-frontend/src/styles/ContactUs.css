@@ -1,0 +1,587 @@
+/* ==================== ROOT & MAIN CONTAINER ==================== */
+.contact-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #fff7ed 0%, #ffffff 50%, #fef3f2 100%);
+  padding: 110px 5%;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.contact-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 60px;
+  align-items: start;
+}
+
+/* ==================== LEFT INFO SECTION ==================== */
+.contact-info {
+  position: sticky;
+  top: 100px;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.info-header {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+.icon-badge {
+  width: 64px;
+  height: 64px;
+  background: linear-gradient(135deg, #f97316, #fb923c);
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  margin-bottom: 24px;
+  box-shadow: 0 10px 30px rgba(249, 115, 22, 0.3);
+  animation: bounceIn 0.8s ease-out;
+}
+
+.info-header h1 {
+  font-size: 48px;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 16px;
+  line-height: 1.2;
+  background: linear-gradient(135deg, #0f172a 0%, #334155 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.info-header p {
+  font-size: 17px;
+  color: #64748b;
+  line-height: 1.6;
+  max-width: 440px;
+}
+
+/* ==================== LOGGED USER CARD ==================== */
+.logged-user-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: white;
+  padding: 18px 22px;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.06);
+  border: 1px solid #f1f5f9;
+  animation: slideInLeft 0.6s ease-out 0.2s both;
+  transition: all 0.3s ease;
+}
+
+.logged-user-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.1);
+}
+
+.user-avatar {
+  width: 42px;
+  height: 42px;
+  background: linear-gradient(135deg, #f97316, #fb923c);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  flex-shrink: 0;
+}
+
+.user-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.user-label {
+  font-size: 13px;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.user-info strong {
+  font-size: 15px;
+  color: #0f172a;
+  font-weight: 600;
+}
+
+.verified-icon {
+  color: #10b981;
+  flex-shrink: 0;
+}
+
+/* ==================== CONTACT METHODS ==================== */
+.contact-methods {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.method-card {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  background: white;
+  padding: 24px;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.06);
+  border: 1px solid #f1f5f9;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  animation: slideInLeft 0.6s ease-out;
+}
+
+.method-card:nth-child(1) {
+  animation-delay: 0.3s;
+}
+
+.method-card:nth-child(2) {
+  animation-delay: 0.4s;
+}
+
+.method-card:hover {
+  transform: translateX(8px);
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.12);
+  border-color: #f97316;
+}
+
+.method-icon {
+  width: 52px;
+  height: 52px;
+  background: linear-gradient(135deg, #fff7ed, #ffedd5);
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #f97316;
+  flex-shrink: 0;
+  transition: all 0.3s ease;
+}
+
+.method-card:hover .method-icon {
+  background: linear-gradient(135deg, #f97316, #fb923c);
+  color: white;
+  transform: scale(1.1) rotate(5deg);
+}
+
+.method-content {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.method-content h3 {
+  font-size: 15px;
+  color: #64748b;
+  font-weight: 500;
+  margin: 0;
+}
+
+.method-content a {
+  font-size: 16px;
+  color: #0f172a;
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.method-content a:hover {
+  color: #f97316;
+}
+
+/* ==================== SUPPORT FEATURES ==================== */
+.support-features {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 24px;
+  background: white;
+  border-radius: 16px;
+  border: 1px solid #f1f5f9;
+  animation: fadeInUp 0.6s ease-out 0.5s both;
+}
+
+.feature-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 15px;
+  color: #475569;
+  transition: all 0.3s ease;
+}
+
+.feature-item:hover {
+  color: #0f172a;
+  transform: translateX(4px);
+}
+
+.feature-item svg {
+  color: #10b981;
+  flex-shrink: 0;
+}
+
+/* ==================== FORM WRAPPER & FORM ==================== */
+.contact-form-wrapper {
+  animation: fadeInUp 0.6s ease-out 0.3s both;
+}
+
+.contact-form {
+  background: white;
+  border-radius: 24px;
+  padding: 44px;
+  box-shadow: 0 20px 60px rgba(15, 23, 42, 0.08);
+  border: 1px solid #f1f5f9;
+}
+
+.contact-form h2 {
+  font-size: 32px;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 8px;
+}
+
+.form-subtitle {
+  font-size: 15px;
+  color: #64748b;
+  margin-bottom: 32px;
+  line-height: 1.5;
+}
+
+/* ==================== FORM GRID ==================== */
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+/* ==================== INPUT GROUPS ==================== */
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+.input-group label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #334155;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.required {
+  color: #f97316;
+}
+
+.input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-icon {
+  position: absolute;
+  left: 16px;
+  color: #94a3b8;
+  pointer-events: none;
+  transition: all 0.3s ease;
+}
+
+.input-wrapper:focus-within .input-icon {
+  color: #f97316;
+}
+
+.input-group input,
+.input-group textarea {
+  width: 100%;
+  padding: 14px 16px 14px 48px;
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  font-size: 15px;
+  font-family: inherit;
+  color: #0f172a;
+  background: #fafafa;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+.input-group textarea {
+  padding: 14px 16px;
+  resize: vertical;
+  min-height: 120px;
+  line-height: 1.6;
+}
+
+.input-group input:focus,
+.input-group textarea:focus {
+  border-color: #f97316;
+  background: white;
+  box-shadow: 0 0 0 4px rgba(249, 115, 22, 0.1);
+}
+
+.input-group input::placeholder,
+.input-group textarea::placeholder {
+  color: #94a3b8;
+}
+
+.input-group input:hover,
+.input-group textarea:hover {
+  border-color: #cbd5e1;
+}
+
+/* ==================== SUBMIT BUTTON ==================== */
+.submit-btn {
+  width: 100%;
+  padding: 16px 24px;
+  background: linear-gradient(135deg, #f97316, #fb923c);
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 8px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 16px rgba(249, 115, 22, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.submit-btn::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
+}
+
+.submit-btn:hover::before {
+  width: 300px;
+  height: 300px;
+}
+
+.submit-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(249, 115, 22, 0.4);
+}
+
+.submit-btn:active {
+  transform: translateY(0);
+}
+
+.submit-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.submit-btn:disabled:hover {
+  box-shadow: 0 4px 16px rgba(249, 115, 22, 0.3);
+}
+
+/* ==================== SPINNER ==================== */
+.spinner {
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ==================== ANIMATIONS ==================== */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes bounceIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.3);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+  70% {
+    transform: scale(0.9);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* ==================== RESPONSIVE - TABLET ==================== */
+@media (max-width: 1024px) {
+  .contact-container {
+    gap: 50px;
+  }
+
+  .contact-info {
+    position: relative;
+    top: 0;
+  }
+
+  .info-header h1 {
+    font-size: 42px;
+  }
+
+  .contact-form {
+    padding: 36px;
+  }
+}
+
+/* ==================== RESPONSIVE - MOBILE ==================== */
+@media (max-width: 768px) {
+  .contact-page {
+    padding: 60px 4%;
+  }
+
+  .contact-container {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+
+  .info-header h1 {
+    font-size: 36px;
+  }
+
+  .icon-badge {
+    width: 56px;
+    height: 56px;
+  }
+
+  .icon-badge svg {
+    width: 24px;
+    height: 24px;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  .contact-form {
+    padding: 28px 20px;
+  }
+
+  .contact-form h2 {
+    font-size: 26px;
+  }
+
+  .method-card {
+    padding: 20px;
+  }
+
+  .method-icon {
+    width: 48px;
+    height: 48px;
+  }
+
+  .support-features {
+    padding: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .contact-page {
+    padding: 40px 5%;
+  }
+
+  .info-header h1 {
+    font-size: 30px;
+  }
+
+  .info-header p {
+    font-size: 15px;
+  }
+
+  .contact-form h2 {
+    font-size: 22px;
+  }
+
+  .form-subtitle {
+    font-size: 14px;
+  }
+
+  .input-group input,
+  .input-group textarea {
+    font-size: 14px;
+    padding: 12px 14px 12px 44px;
+  }
+
+  .submit-btn {
+    padding: 14px 20px;
+    font-size: 15px;
+  }
+}
+
+/* ==================== ACCESSIBILITY ==================== */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ==================== PRINT STYLES ==================== */
+@media print {
+  .contact-page {
+    background: white;
+  }
+
+  .method-card,
+  .contact-form,
+  .support-features {
+    box-shadow: none;
+    border: 1px solid #e2e8f0;
+  }
+
+  .submit-btn {
+    display: none;
+  }
+}

@@ -1,0 +1,324 @@
+/* ============================================================
+   VARIANT CARD — Admin Component
+   ALL rules scoped to .vc__ — zero leakage to other pages
+   Font: Plus Jakarta Sans  |  No @keyframes  |  Mobile-first
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap');
+
+/* ── TOKENS ── */
+:root {
+  --vc-surface    : #ffffff;
+  --vc-bg         : #f8fafc;
+  --vc-border     : #e2e8f0;
+  --vc-radius     : 13px;
+  --vc-shadow     : 0 1px 3px rgba(0,0,0,0.05), 0 4px 12px rgba(0,0,0,0.05);
+  --vc-shadow-hv  : 0 6px 18px rgba(0,0,0,0.09), 0 1px 4px rgba(0,0,0,0.04);
+
+  /* accent — violet (matches Variants/ProductVariantDrawer accent) */
+  --vc-violet     : #7c3aed;
+  --vc-violet-hv  : #6d28d9;
+  --vc-violet-lt  : #f5f3ff;
+  --vc-violet-bdr : #ddd6fe;
+
+  /* price — emerald green */
+  --vc-green      : #047857;
+  --vc-green-lt   : #ecfdf5;
+  --vc-green-bdr  : #a7f3d0;
+
+  /* stock — amber */
+  --vc-amber      : #b45309;
+  --vc-amber-lt   : #fffbeb;
+  --vc-amber-bdr  : #fde68a;
+
+  /* low stock — red */
+  --vc-red        : #dc2626;
+  --vc-red-lt     : #fef2f2;
+  --vc-red-bdr    : #fecaca;
+
+  /* active strip */
+  --vc-active-top : #059669;
+  --vc-inactive-top: #ef4444;
+
+  /* text */
+  --vc-t1  : #0f172a;
+  --vc-t2  : #475569;
+  --vc-t3  : #94a3b8;
+  --vc-t4  : #cbd5e1;
+
+  --vc-font: 'Plus Jakarta Sans', system-ui, sans-serif;
+}
+
+/* ── RESET ── */
+.vc__card *, .vc__card *::before, .vc__card *::after {
+  box-sizing: border-box; margin: 0; padding: 0;
+}
+
+/* ============================================================
+   CARD SHELL
+   ============================================================ */
+.vc__card {
+  background: var(--vc-surface);
+  border: 1px solid var(--vc-border);
+  border-radius: var(--vc-radius);
+  box-shadow: var(--vc-shadow);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  position: relative;
+  font-family: var(--vc-font);
+  transition: box-shadow 0.18s ease, transform 0.18s ease, border-color 0.18s ease;
+}
+
+.vc__card:hover {
+  box-shadow: var(--vc-shadow-hv);
+  transform: translateY(-2px);
+  border-color: var(--vc-violet-bdr);
+}
+
+/* inactive state */
+.vc__card--inactive {
+  opacity: 0.78;
+  background: #fafafa;
+}
+.vc__card--inactive:hover { border-color: #cbd5e1; }
+
+/* ── top strip — active=green, inactive=red ── */
+.vc__strip {
+  height: 3px;
+  width: 100%;
+  flex-shrink: 0;
+}
+.vc__strip--active   { background: var(--vc-active-top); }
+.vc__strip--inactive { background: var(--vc-inactive-top); }
+
+/* ============================================================
+   CARD HEAD  (unit icon + unit value + status badge)
+   ============================================================ */
+.vc__head {
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border-bottom: 1px solid #f1f5f9;
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+}
+
+/* unit block */
+.vc__unit-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  flex: 1;
+}
+
+.vc__unit-icon {
+  width: 40px; height: 40px; min-width: 40px;
+  border-radius: 10px;
+  background: var(--vc-violet-lt);
+  border: 1px solid var(--vc-violet-bdr);
+  color: var(--vc-violet);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 15px; flex-shrink: 0;
+}
+.vc__card--inactive .vc__unit-icon {
+  background: #f1f5f9; color: var(--vc-t3); border-color: var(--vc-border);
+}
+
+.vc__unit-info { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
+.vc__unit-label {
+  font-size: 10px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.06em; color: var(--vc-t3);
+}
+.vc__unit-value {
+  font-size: 15px; font-weight: 800; color: var(--vc-t1);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  letter-spacing: -0.2px;
+}
+.vc__card--inactive .vc__unit-value { color: var(--vc-t2); }
+
+/* status badge */
+.vc__status {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 11px;
+  border-radius: 100px;
+  font-size: 10.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.vc__status--active {
+  background: var(--vc-green-lt);
+  color: var(--vc-green);
+  border: 1px solid var(--vc-green-bdr);
+}
+.vc__status--inactive {
+  background: var(--vc-red-lt);
+  color: var(--vc-red);
+  border: 1px solid var(--vc-red-bdr);
+}
+.vc__status svg { width: 11px; height: 11px; }
+
+/* ============================================================
+   CARD BODY  (price | stock — 2-col divided)
+   ============================================================ */
+.vc__body {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  flex: 1;
+}
+
+.vc__metric {
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.vc__metric:first-child {
+  border-right: 1px solid #f1f5f9;
+}
+
+.vc__metric-icon {
+  width: 36px; height: 36px; min-width: 36px;
+  border-radius: 9px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; flex-shrink: 0;
+}
+.vc__metric-icon--price {
+  background: var(--vc-green-lt);
+  border: 1px solid var(--vc-green-bdr);
+  color: var(--vc-green);
+}
+.vc__metric-icon--stock {
+  background: var(--vc-amber-lt);
+  border: 1px solid var(--vc-amber-bdr);
+  color: var(--vc-amber);
+}
+/* low stock icon turns red */
+.vc__metric-icon--stock.low {
+  background: var(--vc-red-lt);
+  border-color: var(--vc-red-bdr);
+  color: var(--vc-red);
+}
+
+.vc__metric-info { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.vc__metric-label {
+  font-size: 10px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.06em; color: var(--vc-t3);
+}
+.vc__metric-value {
+  font-size: 18px; font-weight: 900; color: var(--vc-t1);
+  letter-spacing: -0.5px; line-height: 1;
+}
+.vc__metric-value--price { color: var(--vc-green); }
+.vc__metric-value--stock { color: var(--vc-amber); }
+.vc__metric-value--low   { color: var(--vc-red); }
+
+/* LOW STOCK indicator pill */
+.vc__low-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 2px 7px;
+  border-radius: 5px;
+  font-size: 9px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  background: var(--vc-red-lt);
+  color: var(--vc-red);
+  border: 1px solid var(--vc-red-bdr);
+  margin-top: 3px;
+  width: fit-content;
+}
+.vc__low-pill svg { width: 8px; height: 8px; }
+
+/* ============================================================
+   CARD FOOTER  (Edit btn + Toggle switch)
+   ============================================================ */
+.vc__footer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 14px;
+  border-top: 1px solid #f1f5f9;
+  background: #fafafa;
+}
+
+/* Edit button */
+.vc__btn-edit {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 34px;
+  padding: 0 14px;
+  border: none;
+  border-radius: 8px;
+  font-family: var(--vc-font);
+  font-size: 12.5px;
+  font-weight: 700;
+  cursor: pointer;
+  background: var(--vc-violet-lt);
+  color: var(--vc-violet);
+  border: 1px solid var(--vc-violet-bdr);
+  transition: background 0.15s ease, box-shadow 0.15s ease;
+  white-space: nowrap;
+}
+.vc__btn-edit:hover {
+  background: #ede9fe;
+  box-shadow: 0 2px 8px rgba(124,58,237,0.18);
+}
+.vc__btn-edit svg { width: 13px; height: 13px; }
+
+/* Toggle switch */
+.vc__toggle {
+  position: relative;
+  width: 48px; height: 26px; min-width: 48px;
+  border: none;
+  border-radius: 100px;
+  cursor: pointer;
+  padding: 0;
+  flex-shrink: 0;
+  transition: background 0.18s ease, box-shadow 0.18s ease;
+}
+.vc__toggle--on  { background: #22c55e; box-shadow: 0 0 0 2px rgba(34,197,94,0.2); }
+.vc__toggle--off { background: #ef4444; box-shadow: 0 0 0 2px rgba(239,68,68,0.2); }
+.vc__toggle:hover { opacity: 0.88; }
+
+.vc__toggle-thumb {
+  position: absolute;
+  top: 3px; left: 3px;
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.22);
+  transition: transform 0.18s ease;
+}
+.vc__toggle--on .vc__toggle-thumb  { transform: translateX(22px); }
+.vc__toggle--off .vc__toggle-thumb { transform: translateX(0); }
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 480px) {
+  .vc__head { padding: 12px 14px; gap: 10px; }
+  .vc__unit-icon { width: 36px; height: 36px; font-size: 13px; }
+  .vc__unit-value { font-size: 13.5px; }
+  .vc__metric { padding: 12px 14px; gap: 9px; }
+  .vc__metric-value { font-size: 16px; }
+  .vc__footer { padding: 10px 12px; gap: 7px; }
+  .vc__btn-edit { font-size: 12px; height: 32px; }
+}
+
+@media (max-width: 360px) {
+  .vc__status span { display: none; }
+  .vc__metric-value { font-size: 15px; }
+}

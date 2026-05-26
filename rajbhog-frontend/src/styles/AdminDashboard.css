@@ -1,0 +1,368 @@
+/* ============================================================
+   ADMIN DASHBOARD — Proper Alignment & Visual Hierarchy
+   Font: Plus Jakarta Sans + DM Mono (numbers)
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800&display=swap');
+
+/* ===================== TOKENS ===================== */
+
+:root {
+  --page-bg:    #f1f5f9;
+  --card-bg:    #ffffff;
+  --radius:     12px;
+  --border:     1px solid #e2e8f0;
+  --shadow:     0 1px 2px rgba(0,0,0,0.05), 0 2px 8px rgba(0,0,0,0.06);
+  --shadow-hov: 0 4px 12px rgba(0,0,0,0.08), 0 1px 3px rgba(0,0,0,0.06);
+
+  --text-title:  #0f172a;
+  --text-label:  #64748b;
+  --text-footer: #94a3b8;
+  --text-num:    #0f172a;
+
+  --font-ui:  'Plus Jakarta Sans', sans-serif;
+  --font-num: 'DM Mono', monospace;
+}
+
+/* ===================== RESET ===================== */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* ===================== PAGE ===================== */
+
+.admin-dashboard {
+  min-height: 100vh;
+  background: var(--page-bg);
+  padding: 92px 28px 60px;
+  font-family: var(--font-ui);
+}
+
+/* ===================== HEADER ===================== */
+
+.dashboard-header {
+  background: #ffffff;
+  border: var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 20px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 28px;
+}
+
+.header-left {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.dashboard-eyebrow {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-footer);
+}
+
+.dashboard-title {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--text-title);
+  letter-spacing: -0.3px;
+  line-height: 1.2;
+}
+
+.live-badge {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: 100px;
+  padding: 7px 14px;
+  flex-shrink: 0;
+}
+
+.live-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #16a34a;
+  flex-shrink: 0;
+}
+
+.live-text {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #16a34a;
+  white-space: nowrap;
+}
+
+/* ===================== SECTION LABEL ===================== */
+
+.section-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-footer);
+  margin-bottom: 14px;
+}
+
+/* ===================== GRID ===================== */
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+}
+
+/* ===================== STAT CARD ===================== */
+
+.stat-card {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  border: var(--border);
+  box-shadow: var(--shadow);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  transition: box-shadow 0.18s ease, transform 0.18s ease;
+  cursor: default;
+  position: relative;
+  overflow: hidden;
+}
+
+/* colored top strip */
+.stat-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--accent);
+  border-radius: var(--radius) var(--radius) 0 0;
+}
+
+.stat-card:hover {
+  box-shadow: var(--shadow-hov);
+  transform: translateY(-2px);
+}
+
+/* ---- icon pinned to top-left corner ---- */
+.card-icon {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  z-index: 1;
+}
+
+/* ---- tag pinned to top-right corner ---- */
+.card-tag {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--accent);
+  background: var(--accent-soft);
+  border: 1px solid var(--accent-border);
+  padding: 3px 9px;
+  border-radius: 100px;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  line-height: 1.6;
+  z-index: 1;
+}
+
+/* ---- spacer so number/label sit below the icon+tag row ---- */
+.card-row-top {
+  height: 60px;
+}
+
+/* ---- Row 2: number ---- */
+.card-number {
+  font-family: 'Plus Jakarta Sans', sans-serif !important;
+  font-size: 30px !important;
+  font-weight: 800 !important;
+  color: #0f172a !important;
+  letter-spacing: -0.5px;
+  line-height: 1;
+  margin-bottom: 6px;
+}
+
+/* ---- Row 3: label ---- */
+.card-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-label);
+  letter-spacing: 0;
+  line-height: 1.3;
+  margin-bottom: 16px;
+}
+
+/* ---- Row 4: footer ---- */
+.card-footer {
+  padding-top: 12px;
+  border-top: 1px solid #f1f5f9;
+}
+
+.card-footer-text {
+  font-size: 11.5px;
+  font-weight: 500;
+  color: var(--text-footer);
+}
+
+/* ===================== ACCENT THEMES ===================== */
+
+.ac-blue   { --accent: #2563eb; --accent-soft: #eff6ff; --accent-border: #bfdbfe; }
+.ac-violet { --accent: #7c3aed; --accent-soft: #f5f3ff; --accent-border: #ddd6fe; }
+.ac-amber  { --accent: #b45309; --accent-soft: #fffbeb; --accent-border: #fde68a; }
+.ac-orange { --accent: #c2410c; --accent-soft: #fff7ed; --accent-border: #fed7aa; }
+.ac-green  { --accent: #047857; --accent-soft: #ecfdf5; --accent-border: #a7f3d0; }
+.ac-cyan   { --accent: #0e7490; --accent-soft: #ecfeff; --accent-border: #a5f3fc; }
+.ac-rose   { --accent: #be123c; --accent-soft: #fff1f2; --accent-border: #fecdd3; }
+.ac-indigo { --accent: #3730a3; --accent-soft: #eef2ff; --accent-border: #c7d2fe; }
+.ac-pink   { --accent: #9d174d; --accent-soft: #fdf2f8; --accent-border: #fbcfe8; }
+
+/* ===================== LOADING ===================== */
+
+.dashboard-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background: var(--page-bg);
+  gap: 14px;
+  font-family: var(--font-ui);
+}
+
+.spinner {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 3px solid #e2e8f0;
+  border-top-color: #2563eb;
+  animation: spin 0.75s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.loading-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-footer);
+}
+
+/* ===================== ERROR ===================== */
+
+.dashboard-error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background: var(--page-bg);
+  gap: 10px;
+  font-family: var(--font-ui);
+}
+
+.error-icon { font-size: 28px; color: #be123c; }
+.error-msg  { font-size: 14px; font-weight: 600; color: #64748b; }
+
+/* ===================== RESPONSIVE ===================== */
+
+@media (max-width: 1100px) {
+  .dashboard-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .admin-dashboard {
+    padding: 20px 14px 48px;
+  }
+
+  .dashboard-header {
+    padding: 16px 18px;
+  }
+
+  .dashboard-title {
+    font-size: 19px;
+  }
+
+  .dashboard-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+
+  .stat-card {
+    padding: 16px;
+  }
+
+  .card-number {
+    font-size: 26px !important;
+    font-weight: 800 !important;
+    letter-spacing: -0.5px;
+  }
+
+  .card-label {
+    font-size: 12.5px;
+    margin-bottom: 0;
+  }
+
+  .card-footer {
+    display: none;
+  }
+
+  .card-row-top {
+    margin-bottom: 14px;
+  }
+
+  .card-icon {
+    width: 36px;
+    height: 36px;
+    font-size: 14px;
+    border-radius: 9px;
+  }
+}
+
+@media (max-width: 420px) {
+  .dashboard-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+
+  .card-number {
+    font-size: 22px !important;
+    font-weight: 800 !important;
+  }
+
+  .card-label {
+    font-size: 11.5px;
+  }
+
+  .card-tag {
+    font-size: 10px;
+    padding: 2px 7px;
+  }
+}

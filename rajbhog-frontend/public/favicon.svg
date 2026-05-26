@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <!-- Brand Gradient -->
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#4b240b"/>
+      <stop offset="100%" stop-color="#f97316"/>
+    </linearGradient>
+
+    <!-- Inner Glow -->
+    <radialGradient id="glow" cx="50%" cy="40%" r="60%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.25"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Rounded Background -->
+  <rect width="64" height="64" rx="16" fill="url(#bg)"/>
+
+  <!-- Subtle Glow -->
+  <rect width="64" height="64" rx="16" fill="url(#glow)"/>
+
+  <!-- Bold R -->
+  <text x="50%" y="58%"
+        text-anchor="middle"
+        font-size="32"
+        font-family="Poppins, Arial, sans-serif"
+        font-weight="900"
+        fill="#ffffff"
+        letter-spacing="1">
+    R
+  </text>
+
+  <!-- Accent Dot (brand identity touch) -->
+  <circle cx="48" cy="18" r="3" fill="#ffe0c2"/>
+</svg>

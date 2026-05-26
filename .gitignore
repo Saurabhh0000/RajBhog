@@ -1,0 +1,46 @@
+# =========================
+# BACKEND
+# =========================
+rajbhog-backend/target/
+rajbhog-backend/.mvn/
+rajbhog-backend/*.log
+
+# =========================
+# FRONTEND
+# =========================
+rajbhog-frontend/node_modules/
+rajbhog-frontend/dist/
+
+# =========================
+# ENV FILES
+# =========================
+.env
+.env.local
+.env.production
+
+# =========================
+# IDE FILES
+# =========================
+.idea/
+.vscode/
+*.iml
+
+# =========================
+# OS FILES
+# =========================
+.DS_Store
+Thumbs.db
+
+# =========================
+# LOG FILES
+# =========================
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# =========================
+# CACHE
+# =========================
+.cache/

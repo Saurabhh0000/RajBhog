@@ -1,0 +1,496 @@
+/* ============================================================
+   ReturnModal.css — RAJBHOG
+   Scope: every rule prefixed with .rtm__
+   No entrance animations. Hover transitions only.
+   Dropdown list is portal-rendered via document.body —
+   completely escapes any overflow:hidden parent.
+   ============================================================ */
+
+/* ── RESET inside modal tree ── */
+.rtm__overlay *,
+.rtm__overlay *::before,
+.rtm__overlay *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* ── TOKENS scoped inside overlay ── */
+.rtm__overlay {
+  --rtm-brand:     #6f3b18;
+  --rtm-brand-dk:  #4b240b;
+  --rtm-brand-lt:  #fdf5ee;
+  --rtm-brand-bdr: #e5c9a8;
+  --rtm-bg:        #faf8f6;
+  --rtm-surface:   #ffffff;
+  --rtm-border:    #e8ddd5;
+  --rtm-text:      #1a0d04;
+  --rtm-sub:       #6b4c3b;
+  --rtm-muted:     #a07d64;
+  --rtm-red:       #dc2626;
+  --rtm-red-lt:    #fef2f2;
+  --rtm-red-bdr:   #fecaca;
+  --rtm-amber-lt:  #fffbeb;
+  --rtm-amber-bdr: #fde68a;
+  --rtm-amber-tx:  #b45309;
+  --rtm-green:     #15803d;
+  --rtm-font: 'Segoe UI', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+}
+
+/* ══════════════════════════════════════════
+   OVERLAY
+══════════════════════════════════════════ */
+.rtm__overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(20, 10, 3, 0.54);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9990;
+  padding: 16px;
+  font-family: var(--rtm-font);
+}
+
+/* ══════════════════════════════════════════
+   MODAL SHELL
+   NOTE: overflow is visible here so nothing
+   clips — the portal list sits on document.body.
+══════════════════════════════════════════ */
+.rtm__modal {
+  background: var(--rtm-surface);
+  width: 100%;
+  max-width: 440px;
+  border-radius: 22px;
+  border: 1px solid var(--rtm-border);
+  border-top: 3px solid var(--rtm-brand);
+  box-shadow:
+    0 4px 16px rgba(26, 13, 4, 0.08),
+    0 20px 56px rgba(26, 13, 4, 0.20);
+  display: flex;
+  flex-direction: column;
+  /* ✅ overflow: visible — lets the portal list extend outside */
+  overflow: visible;
+}
+
+/* ══════════════════════════════════════════
+   HEADER
+══════════════════════════════════════════ */
+.rtm__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 18px 20px 16px;
+  background: var(--rtm-bg);
+  border-bottom: 1px solid var(--rtm-border);
+  /* Match top corners of the modal */
+  border-radius: 20px 20px 0 0;
+}
+
+.rtm__header-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.rtm__header-icon {
+  width: 40px;
+  height: 40px;
+  min-width: 40px;
+  background: var(--rtm-brand-lt);
+  border: 1.5px solid var(--rtm-brand-bdr);
+  border-radius: 11px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--rtm-brand);
+  flex-shrink: 0;
+}
+
+.rtm__header-text { min-width: 0; }
+
+.rtm__title {
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--rtm-text);
+  letter-spacing: -0.2px;
+  line-height: 1.2;
+}
+
+.rtm__order-tag {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--rtm-muted);
+  margin-top: 2px;
+}
+
+.rtm__close-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1.5px solid var(--rtm-border);
+  background: var(--rtm-surface);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--rtm-muted);
+  flex-shrink: 0;
+  transition: background 0.18s, border-color 0.18s, color 0.18s;
+}
+
+.rtm__close-btn:hover {
+  background: var(--rtm-red-lt);
+  border-color: var(--rtm-red-bdr);
+  color: var(--rtm-red);
+}
+
+/* ══════════════════════════════════════════
+   BODY
+══════════════════════════════════════════ */
+.rtm__body {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 20px;
+}
+
+/* ── Info notice ── */
+.rtm__notice {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  padding: 11px 14px;
+  background: var(--rtm-amber-lt);
+  border: 1px solid var(--rtm-amber-bdr);
+  border-radius: 11px;
+}
+
+.rtm__notice-icon {
+  color: var(--rtm-amber-tx);
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.rtm__notice p {
+  font-size: 12.5px;
+  color: var(--rtm-amber-tx);
+  font-weight: 500;
+  line-height: 1.55;
+}
+
+.rtm__notice p strong { font-weight: 700; }
+
+/* ── Form field ── */
+.rtm__field {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.rtm__label {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--rtm-sub);
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+}
+
+.rtm__req {
+  color: var(--rtm-red);
+  font-weight: 800;
+}
+
+/* ── Dropdown trigger button ── */
+.rtm__dropdown-wrap {
+  position: relative;
+}
+
+.rtm__dropdown-btn {
+  width: 100%;
+  height: 48px;
+  padding: 0 14px;
+  border: 1.5px solid var(--rtm-border);
+  border-radius: 12px;
+  background: var(--rtm-bg);
+  font-family: var(--rtm-font);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--rtm-muted);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  text-align: left;
+  transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
+}
+
+.rtm__dropdown-btn--selected {
+  color: var(--rtm-text);
+  font-weight: 600;
+}
+
+.rtm__dropdown-btn--open,
+.rtm__dropdown-btn:hover {
+  border-color: var(--rtm-brand);
+  background: var(--rtm-surface);
+  box-shadow: 0 0 0 3px rgba(111, 59, 24, 0.09);
+}
+
+.rtm__dropdown-chevron {
+  color: var(--rtm-muted);
+  flex-shrink: 0;
+  transition: transform 0.2s;
+}
+
+.rtm__dropdown-chevron--up {
+  transform: rotate(180deg);
+}
+
+/* ── Dropdown list (portal-rendered on document.body) ──────
+   Position is set inline via JS (position:fixed + top/left).
+   The CSS here only handles visual styling.
+─────────────────────────────────────────────────────────── */
+.rtm__dropdown-list {
+  border: 1.5px solid var(--rtm-brand-bdr);
+  border-radius: 14px;
+  box-shadow:
+    0 4px 12px rgba(26, 13, 4, 0.08),
+    0 12px 32px rgba(26, 13, 4, 0.14);
+  list-style: none;
+  overflow: hidden;
+  max-height: 240px;
+  overflow-y: auto;
+    background: #ffffff !important;   /* 🔥 force solid */
+  backdrop-filter: none !important; /* remove blur */
+  -webkit-backdrop-filter: none !important;
+
+  opacity: 1;
+  /* z-index set inline (99999) via JS */
+}
+
+.rtm__dropdown-item {
+  padding: 13px 16px;
+  font-size: 13.5px;
+  font-weight: 500;
+  color: var(--rtm-sub);
+  cursor: pointer;
+  border-bottom: 1px solid var(--rtm-border);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: background 0.15s, color 0.15s, padding-left 0.15s;
+  font-family: var(--rtm-font);
+}
+
+.rtm__dropdown-item:last-child {
+  border-bottom: none;
+}
+
+.rtm__dropdown-item::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--rtm-border);
+  flex-shrink: 0;
+  transition: background 0.15s;
+}
+
+.rtm__dropdown-item:hover {
+  background: var(--rtm-brand-lt);
+  color: var(--rtm-brand);
+  padding-left: 20px;
+}
+
+.rtm__dropdown-item:hover::before {
+  background: var(--rtm-brand);
+}
+
+.rtm__dropdown-item--active {
+  background: var(--rtm-brand-lt);
+  color: var(--rtm-brand);
+  font-weight: 700;
+  padding-left: 20px;
+}
+
+.rtm__dropdown-item--active::before {
+  background: var(--rtm-brand);
+}
+
+/* ── Textarea ── */
+.rtm__textarea {
+  width: 100%;
+  padding: 13px 14px;
+  border: 1.5px solid var(--rtm-border);
+  border-radius: 12px;
+  font-family: var(--rtm-font);
+  font-size: 13.5px;
+  font-weight: 500;
+  color: var(--rtm-text);
+  background: var(--rtm-bg);
+  outline: none;
+  resize: none;
+  line-height: 1.65;
+  transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
+}
+
+.rtm__textarea::placeholder {
+  color: var(--rtm-muted);
+  font-weight: 400;
+}
+
+.rtm__textarea:focus {
+  border-color: var(--rtm-brand);
+  background: var(--rtm-surface);
+  box-shadow: 0 0 0 3px rgba(111, 59, 24, 0.09);
+}
+
+.rtm__textarea:hover:not(:focus) {
+  border-color: #c4956a;
+}
+
+.rtm__char-count {
+  font-size: 11px;
+  color: var(--rtm-muted);
+  font-weight: 500;
+  text-align: right;
+  padding-right: 2px;
+}
+
+/* ══════════════════════════════════════════
+   FOOTER
+══════════════════════════════════════════ */
+.rtm__footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 14px 20px 18px;
+  border-top: 1px solid var(--rtm-border);
+  background: var(--rtm-bg);
+  border-radius: 0 0 20px 20px;
+}
+
+.rtm__btn-cancel {
+  padding: 10px 20px;
+  border: 1.5px solid var(--rtm-border);
+  border-radius: 12px;
+  background: var(--rtm-surface);
+  font-family: var(--rtm-font);
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--rtm-sub);
+  cursor: pointer;
+  transition: background 0.18s, color 0.18s, border-color 0.18s;
+}
+
+.rtm__btn-cancel:hover {
+  background: var(--rtm-border);
+  color: var(--rtm-text);
+  border-color: #d0c0b4;
+}
+
+.rtm__btn-submit {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 10px 22px;
+  border: none;
+  border-radius: 12px;
+  background: var(--rtm-brand);
+  font-family: var(--rtm-font);
+  font-size: 13.5px;
+  font-weight: 700;
+  color: #fff;
+  cursor: pointer;
+  box-shadow: 0 3px 12px rgba(111, 59, 24, 0.28);
+  transition: background 0.18s, box-shadow 0.18s, transform 0.15s;
+}
+
+.rtm__btn-submit:hover:not(:disabled) {
+  background: var(--rtm-brand-dk);
+  box-shadow: 0 4px 16px rgba(111, 59, 24, 0.38);
+  transform: translateY(-1px);
+}
+
+.rtm__btn-submit:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.rtm__btn-submit:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
+}
+
+/* Spinner — only keyframe in this file (functional, not decorative) */
+.rtm__spinner {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(255, 255, 255, 0.35);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: rtm-spin 0.7s linear infinite;
+  flex-shrink: 0;
+}
+
+@keyframes rtm-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ══════════════════════════════════════════
+   MOBILE — bottom sheet
+══════════════════════════════════════════ */
+@media (max-width: 480px) {
+  .rtm__overlay {
+    align-items: flex-end;
+    padding: 0;
+  }
+
+  .rtm__modal {
+    max-width: 100%;
+    border-radius: 22px 22px 0 0;
+    border-left: none;
+    border-right: none;
+    border-bottom: none;
+    border-top: 3px solid var(--rtm-brand);
+    max-height: 92vh;
+    overflow-y: auto;
+    overflow-x: visible;
+  }
+
+  /* Drag handle */
+  .rtm__modal::before {
+    content: "";
+    display: block;
+    width: 36px;
+    height: 4px;
+    border-radius: 2px;
+    background: var(--rtm-border);
+    margin: 10px auto 0;
+  }
+
+  .rtm__header { padding: 14px 16px 12px; border-radius: 20px 20px 0 0; }
+  .rtm__body   { padding: 16px; gap: 16px; }
+  .rtm__footer { padding: 12px 16px 20px; border-radius: 0; }
+
+  .rtm__btn-cancel,
+  .rtm__btn-submit {
+    flex: 1;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 360px) {
+  .rtm__title        { font-size: 15px; }
+  .rtm__dropdown-btn { height: 44px; font-size: 13px; }
+  .rtm__textarea     { font-size: 13px; }
+}

@@ -1,0 +1,559 @@
+/* ============================================================
+   USER DASHBOARD
+   ALL rules scoped to .udb__ — zero leakage to other pages
+   Font: Plus Jakarta Sans  |  Mobile-first  |  No @keyframes
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap');
+
+/* ── TOKENS ── */
+:root {
+  --udb-page-bg   : #f1f5f9;
+  --udb-surface   : #ffffff;
+  --udb-border    : 1px solid #e2e8f0;
+  --udb-radius    : 14px;
+  --udb-shadow    : 0 1px 3px rgba(0,0,0,0.05), 0 4px 12px rgba(0,0,0,0.05);
+  --udb-shadow-hv : 0 6px 18px rgba(0,0,0,0.10);
+
+  --udb-brand     : #6f3b18;
+  --udb-brand-hv  : #5a2f10;
+  --udb-brand-mid : #8b4513;
+  --udb-brand-lt  : #fdf0e8;
+  --udb-brand-bdr : #e8c9ad;
+
+  /* order status tokens */
+  --s-delivered-c:#047857;  --s-delivered-bg:#ecfdf5;  --s-delivered-bdr:#a7f3d0;  --s-delivered-top:#059669;
+  --s-placed-c:#0369a1;     --s-placed-bg:#f0f9ff;     --s-placed-bdr:#bae6fd;     --s-placed-top:#0284c7;
+  --s-confirmed-c:#1d4ed8;  --s-confirmed-bg:#eff6ff;  --s-confirmed-bdr:#bfdbfe;  --s-confirmed-top:#3b82f6;
+  --s-shipped-c:#6d28d9;    --s-shipped-bg:#f5f3ff;    --s-shipped-bdr:#ddd6fe;    --s-shipped-top:#7c3aed;
+  --s-cancelled-c:#dc2626;  --s-cancelled-bg:#fef2f2;  --s-cancelled-bdr:#fecaca;  --s-cancelled-top:#ef4444;
+  --s-pending-c:#b45309;    --s-pending-bg:#fffbeb;    --s-pending-bdr:#fde68a;    --s-pending-top:#f59e0b;
+  --s-packed-c:#7c3aed;     --s-packed-bg:#f5f3ff;     --s-packed-bdr:#ddd6fe;     --s-packed-top:#8b5cf6;
+  --s-otd-c:#b45309;        --s-otd-bg:#fff7ed;        --s-otd-bdr:#fdba74;        --s-otd-top:#f97316;
+
+  /* return status tokens */
+  --s-ret-req-c:#0891b2;    --s-ret-req-bg:#ecfeff;    --s-ret-req-bdr:#a5f3fc;    --s-ret-req-top:#0891b2;
+  --s-ret-app-c:#0f766e;    --s-ret-app-bg:#f0fdf4;    --s-ret-app-bdr:#99f6e4;    --s-ret-app-top:#0f766e;
+  --s-ret-rej-c:#be123c;    --s-ret-rej-bg:#fff1f2;    --s-ret-rej-bdr:#fecdd3;    --s-ret-rej-top:#be123c;
+
+  --udb-t1 : #0f172a;
+  --udb-t2 : #475569;
+  --udb-t3 : #94a3b8;
+  --udb-t4 : #cbd5e1;
+  --udb-green : #047857;
+  --udb-font  : 'Plus Jakarta Sans', system-ui, sans-serif;
+}
+
+/* ── RESET ── */
+.udb__page *, .udb__page *::before, .udb__page *::after {
+  box-sizing: border-box; margin: 0; padding: 0;
+}
+
+/* ── PAGE ── */
+.udb__page {
+  min-height: 100vh;
+  background: var(--udb-page-bg);
+  font-family: var(--udb-font);
+  color: var(--udb-t1);
+  padding: 20px 4% 80px;
+}
+.udb__inner {
+  max-width: 1300px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* =====================================================
+   HERO HEADER
+   ===================================================== */
+.udb__header {
+  background: linear-gradient(150deg, #4b240b 0%, #7a3f16 55%, #8b4513 100%);
+  border-radius: var(--udb-radius);
+  padding: 28px 28px 26px;
+  position: relative; overflow: hidden;
+  box-shadow: 0 4px 24px rgba(111,59,24,0.25);
+}
+.udb__header::before {
+  content: ''; position: absolute; top: -40%; right: -8%;
+  width: 280px; height: 280px;
+  background: radial-gradient(circle, rgba(255,255,255,0.07), transparent 70%);
+  border-radius: 50%; pointer-events: none;
+}
+.udb__header::after {
+  content: ''; position: absolute; bottom: -30%; left: -4%;
+  width: 180px; height: 180px;
+  background: radial-gradient(circle, rgba(255,215,181,0.06), transparent 70%);
+  border-radius: 50%; pointer-events: none;
+}
+.udb__greeting {
+  font-size: clamp(1.25rem, 4.5vw, 2.1rem);
+  font-weight: 900; color: #fff; letter-spacing: -0.5px;
+  line-height: 1.2; margin-bottom: 8px; position: relative; z-index: 1;
+}
+.udb__greeting span { color: #ffd7b5; }
+.udb__greeting-sub {
+  font-size: 13px; color: rgba(255,255,255,0.7);
+  font-weight: 500; line-height: 1.5; position: relative; z-index: 1;
+}
+
+/* =====================================================
+   3 PRIMARY STAT CARDS
+   ===================================================== */
+.udb__stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+.udb__stat-card {
+  background: var(--udb-surface);
+  border: var(--udb-border);
+  border-radius: var(--udb-radius);
+  min-height: 96px;
+  padding: 18px 18px 16px;
+  display: flex; align-items: center; gap: 14px;
+  box-shadow: var(--udb-shadow);
+  position: relative; overflow: hidden;
+}
+.udb__stat-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0;
+  height: 3px; border-radius: var(--udb-radius) var(--udb-radius) 0 0;
+}
+.udb__stat-card--blue::before  { background: #3b82f6; }
+.udb__stat-card--amber::before { background: #f59e0b; }
+.udb__stat-card--green::before { background: #10b981; }
+
+.udb__stat-icon {
+  width: 46px; height: 46px; min-width: 46px;
+  border-radius: 11px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 19px; flex-shrink: 0;
+}
+.udb__stat-card--blue  .udb__stat-icon { background:#eff6ff; color:#3b82f6; border:1px solid #bfdbfe; }
+.udb__stat-card--amber .udb__stat-icon { background:#fffbeb; color:#d97706; border:1px solid #fde68a; }
+.udb__stat-card--green .udb__stat-icon { background:#ecfdf5; color:#059669; border:1px solid #a7f3d0; }
+
+.udb__stat-info { display:flex; flex-direction:column; gap:3px; min-width:0; flex:1; }
+.udb__stat-label {
+  font-size: 11px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.07em; color: var(--udb-t3); white-space: nowrap;
+}
+.udb__stat-value {
+  font-size: clamp(1.15rem, 2.5vw, 1.55rem);
+  font-weight: 900; color: var(--udb-t1);
+  letter-spacing: -0.5px; line-height: 1;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+
+/* =====================================================
+   9 MINI STAT CARDS  (3×3 desktop, 3-col mobile)
+   FIX: 9 cards must never leave a lonely card on last row.
+   Using 3-col on all sizes: labels wrap rather than overflow.
+   ===================================================== */
+.udb__mini-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+.udb__mini-card {
+  background: var(--udb-surface);
+  border: var(--udb-border);
+  border-radius: var(--udb-radius);
+  padding: 13px 14px;
+  display: flex; align-items: center; gap: 11px;
+  box-shadow: var(--udb-shadow);
+  position: relative; overflow: hidden;
+  min-height: 68px;
+}
+.udb__mini-card:hover {
+  border-color: var(--udb-brand-bdr);
+  box-shadow: var(--udb-shadow-hv);
+}
+
+/* ── LEFT STRIP — all 9 colours ── */
+.udb__mini-card::before {
+  content: ''; position: absolute; top: 0; left: 0;
+  width: 3px; height: 100%;
+  border-radius: var(--udb-radius) 0 0 var(--udb-radius);
+}
+/* existing 6 */
+.udb__mini-card[data-color="green"]::before  { background: var(--s-delivered-top); }
+.udb__mini-card[data-color="blue"]::before   { background: var(--s-confirmed-top); }
+.udb__mini-card[data-color="violet"]::before { background: var(--s-packed-top); }
+.udb__mini-card[data-color="orange"]::before { background: var(--s-otd-top); }
+.udb__mini-card[data-color="amber"]::before  { background: var(--s-pending-top); }
+.udb__mini-card[data-color="red"]::before    { background: var(--s-cancelled-top); }
+/* BUG FIX: 3 new return colours were missing */
+.udb__mini-card[data-color="cyan"]::before   { background: var(--s-ret-req-top); }
+.udb__mini-card[data-color="teal"]::before   { background: var(--s-ret-app-top); }
+.udb__mini-card[data-color="rose"]::before   { background: var(--s-ret-rej-top); }
+
+.udb__mini-icon {
+  width: 36px; height: 36px; min-width: 36px;
+  border-radius: 9px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; flex-shrink: 0;
+}
+.udb__mini-info { display:flex; flex-direction:column; gap:2px; min-width:0; flex:1; }
+.udb__mini-label {
+  font-size: 10px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.06em; color: var(--udb-t3);
+  /* wrap instead of hiding — labels like "Return Requested" need 2 lines on small screens */
+  white-space: normal;
+  line-height: 1.3;
+}
+.udb__mini-val {
+  font-size: 20px; font-weight: 900; letter-spacing: -0.5px; line-height: 1;
+}
+
+/* =====================================================
+   COUPON BANNER  (two-panel ticket card)
+   ===================================================== */
+.udb__coupon-banner {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  padding: 10px 2px 14px;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  scroll-snap-type: x mandatory;
+}
+.udb__coupon-banner::-webkit-scrollbar { display: none; }
+
+.udb__coupon-card {
+  flex: 0 0 auto;
+  min-width: 360px;
+  max-width: 440px;
+  height: 168px;
+  display: flex;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow:
+    0 8px 28px rgba(111,59,24,0.22),
+    0 2px 8px rgba(0,0,0,0.10),
+    0 0 0 1px rgba(111,59,24,0.12);
+  scroll-snap-align: start;
+  cursor: pointer;
+}
+.udb__coupon-card:hover {
+  box-shadow: 0 6px 18px rgba(111,59,24,0.18), 0 2px 6px rgba(0,0,0,0.08);
+  transform: translateY(-3px);
+}
+
+.udb__coupon-left-panel {
+  flex: 1 1 auto; min-width: 0;
+  background: #fffdf9;
+  padding: 18px 26px 18px 18px;
+  display: flex; flex-direction: column; gap: 7px;
+  position: relative; overflow: hidden;
+}
+.udb__coupon-serrated-right {
+  position: absolute; right: -10px; top: 0; bottom: 0; width: 20px; z-index: 2;
+  background: repeating-radial-gradient(
+    circle at right, #fffdf9 0px, #fffdf9 7px, transparent 7px, transparent 14px
+  ) right center / 14px 14px repeat-y;
+}
+.udb__coupon-brand       { display:flex; align-items:baseline; line-height:1; }
+.udb__coupon-brand-raj   { font-size:16px; font-weight:900; color:#6f3b18; letter-spacing:2px; font-family:Georgia,serif; }
+.udb__coupon-brand-bhog  { font-size:16px; font-weight:900; color:#ffa040; letter-spacing:2px; font-family:Georgia,serif; }
+.udb__coupon-barcode     { display:flex; align-items:flex-end; gap:2.5px; height:22px; }
+.udb__bar                { display:block; background:#2b160b; border-radius:1px; }
+.udb__bar--thick         { width:4px; height:100%; }
+.udb__bar--thin          { width:2px; height:75%; }
+.udb__coupon-main-text   { display:flex; flex-direction:column; line-height:1.05; }
+.udb__coupon-big         { font-size:clamp(16px,3.5vw,24px); font-weight:900; color:#ffa040; letter-spacing:-0.5px; text-transform:uppercase; }
+.udb__coupon-sale        { font-size:clamp(14px,3vw,22px);   font-weight:900; color:#2b160b; letter-spacing:-0.5px; text-transform:uppercase; }
+.udb__coupon-desc        { font-size:10.5px; color:#7a5a48; line-height:1.5; font-weight:500; max-width:170px; }
+
+.udb__coupon-right-panel {
+  flex: 0 0 138px;
+  background: #f97316;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 8px; padding: 14px 12px;
+  position: relative; overflow: hidden;
+}
+.udb__coupon-serrated-left {
+  position: absolute; left: -10px; top: 0; bottom: 0; width: 20px; z-index: 2;
+  background: repeating-radial-gradient(
+    circle at left, #f97316 0px, #f97316 7px, transparent 7px, transparent 14px
+  ) left center / 14px 14px repeat-y;
+}
+.udb__coupon-rays { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; pointer-events:none; overflow:hidden; }
+.udb__ray { position:absolute; top:50%; left:50%; width:2px; height:200px; background:linear-gradient(to bottom,rgba(255,255,255,0.22),transparent); transform-origin:top center; margin-left:-1px; }
+.udb__coupon-top-label { font-size:10px; font-weight:900; color:#fff; letter-spacing:3px; text-transform:uppercase; position:relative; z-index:1; opacity:0.9; }
+.udb__coupon-circle {
+  width:92px; height:92px; border-radius:50%; background:#fff;
+  display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px;
+  box-shadow:0 4px 16px rgba(0,0,0,0.2),0 0 0 4px rgba(255,255,255,0.25);
+  position:relative; z-index:1; flex-shrink:0;
+}
+.udb__coupon-code-val  { font-size:13.5px; font-weight:900; color:#f97316; letter-spacing:0.5px; font-family:'Courier New',monospace; text-align:center; line-height:1.2; word-break:break-all; padding:0 6px; }
+.udb__coupon-use-label { font-size:8px; font-weight:800; color:#7a3f16; text-transform:uppercase; letter-spacing:1px; line-height:1; }
+
+/* slider shell */
+.udb__cs-root {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.udb__cs-track {
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+}
+.udb__cs-arrow {
+  display: none;
+  position: absolute; top: 50%; transform: translateY(-58%); z-index: 10;
+  width: 34px; height: 34px; border-radius: 50%;
+  border: 1.5px solid #e8c9a8; background: #fff; color: #6f3b18;
+  cursor: pointer; align-items: center; justify-content: center;
+  box-shadow: 0 2px 10px rgba(111,59,24,.18);
+}
+.udb__cs-arrow--left  { left:  -17px; }
+.udb__cs-arrow--right { right: -17px; }
+.udb__cs-arrow:disabled { opacity: 0.3; cursor: not-allowed; }
+.udb__cs-arrow:not(:disabled):hover { background: #fdf0e6; border-color: #6f3b18; }
+.udb__cs-dots  { display:flex; align-items:center; justify-content:center; gap:6px; }
+.udb__cs-dot   { width:8px; height:8px; border-radius:50%; border:none; background:#e8c9a8; cursor:pointer; padding:0; }
+.udb__cs-dot--on { background:#6f3b18; width:22px; border-radius:4px; }
+
+/* =====================================================
+   SECTION SHELL
+   ===================================================== */
+.udb__section { background:var(--udb-surface); border:var(--udb-border); border-radius:var(--udb-radius); box-shadow:var(--udb-shadow); overflow:hidden; }
+.udb__section-head {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:15px 18px; border-bottom:var(--udb-border);
+  background:#fafafa; flex-wrap:wrap; gap:10px;
+}
+.udb__section-title { font-size:14px; font-weight:800; color:var(--udb-t1); letter-spacing:-0.2px; display:flex; align-items:center; gap:8px; }
+.udb__section-title svg { width:15px; height:15px; color:var(--udb-brand-mid); }
+.udb__view-all {
+  display:inline-flex; align-items:center; gap:6px;
+  background:var(--udb-brand-lt); border:1px solid var(--udb-brand-bdr);
+  border-radius:100px; padding:6px 14px;
+  font-family:var(--udb-font); font-size:12px; font-weight:700; color:var(--udb-brand); cursor:pointer;
+}
+.udb__view-all:hover { background:#f5ddc8; }
+.udb__section-body { padding:16px 18px; }
+
+/* =====================================================
+   CATEGORIES
+   ===================================================== */
+.udb__cat-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(108px,1fr)); gap:12px; }
+.udb__cat-item {
+  background:#f8fafc; border:1px solid #e8e0d8; border-radius:12px;
+  padding:13px 10px 11px; text-align:center; cursor:pointer;
+  display:flex; flex-direction:column; align-items:center; gap:7px;
+  -webkit-tap-highlight-color:transparent;
+}
+.udb__cat-item:hover { background:#fff; border-color:var(--udb-brand-bdr); box-shadow:0 2px 12px rgba(111,59,24,0.1); }
+.udb__cat-img-wrap { width:56px; height:56px; border-radius:10px; overflow:hidden; background:var(--udb-brand-lt); flex-shrink:0; }
+.udb__cat-img { width:100%; height:100%; object-fit:cover; }
+.udb__cat-placeholder { width:100%; height:100%; display:flex; align-items:center; justify-content:center; background:linear-gradient(135deg,var(--udb-brand-lt),#ecd6c4); font-size:20px; font-weight:900; color:var(--udb-brand); }
+.udb__cat-name  { font-size:11px; font-weight:700; color:var(--udb-t1); line-height:1.3; word-break:break-word; }
+.udb__cat-arrow { font-size:9px; color:var(--udb-t3); }
+.udb__cat-item:hover .udb__cat-arrow { color:var(--udb-brand); }
+
+/* =====================================================
+   ORDERS — controls
+   ===================================================== */
+.udb__orders-controls { display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+.udb__view-toggle { display:flex; align-items:center; gap:3px; background:#f1f5f9; border:1px solid #e2e8f0; padding:4px; border-radius:9px; }
+.udb__view-btn { background:transparent; border:none; width:30px; height:30px; border-radius:6px; display:flex; align-items:center; justify-content:center; color:var(--udb-t3); cursor:pointer; font-size:13px; -webkit-tap-highlight-color:transparent; }
+.udb__view-btn:hover { background:#fff; color:var(--udb-t1); }
+.udb__view-btn--on   { background:var(--udb-brand); color:#fff; box-shadow:0 1px 4px rgba(0,0,0,0.12); }
+
+/* =====================================================
+   STATUS PILLS
+   BUG FIX: JSX uses .replace(/_/g, "-") → use HYPHENS not underscores
+   ===================================================== */
+.udb__status {
+  display:inline-flex; align-items:center; gap:5px;
+  padding:4px 9px; border-radius:100px;
+  font-size:10px; font-weight:700; text-transform:uppercase;
+  letter-spacing:0.05em; white-space:nowrap;
+}
+.udb__status--delivered        { background:var(--s-delivered-bg);  color:var(--s-delivered-c);  border:1px solid var(--s-delivered-bdr); }
+.udb__status--placed           { background:var(--s-placed-bg);     color:var(--s-placed-c);     border:1px solid var(--s-placed-bdr); }
+.udb__status--confirmed        { background:var(--s-confirmed-bg);  color:var(--s-confirmed-c);  border:1px solid var(--s-confirmed-bdr); }
+.udb__status--shipped          { background:var(--s-shipped-bg);    color:var(--s-shipped-c);    border:1px solid var(--s-shipped-bdr); }
+.udb__status--cancelled        { background:var(--s-cancelled-bg);  color:var(--s-cancelled-c);  border:1px solid var(--s-cancelled-bdr); }
+.udb__status--pending          { background:var(--s-pending-bg);    color:var(--s-pending-c);    border:1px solid var(--s-pending-bdr); }
+.udb__status--packed           { background:var(--s-packed-bg);     color:var(--s-packed-c);     border:1px solid var(--s-packed-bdr); }
+.udb__status--out-for-delivery { background:var(--s-otd-bg);        color:var(--s-otd-c);        border:1px solid var(--s-otd-bdr); }
+.udb__status--processing       { background:var(--s-placed-bg);     color:var(--s-placed-c);     border:1px solid var(--s-placed-bdr); }
+/* BUG FIX: hyphens match JSX output */
+.udb__status--return-requested { background:var(--s-ret-req-bg);    color:var(--s-ret-req-c);    border:1px solid var(--s-ret-req-bdr); }
+.udb__status--return-approved  { background:var(--s-ret-app-bg);    color:var(--s-ret-app-c);    border:1px solid var(--s-ret-app-bdr); }
+.udb__status--return-rejected  { background:var(--s-ret-rej-bg);    color:var(--s-ret-rej-c);    border:1px solid var(--s-ret-rej-bdr); }
+
+/* =====================================================
+   LIST VIEW
+   ===================================================== */
+.udb__orders-list { display:flex; flex-direction:column; }
+.udb__order-lrow {
+  display:flex; align-items:center; gap:12px;
+  padding:14px 18px; border-bottom:1px solid #f1f5f9;
+  cursor:pointer; border-left:3px solid transparent;
+  -webkit-tap-highlight-color:transparent;
+}
+.udb__order-lrow:last-child { border-bottom:none; }
+.udb__order-lrow:hover { background:#fdf0e8; border-left-color:var(--udb-brand); }
+.udb__order-lrow-ico { width:38px; height:38px; min-width:38px; border-radius:10px; background:var(--udb-brand-lt); border:1px solid var(--udb-brand-bdr); color:var(--udb-brand-mid); display:flex; align-items:center; justify-content:center; font-size:15px; flex-shrink:0; }
+.udb__order-lrow-info { flex:1; min-width:0; }
+.udb__order-lrow-num  { font-size:12.5px; font-weight:800; color:var(--udb-t1); font-family:'Courier New',monospace; margin-bottom:3px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.udb__order-lrow-date { font-size:11px; color:var(--udb-t3); font-weight:500; }
+.udb__order-lrow-right { display:flex; flex-direction:column; align-items:flex-end; gap:5px; flex-shrink:0; }
+.udb__order-lrow-amt   { font-size:14px; font-weight:900; color:var(--udb-green); letter-spacing:-0.3px; }
+
+/* =====================================================
+   GRID VIEW
+   ===================================================== */
+.udb__orders-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:14px; padding:16px 18px; }
+.udb__order-gcard { background:var(--udb-surface); border:1px solid #e2e8f0; border-radius:14px; overflow:hidden; cursor:pointer; display:flex; flex-direction:column; box-shadow:var(--udb-shadow); position:relative; -webkit-tap-highlight-color:transparent; }
+.udb__order-gcard:hover { box-shadow:var(--udb-shadow-hv); transform:translateY(-2px); border-color:var(--udb-brand-bdr); }
+.udb__order-gcard::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; background:var(--card-accent,var(--udb-brand)); border-radius:14px 14px 0 0; }
+.udb__order-gcard-head { padding:13px 15px 11px; border-bottom:1px solid #f1f5f9; display:flex; align-items:flex-start; justify-content:space-between; gap:8px; flex-wrap:wrap; background:#fafafa; }
+.udb__order-gcard-num  { display:flex; align-items:center; gap:7px; font-size:12.5px; font-weight:800; color:var(--udb-t1); font-family:'Courier New',monospace; min-width:0; flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.udb__order-gcard-num-ico { width:26px; height:26px; min-width:26px; border-radius:7px; background:var(--udb-brand-lt); border:1px solid var(--udb-brand-bdr); color:var(--udb-brand-mid); display:flex; align-items:center; justify-content:center; font-size:11px; flex-shrink:0; }
+.udb__order-gcard-status { flex-shrink:0; }
+.udb__order-gcard-body   { padding:12px 15px; display:flex; flex-direction:column; gap:8px; flex:1; }
+.udb__gcrow     { display:flex; align-items:center; gap:9px; padding:9px 11px; background:#f8fafc; border:1px solid #f1f5f9; border-radius:9px; }
+.udb__gcrow-ico { width:30px; height:30px; min-width:30px; border-radius:7px; background:var(--udb-brand-lt); border:1px solid var(--udb-brand-bdr); color:var(--udb-brand-mid); display:flex; align-items:center; justify-content:center; font-size:11px; flex-shrink:0; }
+.udb__gcrow-info { display:flex; flex-direction:column; gap:2px; min-width:0; }
+.udb__gcrow-lbl  { font-size:9px; font-weight:800; text-transform:uppercase; letter-spacing:0.07em; color:var(--udb-t3); white-space:nowrap; }
+.udb__gcrow-val  { font-size:13px; font-weight:800; color:var(--udb-t1); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.udb__gcrow-val--amt { font-size:16px; font-weight:900; color:var(--udb-green); letter-spacing:-0.5px; }
+.udb__order-gcard-foot { display:flex; align-items:center; justify-content:flex-end; padding:9px 15px; border-top:1px solid #f1f5f9; background:#fafafa; }
+.udb__gclink { display:inline-flex; align-items:center; gap:5px; font-size:11.5px; font-weight:800; color:var(--udb-brand); }
+.udb__order-gcard:hover .udb__gclink { color:var(--udb-brand-hv); }
+
+/* =====================================================
+   EMPTY + LOADING
+   ===================================================== */
+.udb__orders-empty { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:12px; padding:52px 20px; text-align:center; }
+.udb__orders-empty-ico { width:68px; height:68px; border-radius:50%; background:var(--udb-brand-lt); border:1px solid var(--udb-brand-bdr); display:flex; align-items:center; justify-content:center; font-size:26px; color:var(--udb-brand-mid); }
+.udb__orders-empty h4 { font-size:15px; font-weight:800; color:var(--udb-t1); }
+.udb__orders-empty p  { font-size:13px; color:var(--udb-t3); max-width:280px; line-height:1.6; }
+.udb__btn-shop { display:inline-flex; align-items:center; gap:7px; padding:10px 20px; background:var(--udb-brand); color:#fff; border:none; border-radius:10px; font-family:var(--udb-font); font-size:13px; font-weight:700; cursor:pointer; }
+.udb__btn-shop:hover { background:var(--udb-brand-hv); }
+.udb__loading { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:14px; padding:48px 20px; }
+.udb__spinner { width:32px; height:32px; border:3px solid #e2e8f0; border-top-color:var(--udb-brand); border-radius:50%; animation:udb-spin 0.75s linear infinite; }
+@keyframes udb-spin { to { transform:rotate(360deg); } }
+.udb__loading p { font-size:13px; font-weight:500; color:var(--udb-t3); }
+
+/* =====================================================
+   RESPONSIVE
+   ===================================================== */
+
+/* tablet ≤ 900px */
+@media (max-width: 900px) {
+  .udb__stats       { grid-template-columns: repeat(3, 1fr); }
+  .udb__mini-stats  { grid-template-columns: repeat(3, 1fr); }
+  .udb__orders-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* show slider arrows on ≥ 640px */
+@media (min-width: 640px) {
+  .udb__cs-arrow { display: flex; }
+  .udb__cs-root  { padding: 0 20px; }
+}
+
+/* ══════════════════════════════════════════════════
+   ≤ 640px — PHONE
+   ══════════════════════════════════════════════════ */
+@media (max-width: 640px) {
+  .udb__page  { padding: 14px 4% 64px; }
+  .udb__inner { gap: 14px; }
+
+  /* header */
+  .udb__header       { padding: 18px 16px; }
+  .udb__greeting     { font-size: 1.2rem; }
+  .udb__greeting-sub { font-size: 12px; }
+
+  /* primary stat cards: 1-col → value never truncates */
+  .udb__stats     { grid-template-columns: 1fr; gap: 10px; }
+  .udb__stat-card { min-height: auto; padding: 14px 16px; }
+  .udb__stat-value { font-size: 1.35rem; }
+
+  /* ── MINI STATS: 3-col on phone too ──
+     9 cards ÷ 3 = exactly 3 clean rows, no orphan card.
+     Icons and values are small enough to fit 3-col on 360px+. */
+  .udb__mini-stats { grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .udb__mini-card  { padding: 10px 8px 10px 12px; gap: 8px; min-height: 56px; flex-direction: column; align-items: flex-start; }
+  .udb__mini-icon  { width: 28px; height: 28px; min-width: 28px; font-size: 12px; border-radius: 7px; }
+  .udb__mini-val   { font-size: 18px; }
+  .udb__mini-label { font-size: 8.5px; }
+
+  /* coupon: near-full width so next card peeks */
+  .udb__coupon-banner { gap: 12px; padding: 8px 0 12px; }
+  .udb__coupon-card {
+    min-width: calc(100vw - 72px);
+    max-width: calc(100vw - 40px);
+    height: 152px;
+    border-radius: 14px;
+  }
+  .udb__coupon-left-panel  { padding: 14px 24px 14px 14px; gap: 6px; }
+  .udb__coupon-right-panel { flex: 0 0 116px; padding: 12px 10px; gap: 7px; }
+  .udb__coupon-circle      { width: 80px; height: 80px; }
+  .udb__coupon-code-val    { font-size: 12px; }
+  .udb__coupon-top-label   { font-size: 9px; letter-spacing: 2.5px; }
+  .udb__coupon-barcode     { height: 18px; }
+  .udb__coupon-desc        { font-size: 10px; max-width: 145px; }
+  .udb__coupon-brand-raj,
+  .udb__coupon-brand-bhog  { font-size: 14px; letter-spacing: 1.8px; }
+
+  /* section */
+  .udb__section-head { padding: 12px 14px; }
+  .udb__section-body { padding: 12px 14px; }
+
+  /* categories */
+  .udb__cat-grid     { grid-template-columns: repeat(auto-fill, minmax(82px, 1fr)); gap: 8px; }
+  .udb__cat-img-wrap { width: 50px; height: 50px; }
+  .udb__cat-name     { font-size: 10.5px; }
+
+  /* order list */
+  .udb__order-lrow     { padding: 12px 14px; gap: 10px; }
+  .udb__order-lrow-ico { width: 34px; height: 34px; min-width: 34px; font-size: 13px; }
+  .udb__order-lrow-num { font-size: 11.5px; }
+  .udb__order-lrow-amt { font-size: 13px; }
+
+  /* order grid: 1-col on phone */
+  .udb__orders-grid { grid-template-columns: 1fr; gap: 10px; padding: 12px 14px; }
+}
+
+/* ≤ 400px — small phones */
+@media (max-width: 400px) {
+  .udb__stat-card  { padding: 12px 14px; }
+  .udb__stat-icon  { width: 40px; height: 40px; min-width: 40px; font-size: 17px; }
+  .udb__stat-value { font-size: 1.2rem; }
+
+  .udb__mini-stats { grid-template-columns: repeat(3, 1fr); gap: 7px; }
+  .udb__mini-card  { padding: 9px 6px 9px 10px; gap: 6px; min-height: 52px; }
+  .udb__mini-icon  { width: 24px; height: 24px; min-width: 24px; font-size: 11px; }
+  .udb__mini-val   { font-size: 16px; }
+  .udb__mini-label { font-size: 7.5px; }
+
+  .udb__coupon-card        { min-width: calc(100vw - 52px); height: 144px; }
+  .udb__coupon-right-panel { flex: 0 0 106px; }
+  .udb__coupon-circle      { width: 74px; height: 74px; }
+  .udb__coupon-code-val    { font-size: 11px; }
+
+  .udb__cat-grid { grid-template-columns: repeat(3, 1fr); }
+}
+
+/* ≤ 360px — very small */
+@media (max-width: 360px) {
+  .udb__page { padding: 12px 3.5% 56px; }
+
+  .udb__coupon-brand-raj,
+  .udb__coupon-brand-bhog  { font-size: 12.5px; letter-spacing: 1.5px; }
+  .udb__coupon-card        { height: 140px; }
+  .udb__coupon-right-panel { flex: 0 0 100px; }
+  .udb__coupon-circle      { width: 68px; height: 68px; }
+
+  .udb__cat-grid { grid-template-columns: repeat(2, 1fr); }
+}

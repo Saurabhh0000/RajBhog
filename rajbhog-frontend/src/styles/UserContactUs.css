@@ -1,0 +1,375 @@
+/* ============================================================
+   UserContactUs.css — RAJBHOG Contact Page
+   Scope: .ucu__ prefix — zero leakage to other pages
+   Desktop:  fixed viewport, no scroll (2-col side-by-side)
+   Mobile:   normal scroll, single column
+   No animations. Hover transitions only.
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap');
+
+/* =====================================================
+   PAGE WRAPPER
+   Desktop: locked viewport, no-scroll
+   Mobile:  scrollable (overridden in breakpoint below)
+   ===================================================== */
+.ucu__page {
+  /* Desktop: fill the viewport exactly — no page scroll */
+  height: 100vh;
+  overflow: hidden;
+
+  background: #f4f2ef;
+  padding: 24px 5%;
+  font-family: 'Plus Jakarta Sans', 'Segoe UI', system-ui, sans-serif;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+}
+
+/* =====================================================
+   MAIN GRID
+   ===================================================== */
+.ucu__container {
+  max-width: 1260px;
+  width: 100%;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 360px 1fr;
+  gap: 28px;
+  flex: 1;
+  min-height: 0;       /* allow children to shrink inside flex */
+  overflow: hidden;
+}
+
+/* =====================================================
+   LEFT PANEL
+   Desktop: scrolls independently if content overflows
+   ===================================================== */
+.ucu__left {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  overflow-y: auto;
+  scrollbar-width: none;
+  padding-right: 2px;
+}
+.ucu__left::-webkit-scrollbar { display: none; }
+
+/* brand intro */
+.ucu__brand-intro { display: flex; gap: 14px; align-items: flex-start; }
+
+.ucu__brand-icon {
+  width: 50px; height: 50px; min-width: 50px;
+  background: #6f3b18; border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+  color: #fff; box-shadow: 0 6px 18px rgba(111,59,24,0.28);
+  flex-shrink: 0;
+}
+.ucu__brand-icon svg { width: 24px; height: 24px; }
+
+.ucu__heading {
+  font-size: 24px; font-weight: 900; color: #1a0d04;
+  margin: 0 0 7px; letter-spacing: -0.4px; line-height: 1.2;
+}
+.ucu__subheading {
+  font-size: 13.5px; color: #7a5c48; line-height: 1.65; margin: 0; font-weight: 500;
+}
+
+/* user card */
+.ucu__user-card {
+  background: #fff; border: 1px solid #e8ddd5;
+  border-radius: 14px; padding: 13px 15px;
+  display: flex; align-items: center; gap: 12px;
+  flex-shrink: 0;
+}
+.ucu__user-avatar {
+  width: 40px; height: 40px; min-width: 40px;
+  border-radius: 11px;
+  background: linear-gradient(135deg, #6f3b18, #a85c2a);
+  color: #fff; font-size: 16px; font-weight: 800;
+  display: flex; align-items: center; justify-content: center;
+}
+.ucu__user-info    { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 1px; }
+.ucu__user-tag     { font-size: 10px; font-weight: 700; color: #a07d64; text-transform: uppercase; letter-spacing: 0.6px; }
+.ucu__user-name    { font-size: 13.5px; font-weight: 700; color: #1a0d04; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ucu__user-email   { font-size: 11.5px; color: #9c7a60; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ucu__verified-badge {
+  display: inline-flex; align-items: center; gap: 4px;
+  background: #f0fdf4; border: 1px solid #bbf7d0;
+  color: #15803d; font-size: 10.5px; font-weight: 700;
+  padding: 4px 9px; border-radius: 100px; white-space: nowrap; flex-shrink: 0;
+}
+
+/* contact method cards */
+.ucu__methods { display: flex; flex-direction: column; gap: 9px; flex-shrink: 0; }
+.ucu__methods-title {
+  font-size: 10.5px; font-weight: 700; color: #a07d64;
+  text-transform: uppercase; letter-spacing: 1px; margin: 0 0 3px;
+}
+.ucu__method-card {
+  display: flex; align-items: center; gap: 13px;
+  background: #fff; border: 1px solid #e8ddd5;
+  border-radius: 13px; padding: 13px 15px;
+  text-decoration: none;
+  transition: border-color 0.18s, box-shadow 0.18s, background 0.18s;
+  cursor: pointer;
+}
+.ucu__method-card:hover { border-color: #c4956a; box-shadow: 0 3px 12px rgba(111,59,24,0.10); background: #fdf8f4; }
+.ucu__method-card--static:hover { border-color: #e8ddd5; box-shadow: none; background: #fff; cursor: default; }
+.ucu__method-icon {
+  width: 38px; height: 38px; min-width: 38px;
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.ucu__method-icon svg { width: 17px; height: 17px; }
+.ucu__method-icon--mail  { background: #fef3c7; color: #d97706; }
+.ucu__method-icon--phone { background: #dcfce7; color: #16a34a; }
+.ucu__method-icon--map   { background: #fee2e2; color: #dc2626; }
+.ucu__method-body { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.ucu__method-label { font-size: 10.5px; font-weight: 700; color: #a07d64; text-transform: uppercase; letter-spacing: 0.5px; }
+.ucu__method-value { font-size: 13px; font-weight: 600; color: #1a0d04; line-height: 1.45; }
+
+/* trust pills */
+.ucu__trust-row { display: flex; gap: 7px; flex-wrap: wrap; flex-shrink: 0; }
+.ucu__trust-pill {
+  display: inline-flex; align-items: center; gap: 5px;
+  background: #fff; border: 1px solid #e8ddd5;
+  border-radius: 100px; padding: 5px 11px;
+  font-size: 11.5px; font-weight: 600; color: #6b4c3b;
+}
+.ucu__trust-pill svg { color: #6f3b18; flex-shrink: 0; width: 13px; height: 13px; }
+
+/* =====================================================
+   RIGHT PANEL — FORM
+   Desktop: inner-scrollable so it never overflows page
+   ===================================================== */
+.ucu__form-panel {
+  background: #fff;
+  border: 1px solid #e8ddd5;
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 2px 8px rgba(26,13,4,0.05), 0 8px 32px rgba(26,13,4,0.05);
+  overflow: hidden;
+  min-height: 0;   /* allow shrink inside grid */
+}
+
+/* form header — always visible, never scrolls away */
+.ucu__form-header {
+  flex-shrink: 0;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 22px 28px 18px;
+  background: #fdf8f4;
+  border-bottom: 1px solid #f0e8df;
+}
+.ucu__form-title    { font-size: 19px; font-weight: 800; color: #1a0d04; margin: 0 0 4px; letter-spacing: -0.3px; }
+.ucu__form-subtitle { font-size: 13px; color: #7a5c48; margin: 0; line-height: 1.55; font-weight: 500; }
+.ucu__form-badge {
+  display: inline-flex; align-items: center; gap: 5px;
+  background: #6f3b18; color: #fff;
+  font-size: 10.5px; font-weight: 700;
+  padding: 5px 12px; border-radius: 100px;
+  white-space: nowrap; flex-shrink: 0; letter-spacing: 0.2px;
+}
+.ucu__form-badge svg { width: 13px; height: 13px; }
+
+/* form body — scrollable independently on desktop */
+.ucu__form {
+  flex: 1;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #e8ddd5 transparent;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  padding: 20px 28px 24px;
+}
+.ucu__form::-webkit-scrollbar { width: 5px; }
+.ucu__form::-webkit-scrollbar-track { background: transparent; }
+.ucu__form::-webkit-scrollbar-thumb { background: #e0d4ca; border-radius: 4px; }
+
+/* 2-col row */
+.ucu__row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+/* field */
+.ucu__field { display: flex; flex-direction: column; gap: 6px; }
+.ucu__label {
+  font-size: 12px; font-weight: 700; color: #4b2c1a;
+  display: flex; align-items: center; gap: 5px; letter-spacing: 0.1px;
+}
+.ucu__req { color: #f97316; font-weight: 800; }
+.ucu__optional {
+  font-size: 10.5px; font-weight: 500; color: #a07d64;
+  background: #f5ede7; border-radius: 100px; padding: 2px 8px; margin-left: 2px;
+}
+
+/* input wrapper */
+.ucu__input-wrap { position: relative; display: flex; align-items: center; }
+.ucu__input-icon {
+  position: absolute; left: 13px; color: #b89880;
+  pointer-events: none; flex-shrink: 0;
+}
+.ucu__input-icon svg { width: 15px; height: 15px; }
+.ucu__input-wrap:focus-within .ucu__input-icon { color: #6f3b18; }
+
+.ucu__locked-tag {
+  position: absolute; right: 11px;
+  font-size: 9.5px; font-weight: 700; color: #16a34a;
+  background: #f0fdf4; border: 1px solid #bbf7d0;
+  border-radius: 100px; padding: 2px 8px;
+  pointer-events: none; white-space: nowrap;
+}
+
+/* input */
+.ucu__input {
+  width: 100%; height: 46px;
+  padding: 0 105px 0 40px;
+  border: 1.5px solid #e0d4ca; border-radius: 11px;
+  font-size: 13.5px; font-family: inherit; font-weight: 500;
+  color: #1a0d04; background: #faf7f5; outline: none;
+  transition: border-color 0.18s, background 0.18s, box-shadow 0.18s;
+  box-sizing: border-box;
+}
+.ucu__input-wrap:not(:has(.ucu__locked-tag)) .ucu__input { padding-right: 13px; }
+.ucu__input::placeholder { color: #b89880; font-weight: 400; }
+.ucu__input:focus { border-color: #6f3b18; background: #fff; box-shadow: 0 0 0 3px rgba(111,59,24,0.10); }
+.ucu__input:hover:not(:focus):not([readonly]) { border-color: #c4956a; }
+.ucu__input[readonly] { background: #f5ede7; color: #4b2c1a; cursor: default; }
+
+/* textarea */
+.ucu__textarea {
+  width: 100%; padding: 13px;
+  border: 1.5px solid #e0d4ca; border-radius: 11px;
+  font-size: 13.5px; font-family: inherit; font-weight: 500;
+  color: #1a0d04; background: #faf7f5; outline: none;
+  resize: vertical; min-height: 88px; line-height: 1.65;
+  transition: border-color 0.18s, background 0.18s, box-shadow 0.18s;
+  box-sizing: border-box;
+}
+.ucu__textarea::placeholder { color: #b89880; font-weight: 400; }
+.ucu__textarea:focus { border-color: #6f3b18; background: #fff; box-shadow: 0 0 0 3px rgba(111,59,24,0.10); }
+.ucu__textarea:hover:not(:focus) { border-color: #c4956a; }
+
+.ucu__char-hint { font-size: 11px; color: #b89880; font-weight: 500; text-align: right; padding-right: 2px; }
+
+/* submit button */
+.ucu__submit-btn {
+  flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  width: 100%; height: 50px;
+  border: none; border-radius: 12px;
+  background: #6f3b18; color: #fff;
+  font-family: inherit; font-size: 14.5px; font-weight: 700;
+  cursor: pointer; letter-spacing: 0.1px;
+  box-shadow: 0 4px 16px rgba(111,59,24,0.28);
+  transition: background 0.18s, box-shadow 0.18s;
+  margin-top: 4px;
+}
+.ucu__submit-btn svg { width: 16px; height: 16px; }
+.ucu__submit-btn:hover:not(:disabled) { background: #4b240b; box-shadow: 0 6px 20px rgba(111,59,24,0.38); }
+.ucu__submit-btn:disabled { opacity: 0.65; cursor: not-allowed; box-shadow: none; }
+
+/* spinner */
+.ucu__spinner {
+  display: inline-block;
+  width: 16px; height: 16px;
+  border: 2.5px solid rgba(255,255,255,0.35);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: ucu-spin 0.72s linear infinite;
+  flex-shrink: 0;
+}
+@keyframes ucu-spin { to { transform: rotate(360deg); } }
+
+/* =====================================================
+   RESPONSIVE
+   ===================================================== */
+
+/* 1024–1260px: slightly narrower left panel */
+@media (max-width: 1100px) {
+  .ucu__container { grid-template-columns: 320px 1fr; gap: 22px; }
+}
+
+/* ──────────────────────────────────────────────────────
+   ≤ 1024px  TABLET + MOBILE
+   KEY FIX: remove fixed height + overflow hidden from page
+   so the whole page can scroll normally
+   ────────────────────────────────────────────────────── */
+@media (max-width: 1024px) {
+
+  /* Allow the page to scroll */
+  .ucu__page {
+    height: auto;           /* ← removes fixed viewport height */
+    overflow: visible;      /* ← removes scroll lock */
+    padding: 28px 5% 60px;
+    display: block;         /* no flex needed in scroll mode */
+  }
+
+  /* Stack panels vertically */
+  .ucu__container {
+    grid-template-columns: 1fr;
+    gap: 22px;
+    overflow: visible;      /* remove inner overflow clip */
+  }
+
+  /* Left panel: no scrollbar, shows all content */
+  .ucu__left {
+    overflow: visible;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 14px;
+    padding-right: 0;
+  }
+  .ucu__brand-intro { width: 100%; }
+  .ucu__user-card   { flex: 1; min-width: 240px; }
+  .ucu__methods     { flex: 1; min-width: 240px; }
+  .ucu__trust-row   { width: 100%; }
+
+  /* Form panel: no inner scroll — grows to show all content */
+  .ucu__form-panel { overflow: visible; }
+  .ucu__form {
+    overflow: visible;
+    flex: none;
+  }
+}
+
+/* ≤ 768px  MOBILE */
+@media (max-width: 768px) {
+  .ucu__page { padding: 20px 4% 60px; }
+
+  .ucu__left { flex-direction: column; }
+
+  .ucu__heading      { font-size: 21px; }
+  .ucu__subheading   { font-size: 13px; }
+
+  .ucu__form-header  { flex-direction: column; gap: 12px; padding: 18px 18px 16px; }
+  .ucu__form-title   { font-size: 17px; }
+  .ucu__form         { padding: 18px 18px 22px; gap: 16px; }
+
+  /* 2-col → 1-col */
+  .ucu__row-2        { grid-template-columns: 1fr; gap: 16px; }
+
+  .ucu__method-card  { padding: 12px 13px; }
+  .ucu__trust-row    { gap: 6px; }
+}
+
+/* ≤ 480px  SMALL MOBILE */
+@media (max-width: 480px) {
+  .ucu__page         { padding: 16px 4% 50px; }
+
+  .ucu__brand-icon   { width: 42px; height: 42px; min-width: 42px; }
+  .ucu__heading      { font-size: 19px; }
+
+  .ucu__form-header  { padding: 16px 16px 14px; }
+  .ucu__form         { padding: 16px 16px 20px; }
+
+  .ucu__input        { height: 44px; font-size: 13px; }
+  .ucu__submit-btn   { height: 48px; font-size: 14px; }
+
+  .ucu__trust-pill   { font-size: 11px; }
+  .ucu__user-card    { flex-wrap: wrap; }
+  .ucu__verified-badge { align-self: flex-start; }
+}

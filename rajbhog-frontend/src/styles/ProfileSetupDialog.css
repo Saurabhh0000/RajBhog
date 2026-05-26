@@ -1,0 +1,353 @@
+/* ============================================================
+   PROFILE SETUP DIALOG
+   ALL rules scoped to .psd__ — zero leakage to other pages
+   Font: Plus Jakarta Sans  |  No @keyframes  |  Mobile-first
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap');
+
+/* ── TOKENS (scoped inside overlay) ── */
+.psd__overlay {
+  --psd-brand     : #6f3b18;
+  --psd-brand-dk  : #4b240b;
+  --psd-brand-hv  : #5a2f10;
+  --psd-brand-mid : #8b4513;
+  --psd-brand-lt  : #fdf0e8;
+  --psd-brand-bdr : #e8c9ad;
+
+  --psd-accent    : #e85d04;
+  --psd-accent-lt : #fff4ee;
+  --psd-accent-bdr: #ffd5bf;
+
+  --psd-surface   : #ffffff;
+  --psd-bg        : #faf8f5;
+  --psd-border    : #e8ddd5;
+  --psd-border-lt : #f2ede8;
+
+  --psd-green     : #047857;
+  --psd-green-lt  : #ecfdf5;
+  --psd-green-bdr : #a7f3d0;
+  --psd-red       : #dc2626;
+  --psd-red-lt    : #fef2f2;
+  --psd-red-bdr   : #fecaca;
+
+  --psd-t1 : #1a0d04;
+  --psd-t2 : #6b4c3b;
+  --psd-t3 : #a07d64;
+  --psd-t4 : #cdb59e;
+
+  --psd-r     : 12px;
+  --psd-r-lg  : 18px;
+  --psd-r-xl  : 24px;
+
+  --psd-shadow : 0 24px 72px rgba(26,13,4,.26), 0 8px 24px rgba(0,0,0,.10);
+  --psd-font   : 'Plus Jakarta Sans', system-ui, sans-serif;
+}
+
+/* ── RESET (scoped) ── */
+.psd__overlay *,
+.psd__overlay *::before,
+.psd__overlay *::after {
+  box-sizing: border-box; margin: 0; padding: 0;
+}
+
+/* =====================================================
+   OVERLAY  (backdrop)
+   ===================================================== */
+.psd__overlay {
+  position: fixed; inset: 0;
+  background: rgba(20,10,3,0.58);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  padding: 16px;
+  font-family: var(--psd-font);
+}
+
+/* =====================================================
+   DIALOG SHELL
+   ===================================================== */
+.psd__dialog {
+  background: var(--psd-surface);
+  width: 100%;
+  max-width: 460px;
+  border-radius: var(--psd-r-xl);
+  box-shadow: var(--psd-shadow);
+  border: 1px solid var(--psd-border);
+  border-top: 4px solid var(--psd-brand);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* =====================================================
+   BRANDED TOP STRIP  (gradient)
+   ===================================================== */
+.psd__top-strip {
+  background: linear-gradient(150deg, #4b240b 0%, #7a3f16 55%, #8b4513 100%);
+  padding: 22px 24px 20px;
+  position: relative;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.psd__top-strip::before {
+  content: '';
+  position: absolute; top: -40%; right: -8%;
+  width: 200px; height: 200px;
+  background: radial-gradient(circle, rgba(255,255,255,0.07), transparent 70%);
+  border-radius: 50%; pointer-events: none;
+}
+
+.psd__top-inner {
+  display: flex; align-items: center; gap: 14px;
+  position: relative; z-index: 1;
+}
+
+.psd__top-icon {
+  width: 48px; height: 48px; min-width: 48px;
+  background: rgba(255,255,255,0.15);
+  border: 1px solid rgba(255,255,255,0.25);
+  border-radius: 13px;
+  display: flex; align-items: center; justify-content: center;
+  color: #fff; flex-shrink: 0;
+}
+.psd__top-icon svg { width: 24px; height: 24px; }
+
+.psd__top-text {}
+.psd__top-title {
+  font-size: clamp(1.1rem, 4vw, 1.45rem);
+  font-weight: 900; color: #fff;
+  letter-spacing: -0.4px; line-height: 1.2; margin-bottom: 3px;
+}
+.psd__top-sub {
+  font-size: 12.5px; color: rgba(255,215,181,0.8);
+  font-weight: 500; line-height: 1.4;
+}
+
+/* =====================================================
+   STEP INDICATOR
+   ===================================================== */
+.psd__steps {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  padding: 16px 24px;
+  background: var(--psd-bg);
+  border-bottom: 1px solid var(--psd-border);
+  flex-shrink: 0;
+}
+
+.psd__step-item {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  flex: 1;
+}
+
+.psd__step-dot-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  flex-shrink: 0;
+  width: 60px;
+}
+
+.psd__step-dot {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 800;
+  border: 2px solid var(--psd-border);
+  background: var(--psd-surface);
+  color: var(--psd-t4);
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+.psd__step-dot svg { width: 14px; height: 14px; }
+
+.psd__step-dot--done {
+  background: var(--psd-brand);
+  border-color: var(--psd-brand);
+  color: #fff;
+}
+.psd__step-dot--active {
+  background: var(--psd-brand-lt);
+  border-color: var(--psd-brand);
+  color: var(--psd-brand);
+  box-shadow: 0 0 0 3px rgba(111,59,24,0.12);
+}
+
+.psd__step-label {
+  font-size: 9.5px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.5px;
+  color: var(--psd-t4); text-align: center; white-space: nowrap;
+}
+.psd__step-label--active { color: var(--psd-brand); }
+.psd__step-label--done   { color: var(--psd-t3); }
+
+/* connector line between dots */
+.psd__step-line {
+  flex: 1;
+  height: 2px;
+  background: var(--psd-border);
+  margin-bottom: 16px;
+  /* aligned with dot center */
+}
+.psd__step-line--done { background: var(--psd-brand); }
+
+/* =====================================================
+   BODY
+   ===================================================== */
+.psd__body {
+  padding: 24px 24px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* FIELD GROUP */
+.psd__field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.psd__field-label {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 10.5px; font-weight: 800;
+  text-transform: uppercase; letter-spacing: 0.6px;
+  color: var(--psd-t3);
+}
+.psd__field-label svg { width: 12px; height: 12px; color: var(--psd-brand-mid); }
+
+.psd__required-dot {
+  width: 5px; height: 5px; border-radius: 50%;
+  background: var(--psd-red); flex-shrink: 0; margin-bottom: 1px;
+}
+
+/* Input */
+.psd__input {
+  width: 100%; height: 44px;
+  padding: 0 14px;
+  border: 1.5px solid var(--psd-border);
+  border-radius: var(--psd-r);
+  font-family: var(--psd-font);
+  font-size: 14px; font-weight: 500; color: var(--psd-t1);
+  background: var(--psd-bg); outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s, background 0.15s;
+}
+.psd__input::placeholder { color: var(--psd-t4); font-weight: 400; }
+.psd__input:focus {
+  border-color: var(--psd-brand-mid);
+  box-shadow: 0 0 0 3px rgba(111,59,24,0.1);
+  background: var(--psd-surface);
+}
+
+/* 2-col row for city/state */
+.psd__field-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+/* Address Line 2 hint */
+.psd__optional-tag {
+  font-size: 10px; color: var(--psd-t4); font-weight: 500;
+  background: var(--psd-bg); border: 1px solid var(--psd-border);
+  border-radius: 100px; padding: 1px 8px; margin-left: auto;
+}
+
+/* =====================================================
+   FOOTER
+   ===================================================== */
+.psd__footer {
+  padding: 16px 24px 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  border-top: 1px solid var(--psd-border-lt);
+  background: var(--psd-bg);
+  flex-shrink: 0;
+}
+
+.psd__btn-primary {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  width: 100%; height: 48px;
+  border: none; border-radius: var(--psd-r);
+  font-family: var(--psd-font); font-size: 15px; font-weight: 800;
+  letter-spacing: 0.2px;
+  background: linear-gradient(135deg, var(--psd-brand) 0%, var(--psd-brand-mid) 100%);
+  color: #fff; cursor: pointer;
+  box-shadow: 0 4px 16px rgba(111,59,24,0.28);
+  transition: background 0.18s, box-shadow 0.18s;
+  -webkit-tap-highlight-color: transparent;
+}
+.psd__btn-primary svg { width: 17px; height: 17px; }
+.psd__btn-primary:hover:not(:disabled) {
+  background: linear-gradient(135deg, var(--psd-brand-hv) 0%, var(--psd-brand) 100%);
+  box-shadow: 0 6px 22px rgba(111,59,24,0.36);
+}
+.psd__btn-primary:disabled { background: #c9b8aa; cursor: not-allowed; box-shadow: none; }
+
+/* spinner inside button */
+.psd__btn-spin {
+  width: 17px; height: 17px;
+  border: 2.5px solid rgba(255,255,255,0.35);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: psd-spin 0.72s linear infinite;
+  flex-shrink: 0;
+}
+@keyframes psd-spin { to { transform: rotate(360deg); } }
+
+/* progress note */
+.psd__progress-note {
+  text-align: center;
+  font-size: 11.5px; font-weight: 600; color: var(--psd-t4);
+  display: flex; align-items: center; justify-content: center; gap: 5px;
+}
+.psd__progress-note svg { width: 12px; height: 12px; color: var(--psd-brand-mid); }
+
+/* =====================================================
+   RESPONSIVE
+   ===================================================== */
+@media (max-width: 520px) {
+  .psd__overlay { align-items: flex-end; padding: 0; }
+
+  .psd__dialog {
+    max-width: 100%;
+    border-radius: var(--psd-r-xl) var(--psd-r-xl) 0 0;
+    border-left: none; border-right: none; border-bottom: none;
+    border-top: 4px solid var(--psd-brand);
+    max-height: 95vh;
+    overflow-y: auto;
+  }
+
+  /* drag handle */
+  .psd__dialog::before {
+    content: "";
+    display: block;
+    width: 38px; height: 4px;
+    background: var(--psd-border);
+    border-radius: 2px;
+    margin: 10px auto 0;
+    flex-shrink: 0;
+  }
+
+  .psd__top-strip { padding: 16px 18px; }
+  .psd__top-icon  { width: 42px; height: 42px; min-width: 42px; }
+  .psd__body      { padding: 18px 18px 14px; }
+  .psd__footer    { padding: 14px 18px 20px; }
+
+  .psd__field-row { grid-template-columns: 1fr; gap: 10px; }
+}
+
+@media (max-width: 360px) {
+  .psd__top-title { font-size: 1rem; }
+  .psd__steps     { padding: 12px 14px; }
+  .psd__step-dot  { width: 28px; height: 28px; font-size: 11px; }
+}

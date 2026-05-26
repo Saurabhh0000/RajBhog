@@ -1,0 +1,488 @@
+/* ============================================================
+   USER CATEGORIES
+   ALL rules scoped to .ucat__ — zero leakage to other pages
+   Font: Plus Jakarta Sans  |  Mobile-first  |  No @keyframes
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap');
+
+/* ── TOKENS ── */
+:root {
+  --ucat-page-bg   : #f1f5f9;
+  --ucat-surface   : #ffffff;
+  --ucat-border    : #e2e8f0;
+  --ucat-radius    : 16px;
+  --ucat-shadow    : 0 1px 3px rgba(0,0,0,0.05), 0 4px 14px rgba(0,0,0,0.06);
+  --ucat-shadow-hv : 0 8px 30px rgba(111,59,24,0.14), 0 2px 8px rgba(0,0,0,0.06);
+
+  /* brand warm brown */
+  --ucat-brand     : #6f3b18;
+  --ucat-brand-hv  : #5a2f10;
+  --ucat-brand-mid : #8b4513;
+  --ucat-brand-lt  : #fdf0e8;
+  --ucat-brand-bdr : #e8c9ad;
+
+  /* glass effect tints */
+  --ucat-glass-bg  : rgba(255,255,255,0.72);
+  --ucat-glass-bdr : rgba(255,255,255,0.5);
+
+  /* text */
+  --ucat-t1 : #0f172a;
+  --ucat-t2 : #475569;
+  --ucat-t3 : #94a3b8;
+  --ucat-t4 : #cbd5e1;
+
+  --ucat-font: 'Plus Jakarta Sans', system-ui, sans-serif;
+}
+
+/* ── RESET ── */
+.ucat__page *, .ucat__page *::before, .ucat__page *::after {
+  box-sizing: border-box; margin: 0; padding: 0;
+}
+
+/* ── PAGE ── */
+.ucat__page {
+  min-height: 100vh;
+  background: var(--ucat-page-bg);
+  font-family: var(--ucat-font);
+  color: var(--ucat-t1);
+  padding: 20px 4% 80px;
+}
+
+.ucat__inner {
+  max-width: 1300px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+/* =====================================================
+   HERO HEADER
+   ===================================================== */
+.ucat__header {
+  background: linear-gradient(150deg, #4b240b 0%, #7a3f16 55%, #8b4513 100%);
+  border-radius: var(--ucat-radius);
+  padding: 26px 28px 24px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 24px rgba(111,59,24,0.25);
+}
+
+.ucat__header::before {
+  content: '';
+  position: absolute;
+  top: -40%; right: -8%;
+  width: 260px; height: 260px;
+  background: radial-gradient(circle, rgba(255,255,255,0.07), transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+}
+.ucat__header::after {
+  content: '';
+  position: absolute;
+  bottom: -30%; left: -4%;
+  width: 180px; height: 180px;
+  background: radial-gradient(circle, rgba(255,215,181,0.06), transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.ucat__header-inner { position: relative; z-index: 1; }
+
+.ucat__title {
+  font-size: clamp(1.4rem, 4.5vw, 2rem);
+  font-weight: 900;
+  color: #fff;
+  letter-spacing: -0.4px;
+  line-height: 1.2;
+  margin-bottom: 6px;
+}
+.ucat__title span { color: #ffd7b5; }
+
+.ucat__subtitle {
+  font-size: 13.5px;
+  color: rgba(255,255,255,0.7);
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+/* =====================================================
+   CONTROLS BAR  (search + sort + view toggle)
+   ===================================================== */
+.ucat__controls {
+  background: var(--ucat-surface);
+  border: 1px solid var(--ucat-border);
+  border-radius: var(--ucat-radius);
+  padding: 14px 18px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  box-shadow: var(--ucat-shadow);
+}
+
+/* search */
+.ucat__search {
+  position: relative;
+  flex: 1;
+  min-width: 200px;
+  display: flex;
+  align-items: center;
+}
+
+.ucat__search-ico {
+  position: absolute; left: 12px;
+  color: var(--ucat-t3); pointer-events: none; font-size: 14px; display: flex;
+}
+
+.ucat__search-input {
+  width: 100%;
+  padding: 10px 36px 10px 38px;
+  border: 1px solid var(--ucat-border);
+  border-radius: 10px;
+  font-family: var(--ucat-font);
+  font-size: 13.5px; font-weight: 500; color: var(--ucat-t1);
+  background: #f8fafc; outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.ucat__search-input::placeholder { color: var(--ucat-t3); }
+.ucat__search-input:focus {
+  border-color: var(--ucat-brand-mid);
+  box-shadow: 0 0 0 3px rgba(139,69,19,0.1);
+  background: #fff;
+}
+
+.ucat__search-clear {
+  position: absolute; right: 10px;
+  background: #e2e8f0; border: none; width: 22px; height: 22px;
+  border-radius: 50%; cursor: pointer; color: var(--ucat-t2);
+  display: flex; align-items: center; justify-content: center; font-size: 10px;
+  transition: background 0.15s;
+}
+.ucat__search-clear:hover { background: #cbd5e1; }
+
+/* divider */
+.ucat__ctrl-div { width: 1px; height: 32px; background: var(--ucat-border); flex-shrink: 0; }
+
+/* sort select */
+.ucat__sort-wrap {
+  display: flex; align-items: center; gap: 7px; flex-shrink: 0;
+}
+.ucat__sort-ico { font-size: 13px; color: var(--ucat-t3); }
+
+.ucat__sort-sel {
+  height: 38px;
+  padding: 0 30px 0 10px;
+  border: 1px solid var(--ucat-border);
+  border-radius: 10px;
+  font-family: var(--ucat-font);
+  font-size: 12.5px; font-weight: 600; color: var(--ucat-t1);
+  background: #f8fafc; cursor: pointer; outline: none; appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%238b4513' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 10px center;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.ucat__sort-sel:focus {
+  border-color: var(--ucat-brand-mid);
+  box-shadow: 0 0 0 3px rgba(139,69,19,0.1);
+  background-color: #fff;
+}
+
+/* view toggle */
+.ucat__view-toggle {
+  display: flex; align-items: center; gap: 3px;
+  background: #f1f5f9; border: 1px solid var(--ucat-border);
+  padding: 4px; border-radius: 9px; flex-shrink: 0;
+}
+.ucat__view-btn {
+  background: transparent; border: none;
+  width: 32px; height: 32px; border-radius: 7px;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--ucat-t3); cursor: pointer; font-size: 14px;
+  transition: background 0.15s, color 0.15s;
+  -webkit-tap-highlight-color: transparent;
+}
+.ucat__view-btn:hover { background: #fff; color: var(--ucat-t1); }
+.ucat__view-btn--on   { background: var(--ucat-brand); color: #fff; box-shadow: 0 1px 4px rgba(0,0,0,0.12); }
+
+/* =====================================================
+   RESULTS META
+   ===================================================== */
+.ucat__meta {
+  display: flex; align-items: center; gap: 8px; padding: 0 2px;
+}
+.ucat__meta-count {
+  font-size: 12.5px; font-weight: 500; color: var(--ucat-t3);
+}
+.ucat__meta-count strong { color: var(--ucat-t1); font-weight: 800; }
+
+/* =====================================================
+   EMPTY / LOADING STATES
+   ===================================================== */
+.ucat__empty, .ucat__loading {
+  background: var(--ucat-surface);
+  border: 1px solid var(--ucat-border);
+  border-radius: var(--ucat-radius);
+  box-shadow: var(--ucat-shadow);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 14px; min-height: 260px; padding: 48px 24px;
+  text-align: center;
+}
+.ucat__empty-icon {
+  width: 68px; height: 68px; border-radius: 50%;
+  background: var(--ucat-brand-lt); border: 1px solid var(--ucat-brand-bdr);
+  color: var(--ucat-brand-mid);
+  display: flex; align-items: center; justify-content: center; font-size: 28px;
+}
+.ucat__empty h3 { font-size: 17px; font-weight: 800; color: var(--ucat-t1); }
+.ucat__empty p  { font-size: 13.5px; color: var(--ucat-t3); max-width: 280px; line-height: 1.6; }
+.ucat__empty-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 10px 20px;
+  background: var(--ucat-brand); color: #fff;
+  border: none; border-radius: 10px;
+  font-family: var(--ucat-font); font-size: 13px; font-weight: 700;
+  cursor: pointer; transition: background 0.15s;
+}
+.ucat__empty-btn:hover { background: var(--ucat-brand-hv); }
+
+.ucat__spinner {
+  width: 34px; height: 34px; border-radius: 50%;
+  border: 3px solid #e2e8f0; border-top-color: var(--ucat-brand);
+  animation: ucat-spin 0.75s linear infinite;
+}
+@keyframes ucat-spin { to { transform: rotate(360deg); } }
+.ucat__loading p { font-size: 13.5px; font-weight: 500; color: var(--ucat-t3); }
+
+/* =====================================================
+   GRID VIEW  — all cards EXACT same size
+   ===================================================== */
+.ucat__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 16px;
+
+  /* ── KEY: stretch makes every cell fill the same row height ── */
+  align-items: stretch;
+}
+
+/* GLASS CARD — fixed total height so every card is identical */
+.ucat__gcard {
+  position: relative;
+  background: var(--ucat-glass-bg);
+  border: 1px solid var(--ucat-glass-bdr);
+  border-radius: 20px;
+  overflow: hidden;
+  cursor: pointer;
+
+  /* ── EQUAL SIZE: flex column, fixed total height ── */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 210px;           /* every card is exactly 210 px tall */
+
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06), 0 0 0 1px rgba(255,255,255,0.6) inset;
+  transition: box-shadow 0.22s ease, transform 0.22s ease, border-color 0.22s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.ucat__gcard:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--ucat-shadow-hv), 0 0 0 1px rgba(255,255,255,0.8) inset;
+  border-color: var(--ucat-brand-bdr);
+}
+
+/* glass shimmer */
+.ucat__gcard::before {
+  content: '';
+  position: absolute;
+  top: -60%; left: -60%;
+  width: 80%; height: 200%;
+  background: linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.18) 50%, transparent 60%);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.25s ease, transform 0.5s ease;
+  transform: skewX(-15deg);
+}
+.ucat__gcard:hover::before { opacity: 1; transform: skewX(-15deg) translateX(200%); }
+
+/* image strip — fixed height, never changes */
+.ucat__gcard-img-strip {
+  width: 100%;
+  height: 120px;          /* fixed — same for every card */
+  flex-shrink: 0;         /* never squash the image */
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, #fdf0e8 0%, #f5ddc8 50%, #ecd6c4 100%);
+}
+
+.ucat__gcard-img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  transition: transform 0.35s ease;
+}
+.ucat__gcard:hover .ucat__gcard-img { transform: scale(1.07); }
+
+.ucat__gcard-placeholder {
+  width: 100%; height: 100%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 40px; font-weight: 900;
+  color: var(--ucat-brand);
+  background: linear-gradient(135deg, #fdf0e8, #ecd6c4);
+  letter-spacing: -1px;
+}
+
+.ucat__gcard-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(to bottom, transparent 40%, rgba(75,36,11,0.45) 100%);
+  pointer-events: none;
+}
+
+/* name — fixed 2-line height so it never changes card height */
+.ucat__gcard-name {
+  flex: 1;                /* fills remaining space between image and chip */
+  display: flex;
+  align-items: center;    /* vertically centres the name in the leftover space */
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--ucat-t1);
+  text-align: center;
+  line-height: 1.3;
+  padding: 0 12px;
+  letter-spacing: -0.1px;
+
+  /* clamp to 2 lines max — prevents any card growing taller */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* arrow chip — always pinned to bottom */
+.ucat__gcard-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;          /* never shrink or disappear */
+  margin-bottom: 14px;
+  padding: 4px 10px;
+  background: var(--ucat-brand-lt);
+  border: 1px solid var(--ucat-brand-bdr);
+  border-radius: 100px;
+  font-size: 10.5px;
+  font-weight: 700;
+  color: var(--ucat-brand);
+  transition: background 0.15s;
+}
+.ucat__gcard:hover .ucat__gcard-chip { background: #f0d8c0; }
+
+/* =====================================================
+   LIST VIEW
+   ===================================================== */
+.ucat__list {
+  background: var(--ucat-surface);
+  border: 1px solid var(--ucat-border);
+  border-radius: var(--ucat-radius);
+  box-shadow: var(--ucat-shadow);
+  overflow: hidden;
+}
+
+.ucat__lrow {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 20px;
+  border-bottom: 1px solid #f1f5f9;
+  cursor: pointer;
+  border-left: 3px solid transparent;
+  transition: background 0.15s, border-left-color 0.15s;
+  -webkit-tap-highlight-color: transparent;
+}
+.ucat__lrow:last-child { border-bottom: none; }
+.ucat__lrow:hover {
+  background: var(--ucat-brand-lt);
+  border-left-color: var(--ucat-brand);
+}
+
+.ucat__lrow-thumb {
+  width: 52px; height: 52px; min-width: 52px;
+  border-radius: 12px;
+  overflow: hidden;
+  background: linear-gradient(135deg, #fdf0e8, #ecd6c4);
+  flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+.ucat__lrow-thumb img { width: 100%; height: 100%; object-fit: cover; }
+.ucat__lrow-thumb-placeholder {
+  width: 100%; height: 100%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px; font-weight: 900; color: var(--ucat-brand);
+}
+
+.ucat__lrow-info { flex: 1; min-width: 0; }
+.ucat__lrow-name {
+  font-size: 14px; font-weight: 800; color: var(--ucat-t1);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  letter-spacing: -0.2px;
+}
+.ucat__lrow-sub {
+  font-size: 11.5px; color: var(--ucat-t3); font-weight: 500; margin-top: 2px;
+}
+
+.ucat__lrow-arrow {
+  font-size: 12px; color: var(--ucat-t3); flex-shrink: 0;
+  transition: color 0.15s, transform 0.15s;
+}
+.ucat__lrow:hover .ucat__lrow-arrow { color: var(--ucat-brand); transform: translateX(3px); }
+
+/* =====================================================
+   RESPONSIVE — card height adjusts per breakpoint
+   ===================================================== */
+@media (max-width: 900px) {
+  .ucat__grid { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 14px; }
+}
+
+@media (max-width: 640px) {
+  .ucat__page   { padding: 16px 4% 60px; }
+  .ucat__inner  { gap: 14px; }
+  .ucat__header { padding: 20px; }
+
+  .ucat__controls { gap: 10px; }
+  .ucat__search   { min-width: unset; width: 100%; }
+  .ucat__ctrl-div { display: none; }
+  .ucat__sort-wrap { flex: 1; }
+  .ucat__sort-sel  { width: 100%; }
+
+  .ucat__grid { grid-template-columns: repeat(3, 1fr); gap: 12px; }
+
+  /* 3-col mobile: tighter fixed height */
+  .ucat__gcard           { height: 180px; }
+  .ucat__gcard-img-strip { height: 100px; }
+  .ucat__gcard-name      { font-size: 11.5px; }
+  .ucat__gcard-chip      { font-size: 9.5px; padding: 3px 8px; margin-bottom: 10px; }
+
+  .ucat__lrow { padding: 12px 16px; gap: 12px; }
+}
+
+@media (max-width: 480px) {
+  .ucat__grid { grid-template-columns: repeat(3, 1fr); gap: 10px; }
+
+  .ucat__gcard           { height: 168px; }
+  .ucat__gcard-img-strip { height: 92px; }
+  .ucat__gcard-placeholder { font-size: 32px; }
+
+  .ucat__lrow-thumb { width: 44px; height: 44px; min-width: 44px; border-radius: 10px; }
+  .ucat__lrow-name  { font-size: 13px; }
+}
+
+@media (max-width: 360px) {
+  .ucat__grid { grid-template-columns: repeat(2, 1fr); }
+
+  .ucat__gcard           { height: 172px; }
+  .ucat__gcard-img-strip { height: 96px; }
+}

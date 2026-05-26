@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Order Delivered</title>
+</head>
+
+<body style="margin:0; padding:0; background:#f8fafc; font-family: Arial, sans-serif;">
+
+  <table width="100%" cellpadding="0" cellspacing="0" style="padding:20px;">
+    <tr>
+      <td align="center">
+
+        <!-- MAIN CARD -->
+        <table width="100%" max-width="500" cellpadding="0" cellspacing="0"
+               style="background:#ffffff; border-radius:16px; overflow:hidden; box-shadow:0 10px 30px rgba(0,0,0,0.08);">
+
+          <!-- HEADER -->
+          <tr>
+            <td style="background:linear-gradient(135deg,#16a34a,#15803d); padding:20px; text-align:center; color:white;">
+              <h1 style="margin:0; font-size:22px;">Rajbhog</h1>
+              <p style="margin:6px 0 0; font-size:13px;">
+                जो भी खाए, दोस्त बन जाए ❤️
+              </p>
+            </td>
+          </tr>
+
+          <!-- SUCCESS ICON -->
+          <tr>
+            <td style="text-align:center; padding:25px 20px;">
+              <div style="font-size:40px;">🎉</div>
+              <h2 style="margin:10px 0; color:#16a34a;">Order Delivered</h2>
+              <p style="color:#64748b; font-size:14px;">
+                Your order has been delivered successfully!
+              </p>
+            </td>
+          </tr>
+
+          <!-- ORDER INFO -->
+          <tr>
+            <td style="padding:0 20px 10px;">
+              <p style="margin:6px 0;"><b>Order ID:</b> {{ORDER_NUMBER}}</p>
+              <p style="margin:6px 0;"><b>Total Paid:</b> ₹{{TOTAL}}</p>
+            </td>
+          </tr>
+
+          <!-- ITEMS -->
+          <tr>
+            <td style="padding:10px 20px;">
+              <table width="100%" cellpadding="8" cellspacing="0"
+                     style="border-collapse: collapse; font-size:13px;">
+
+                <tr style="background:#f1f5f9;">
+                  <th align="left">Item</th>
+                  <th align="center">Qty</th>
+                  <th align="right">Price</th>
+                </tr>
+
+                {{ITEMS}}
+
+              </table>
+            </td>
+          </tr>
+
+          <!-- REVIEW SECTION -->
+          <tr>
+            <td style="padding:20px; text-align:center;">
+              <h3 style="margin:0;">How was your experience? ⭐</h3>
+              <p style="font-size:13px; color:#64748b;">
+                Your feedback helps us improve and serve you better.
+              </p>
+
+              <a href="http://localhost:5173/user/orders"
+                 style="display:inline-block; margin-top:10px;
+                        background:#f97316; color:white;
+                        padding:12px 20px; border-radius:8px;
+                        text-decoration:none; font-size:14px;">
+                Rate Your Order
+              </a>
+            </td>
+          </tr>
+
+          <!-- THANK YOU -->
+          <tr>
+            <td style="padding:0 20px 20px; text-align:center;">
+              <p style="font-size:14px; color:#334155;">
+                Thank you for choosing <b>Rajbhog</b> ❤️
+              </p>
+            </td>
+          </tr>
+
+          <!-- FOOTER -->
+          <tr>
+            <td style="background:#f1f5f9; padding:15px; text-align:center; font-size:12px; color:#64748b;">
+              © {{YEAR}} Rajbhog. All rights reserved.
+            </td>
+          </tr>
+
+        </table>
+
+      </td>
+    </tr>
+  </table>
+
+</body>
+</html>

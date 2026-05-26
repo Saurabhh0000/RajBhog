@@ -1,0 +1,21 @@
+@import "tailwindcss";
+
+/* RAJBHOG Brand Tokens */
+:root {
+  --primary: #E65100;
+  --dark: #1E1E1E;
+  --accent: #2ECC71;
+  --light: #FFF8F1;
+}
+.brand-logo {
+  font-family: "Poppins", sans-serif;
+  font-weight: 700;
+  letter-spacing: 0.6px;
+}
+
+
+body {
+  margin: 0;
+  font-family: Inter, system-ui, sans-serif;
+  background-color: var(--light);
+}
