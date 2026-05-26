@@ -11,34 +11,31 @@ import org.springframework.web.filter.CorsFilter;
 @Configuration
 public class CorsConfig {
 
-    @Bean
-    public CorsFilter corsFilter() {
-        CorsConfiguration config = new CorsConfiguration();
+        @Bean
+        public CorsFilter corsFilter() {
+                CorsConfiguration config = new CorsConfiguration();
 
-        // 👇 FRONTEND ORIGIN
-        config.setAllowedOrigins(List.of(
-                "http://localhost:5173"
-        ));
+                // 👇 FRONTEND ORIGIN
+                config.setAllowedOrigins(List.of(
+                                "http://localhost:5173",
+                                "https://rajbhog-store.netlify.app"));
 
-        // 👇 ALLOW ALL COMMON METHODS
-        config.setAllowedMethods(List.of(
-                "GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"
-        ));
+                // 👇 ALLOW ALL COMMON METHODS
+                config.setAllowedMethods(List.of(
+                                "GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
 
-        // 👇 ALLOW HEADERS (VERY IMPORTANT FOR JWT)
-        config.setAllowedHeaders(List.of(
-                "Authorization",
-                "Content-Type",
-                "Accept"
-        ));
+                // 👇 ALLOW HEADERS (VERY IMPORTANT FOR JWT)
+                config.setAllowedHeaders(List.of(
+                                "Authorization",
+                                "Content-Type",
+                                "Accept"));
 
-        config.setAllowCredentials(true);
+                config.setAllowCredentials(true);
 
-        UrlBasedCorsConfigurationSource source =
-                new UrlBasedCorsConfigurationSource();
+                UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 
-        source.registerCorsConfiguration("/**", config);
+                source.registerCorsConfiguration("/**", config);
 
-        return new CorsFilter(source);
-    }
+                return new CorsFilter(source);
+        }
 }
