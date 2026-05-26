@@ -1,10 +1,11 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "http://localhost:8080",
+  baseURL: import.meta.env.VITE_API_BASE_URL,
 });
 
 api.interceptors.request.use((config) => {
+
   const token = localStorage.getItem("token");
 
   if (token) {
@@ -14,4 +15,5 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
-export const fetchAdminDashboard = () => api.get("/api/admin/dashboard");
+export const fetchAdminDashboard = () =>
+  api.get("/api/admin/dashboard");
