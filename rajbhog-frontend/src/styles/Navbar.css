@@ -444,15 +444,15 @@
 /* MOBILE */
 @media (max-width: 768px) {
   .navbar {
-    height: 64px;
-    padding: 0 8px;
+    height: 82px;
+    padding: 0 12px;
 
   }
     .navbar-left {
     gap: 4px;   /* 🔥 reduce space between icon & brand */
   }
  .brand-container {
-    margin-left: -20px;
+    justify-content: center;
   }
   
 
