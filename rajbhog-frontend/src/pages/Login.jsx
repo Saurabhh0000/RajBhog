@@ -10,7 +10,6 @@ import {
   faArrowRight,
   faStar,
   faTruck,
-  faPercent,
   faShieldHalved,
   faBolt,
   faStore,
@@ -22,9 +21,6 @@ import {
   faTag,
   faChevronLeft,
   faLock,
-  faFire,
-  faCartShopping,
-  faBagShopping,
 } from "@fortawesome/free-solid-svg-icons";
 import "../styles/Login.css";
 import Navbar from "../components/Navbar";
@@ -189,10 +185,10 @@ export default function Login() {
       <Navbar />
       <div className="rb-auth-page">
         <div className="rb-auth-card">
-          {/* ── LEFT BRAND PANEL ── */}
+          {/* ══ LEFT BRAND PANEL (desktop) / TOP HEADER (mobile) ══ */}
           <div className="rb-brand-panel">
             <div className="rb-brand-inner">
-              {/* Logo */}
+              {/* Logo — always visible */}
               <div className="rb-logo-row">
                 <div className="rb-logo-icon">
                   <FontAwesomeIcon icon={faStore} />
@@ -201,10 +197,12 @@ export default function Login() {
                   <span className="rb-logo-raj">RAJ</span>
                   <span className="rb-logo-bhog">BHOG</span>
                 </div>
+                {/* Mobile-only tagline next to logo */}
+                <p className="rb-mobile-tagline">जो भी खाए, दोस्त बन जाए</p>
               </div>
 
-              {/* Tagline */}
-              <p className="rb-brand-tagline">
+              {/* Desktop tagline — hidden on mobile */}
+              <p className="rb-brand-tagline rb-desktop-only">
                 Your neighbourhood kirana, now online.{" "}
                 <span className="rb-tag-highlight">
                   <FontAwesomeIcon icon={faLeaf} /> Fresh groceries
@@ -215,8 +213,8 @@ export default function Login() {
                 </span>
               </p>
 
-              {/* Highlights */}
-              <div className="rb-highlights">
+              {/* Highlights — hidden on mobile */}
+              <div className="rb-highlights rb-desktop-only">
                 <div className="rb-highlight-item">
                   <span className="rb-hl-icon rb-hl-bolt">
                     <FontAwesomeIcon icon={faBolt} />
@@ -237,8 +235,8 @@ export default function Login() {
                 </div>
               </div>
 
-              {/* Feature cards */}
-              <div className="rb-feature-grid">
+              {/* Feature grid — hidden on mobile */}
+              <div className="rb-feature-grid rb-desktop-only">
                 <FeatureCard
                   icon={faStore}
                   color="orange"
@@ -267,7 +265,7 @@ export default function Login() {
             </div>
           </div>
 
-          {/* ── RIGHT FORM PANEL ── */}
+          {/* ══ RIGHT FORM PANEL ══ */}
           <div className="rb-form-panel">
             <div className="rb-form-inner">
               {step === "EMAIL" && (
@@ -313,6 +311,7 @@ export default function Login() {
                     {loading && <span className="rb-spinner" />}
                   </button>
 
+                  {/* Trust chips */}
                   <div className="rb-trust-row">
                     <span className="rb-trust-chip">
                       <FontAwesomeIcon icon={faShieldHalved} /> Secure Login
@@ -323,6 +322,34 @@ export default function Login() {
                     <span className="rb-trust-chip">
                       <FontAwesomeIcon icon={faCheckCircle} /> Verified
                     </span>
+                  </div>
+
+                  {/* Mobile-only feature icon strip */}
+                  <div className="rb-mobile-feat-strip">
+                    <div className="rb-mf-item">
+                      <span className="rb-mf-icon rb-mf-orange">
+                        <FontAwesomeIcon icon={faStore} />
+                      </span>
+                      <span>Local Kirana</span>
+                    </div>
+                    <div className="rb-mf-item">
+                      <span className="rb-mf-icon rb-mf-blue">
+                        <FontAwesomeIcon icon={faTruck} />
+                      </span>
+                      <span>Fast Delivery</span>
+                    </div>
+                    <div className="rb-mf-item">
+                      <span className="rb-mf-icon rb-mf-green">
+                        <FontAwesomeIcon icon={faShieldHalved} />
+                      </span>
+                      <span>Safe & Secure</span>
+                    </div>
+                    <div className="rb-mf-item">
+                      <span className="rb-mf-icon rb-mf-purple">
+                        <FontAwesomeIcon icon={faTag} />
+                      </span>
+                      <span>Best Prices</span>
+                    </div>
                   </div>
                 </div>
               )}
