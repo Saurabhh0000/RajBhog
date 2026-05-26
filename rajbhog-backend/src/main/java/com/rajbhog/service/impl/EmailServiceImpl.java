@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import com.rajbhog.dto.response.OrderEmailDto;
 import com.rajbhog.exception.EmailSendException;
+import com.rajbhog.service.BrevoEmailService;
 import com.rajbhog.service.EmailService;
 import com.rajbhog.service.InvoiceService;
 
@@ -28,6 +29,7 @@ public class EmailServiceImpl implements EmailService {
 
     private final JavaMailSender mailSender;
     private final InvoiceService invoiceService;
+    private final BrevoEmailService brevoEmailService;
 
     // ---------- OTP EMAIL ----------
     @Override
@@ -180,14 +182,7 @@ public class EmailServiceImpl implements EmailService {
     private void sendHtmlEmail(String to, String subject, String html)
             throws MessagingException, MailException {
 
-        MimeMessage message = mailSender.createMimeMessage();
-        MimeMessageHelper helper = new MimeMessageHelper(message, true, StandardCharsets.UTF_8.name());
-
-        helper.setTo(to);
-        helper.setSubject(subject);
-        helper.setText(html, true);
-
-        mailSender.send(message);
+        brevoEmailService.sendEmail(to, subject, html);
     }
 
     private void sendHtmlEmailWithAttachment(
@@ -197,18 +192,20 @@ public class EmailServiceImpl implements EmailService {
             byte[] attachment,
             String fileName) throws MessagingException {
 
-        MimeMessage message = mailSender.createMimeMessage();
+        // MimeMessage message = mailSender.createMimeMessage();
 
-        MimeMessageHelper helper = new MimeMessageHelper(message, true, StandardCharsets.UTF_8.name());
+        // MimeMessageHelper helper = new MimeMessageHelper(message, true,
+        // StandardCharsets.UTF_8.name());
 
-        helper.setTo(to);
-        helper.setSubject(subject);
-        helper.setText(html, true);
+        // helper.setTo(to);
+        // helper.setSubject(subject);
+        // helper.setText(html, true);
 
-        // 🔥 ATTACH FILE
-        helper.addAttachment(fileName, new ByteArrayResource(attachment));
+        // // 🔥 ATTACH FILE
+        // helper.addAttachment(fileName, new ByteArrayResource(attachment));
 
-        mailSender.send(message);
+        // mailSender.send(message);
+        brevoEmailService.sendEmail(to, subject, html);
     }
 
     // ---------- TEMPLATE LOADER ----------
