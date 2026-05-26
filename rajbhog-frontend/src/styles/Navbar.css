@@ -443,18 +443,15 @@
 
 /* MOBILE */
 @media (max-width: 768px) {
+
   .navbar {
     height: 82px;
     padding: 0 12px;
+  }
 
+  .navbar-left {
+    gap: 6px;
   }
-    .navbar-left {
-    gap: 4px;   /* 🔥 reduce space between icon & brand */
-  }
- .brand-container {
-    margin-left: -20px;
-  }
-  
 
   .mobile-menu-btn {
     display: flex;
@@ -462,12 +459,14 @@
 
   .brand {
     font-size: 20px;
+    transform: translateX(-6px);
   }
 
   .micro-text {
     font-size: 9px;
     letter-spacing: 0.2px;
     font-weight: 700;
+    transform: translateX(-6px);
   }
 
   .nav-link {
