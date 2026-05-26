@@ -2,7 +2,7 @@
 .contact-page {
   min-height: 100vh;
   background: linear-gradient(135deg, #fff7ed 0%, #ffffff 50%, #fef3f2 100%);
-  padding: 110px 5%;
+  padding: 140px 5% 80px;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 
@@ -475,7 +475,7 @@
 /* ==================== RESPONSIVE - MOBILE ==================== */
 @media (max-width: 768px) {
   .contact-page {
-    padding: 60px 4%;
+  padding: 110px 4% 50px;
   }
 
   .contact-container {
@@ -526,7 +526,7 @@
 
 @media (max-width: 480px) {
   .contact-page {
-    padding: 40px 5%;
+    padding: 100px 5% 40px;
   }
 
   .info-header h1 {
