@@ -22,5 +22,5 @@
   <line x1="3" y1="22" x2="29" y2="22" stroke="rgba(255,220,140,0.50)" stroke-width="0.7" stroke-linecap="round" stroke-dasharray="2,2.5"/>
 
   <!-- RAJBHOG wordmark -->
-  <text x="16" y="29" font-family="Arial, sans-serif" font-size="4.2" font-weight="700" fill="white" opacity="0.88" text-anchor="middle" letter-spacing="1.2">RAJBHOG</text>
+  <!-- <text x="16" y="29" font-family="Arial, sans-serif" font-size="4.2" font-weight="700" fill="white" opacity="0.88" text-anchor="middle" letter-spacing="1.2">RAJBHOG</text> -->
 </svg>
