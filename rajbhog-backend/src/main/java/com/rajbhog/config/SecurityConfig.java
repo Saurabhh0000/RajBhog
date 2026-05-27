@@ -26,52 +26,49 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
-        
-            // Disable CSRF (API based)
+        // Disable CSRF (API based)
         http
-        .cors(cors -> {})
-        .csrf(csrf -> csrf.disable())
+                .cors(cors -> {
+                })
+                .csrf(csrf -> csrf.disable())
 
+                // Stateless session (JWT)
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 
-            // Stateless session (JWT)
-            .sessionManagement(session ->
-                session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-            )
+                // Authorization rules
+                .authorizeHttpRequests(auth -> auth
 
-            // Authorization rules
-            .authorizeHttpRequests(auth -> auth
+                        // Public APIs
+                        .requestMatchers(
+                                "/api/auth/**",
+                                "/api/categories/**",
+                                "/api/products/**",
+                                "/api/variants/**",
+                                "/api/contact",
+                                "/api/reviews/variant/**",
+                                "/v3/api-docs/**",
+                                "/swagger-ui/**",
+                                "/swagger-ui.html",
+                                "/actuator/**")
+                        .permitAll()
 
-                // Public APIs
-                .requestMatchers(
-                        "/api/auth/**",
-                        "/api/categories/**",
-                        "/api/products/**",
-                        "/api/variants/**",
-                        "/api/contact",
-                        "/api/reviews/variant/**",
-                        "/v3/api-docs/**",
-                        "/swagger-ui/**",
-                        "/swagger-ui.html"
-                ).permitAll()
+                        // CUSTOMER APIs
+                        .requestMatchers(
+                                "/api/profile/**",
+                                "/api/cart/**",
+                                "/api/orders/**",
+                                "/api/reviews/**",
+                                "/api/user/coupons/**")
+                        .hasRole("CUSTOMER")
 
-                // CUSTOMER APIs
-                .requestMatchers(
-                        "/api/profile/**",
-                        "/api/cart/**",
-                        "/api/orders/**",
-                        "/api/reviews/**",
-                        "/api/user/coupons/**"
-                ).hasRole("CUSTOMER")
+                        // ADMIN APIs
+                        .requestMatchers("/api/admin/**")
+                        .hasRole("ADMIN")
 
-                // ADMIN APIs
-                .requestMatchers("/api/admin/**")
-                .hasRole("ADMIN")
+                        .anyRequest().authenticated())
 
-                .anyRequest().authenticated()
-            )
-
-            // 🔥 REGISTER JWT FILTER (MOST IMPORTANT LINE)
-            .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+                // 🔥 REGISTER JWT FILTER (MOST IMPORTANT LINE)
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
