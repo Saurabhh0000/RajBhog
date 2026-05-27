@@ -1,5 +1,5 @@
 // src/pages/Home.jsx
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import {
   ArrowRight,
   Droplet,
@@ -21,17 +21,20 @@ import {
   Twitter,
   MapPin,
   Mail,
-  Phone,
   Flame,
   Heart,
   Award,
   Clock,
-  ChevronDown,
-  ChevronUp,
   HelpCircle,
   MessageCircle,
   Plus,
   Minus,
+  Sparkles,
+  Star,
+  Zap,
+  Shield,
+  CheckCircle2,
+  AlertCircle,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { getCategories } from "../api/public/categoryApi";
@@ -91,7 +94,7 @@ const FAQS = [
   },
 ];
 
-/* ── card data (original) ── */
+/* ── SLIDER CARD DATA (original) ── */
 const CARDS = [
   {
     title: "Spices & Masala",
@@ -191,41 +194,111 @@ const CARDS = [
   },
 ];
 
+/* ── Inline alert component ── */
+function InlineAlert({ type, message, onDismiss }) {
+  if (!message) return null;
+  return (
+    <div className={`hm-alert hm-alert--${type}`}>
+      {type === "error" ? (
+        <AlertCircle size={16} />
+      ) : (
+        <CheckCircle2 size={16} />
+      )}
+      <span>{message}</span>
+      {onDismiss && (
+        <button
+          className="hm-alert-close"
+          onClick={onDismiss}
+          aria-label="Dismiss">
+          ✕
+        </button>
+      )}
+    </div>
+  );
+}
+
+/* ── CARD WIDTH for scroll math ── */
+const CARD_WIDTH = 272; // card min-width + gap
+
 export default function Home() {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activeIndex, setActiveIndex] = useState(0);
   const [openFaq, setOpenFaq] = useState(null);
+  const [parallaxY, setParallaxY] = useState(0);
+  const [alert, setAlert] = useState({ type: "", message: "" });
+
   const sliderRef = useRef(null);
+  const heroRef = useRef(null);
   const navigate = useNavigate();
 
-  /* ── ORIGINAL LOGIC ── */
+  /* ── ORIGINAL LOGIC — fetch categories ── */
   useEffect(() => {
     getCategories()
       .then((res) => setCategories(res.data))
-      .catch((err) => console.error(err))
+      .catch((err) => {
+        console.error(err);
+        setAlert({
+          type: "error",
+          message: "Failed to load categories. Please refresh.",
+        });
+      })
       .finally(() => setLoading(false));
   }, []);
 
+  /* ── Parallax on scroll ── */
+  useEffect(() => {
+    const handleScroll = () => {
+      if (heroRef.current) {
+        const scrollY = window.scrollY;
+        setParallaxY(scrollY * 0.38);
+      }
+    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  /* ── Auto-slide every 3.5s ── */
   useEffect(() => {
     const interval = setInterval(() => scrollRight(), 3500);
     return () => clearInterval(interval);
   }, [activeIndex]);
 
-  const scrollLeft = () => {
-    const newIndex = activeIndex === 0 ? CARDS.length - 1 : activeIndex - 1;
-    sliderRef.current?.scrollTo({ left: newIndex * 304, behavior: "smooth" });
-    setActiveIndex(newIndex);
-  };
+  /* ── Sync active dot on manual scroll ── */
+  useEffect(() => {
+    const slider = sliderRef.current;
+    if (!slider) return;
+    const onScroll = () => {
+      const idx = Math.round(slider.scrollLeft / CARD_WIDTH);
+      setActiveIndex(Math.min(idx, CARDS.length - 1));
+    };
+    slider.addEventListener("scroll", onScroll, { passive: true });
+    return () => slider.removeEventListener("scroll", onScroll);
+  }, []);
 
-  const scrollRight = () => {
-    const newIndex = activeIndex === CARDS.length - 1 ? 0 : activeIndex + 1;
-    sliderRef.current?.scrollTo({ left: newIndex * 304, behavior: "smooth" });
+  const scrollLeft = useCallback(() => {
+    const newIndex = activeIndex === 0 ? CARDS.length - 1 : activeIndex - 1;
+    sliderRef.current?.scrollTo({
+      left: newIndex * CARD_WIDTH,
+      behavior: "smooth",
+    });
     setActiveIndex(newIndex);
-  };
+  }, [activeIndex]);
+
+  const scrollRight = useCallback(() => {
+    const newIndex = activeIndex === CARDS.length - 1 ? 0 : activeIndex + 1;
+    sliderRef.current?.scrollTo({
+      left: newIndex * CARD_WIDTH,
+      behavior: "smooth",
+    });
+    setActiveIndex(newIndex);
+  }, [activeIndex]);
 
   const goToSlide = (index) => {
-    sliderRef.current?.scrollTo({ left: index * 304, behavior: "smooth" });
+    sliderRef.current?.scrollTo({
+      left: index * CARD_WIDTH,
+      behavior: "smooth",
+    });
     setActiveIndex(index);
   };
 
@@ -235,328 +308,363 @@ export default function Home() {
     <>
       <Navbar />
 
-      {/* ═══════════════ HERO ═══════════════ */}
-      <section className="hero">
-        <div className="hero-content">
-          <h1>
-            Your trusted <span>Kirana Store</span>
+      {/* ── Global inline alert ── */}
+      {alert.message && (
+        <div className="hm-alert-wrap">
+          <InlineAlert
+            type={alert.type}
+            message={alert.message}
+            onDismiss={() => setAlert({ type: "", message: "" })}
+          />
+        </div>
+      )}
+
+      {/* ═══════════════ HERO — with parallax ═══════════════ */}
+      <section className="hm-hero" ref={heroRef}>
+        {/* Parallax background layer */}
+        <div
+          className="hm-hero-bg"
+          style={{ transform: `translateY(${parallaxY}px)` }}
+          aria-hidden="true"
+        />
+        {/* Grain texture overlay */}
+        <div className="hm-hero-grain" aria-hidden="true" />
+        {/* Decorative rings */}
+        <div className="hm-hero-ring hm-hero-ring--1" aria-hidden="true" />
+        <div className="hm-hero-ring hm-hero-ring--2" aria-hidden="true" />
+
+        <div className="hm-hero-inner">
+          {/* Badge */}
+          <div className="hm-hero-badge">
+            <Sparkles size={12} />
+            <span>Pure · Trusted · Honest</span>
+          </div>
+
+          <h1 className="hm-hero-title">
+            Your trusted <span className="hm-hero-accent">Kirana Store</span>
             <br />
             for daily essentials
           </h1>
-          <p>
+
+          <p className="hm-hero-sub">
             Buy premium edible oils, sugar, grains and household essentials.
             Honest quality, fair prices, delivered with trust.
           </p>
+
+          {/* Stat pills */}
+          <div className="hm-hero-stats">
+            <div className="hm-stat">
+              <Star size={13} />
+              <span>4.9 Rating</span>
+            </div>
+            <div className="hm-stat-divider" />
+            <div className="hm-stat">
+              <Zap size={13} />
+              <span>Same-day delivery</span>
+            </div>
+            <div className="hm-stat-divider" />
+            <div className="hm-stat">
+              <Shield size={13} />
+              <span>Quality assured</span>
+            </div>
+          </div>
         </div>
 
-        <div className="hero-cards">
+        {/* Hero Cards */}
+        <div className="hm-hero-cards">
           <KiranaCard
-            title="EDIBLE OILS"
+            title="Edible Oils"
             subtitle="Pure cooking oils"
-            offer="UPTO 20% OFF"
+            offer="Upto 20% Off"
             Icon={Droplet}
+            color="amber"
             onClick={() => navigate("/products/edible-oils-ghee")}
           />
           <KiranaCard
-            title="DAILY GROCERIES"
+            title="Daily Groceries"
             subtitle="Sugar, rice & staples"
-            offer="BEST PRICES"
+            offer="Best Prices"
             Icon={Package}
+            color="green"
             onClick={() => navigate("/products/staples-grains")}
           />
           <KiranaCard
-            title="HOUSEHOLD NEEDS"
+            title="Household Needs"
             subtitle="Daily home essentials"
-            offer="TRUSTED QUALITY"
+            offer="Trusted Quality"
             Icon={ShoppingBag}
+            color="blue"
             onClick={() => navigate("/products/household-essentials")}
           />
         </div>
       </section>
 
       {/* ═══════════════ SLIDER ═══════════════ */}
-      <section className="home-visuals">
-        <h2 className="visuals-title">
-          Fresh from <span>RAJBHOG</span>
-        </h2>
-        <p className="visuals-subtitle">
-          Everyday essentials sourced with care &amp; purity
-        </p>
+      <section className="hm-slider-section">
+        <div className="hm-section-head">
+          <div className="hm-section-badge">
+            <Store size={12} />
+            <span>Our Categories</span>
+          </div>
+          <h2 className="hm-section-title">
+            Fresh from <span>RAJBHOG</span>
+          </h2>
+          <p className="hm-section-sub">
+            Everyday essentials sourced with care &amp; purity
+          </p>
+        </div>
 
-        <div className="visuals-wrapper">
-          <button className="nav-btn left" onClick={scrollLeft}>
-            <ChevronLeft />
+        <div className="hm-slider-wrap">
+          <button
+            className="hm-nav-btn hm-nav-btn--left"
+            onClick={scrollLeft}
+            aria-label="Previous">
+            <ChevronLeft size={18} />
           </button>
-          <div className="slider" ref={sliderRef}>
+
+          <div className="hm-slider" ref={sliderRef}>
             {CARDS.map((card, index) => (
               <div
                 key={index}
-                className="visual-card"
-                onClick={() => navigate(`/products/${card.slug}`)}>
-                <img src={card.image} alt={card.title} />
-                <div className="visual-overlay">
-                  <h3>{card.title}</h3>
-                  <span>{card.subtitle}</span>
+                className="hm-slide-card"
+                onClick={() => navigate(`/products/${card.slug}`)}
+                role="button"
+                tabIndex={0}
+                onKeyPress={(e) =>
+                  e.key === "Enter" && navigate(`/products/${card.slug}`)
+                }>
+                <div className="hm-slide-img-wrap">
+                  <img src={card.image} alt={card.title} loading="lazy" />
+                  <div className="hm-slide-overlay" />
+                </div>
+                <div className="hm-slide-info">
+                  <h3 className="hm-slide-title">{card.title}</h3>
+                  <p className="hm-slide-sub">{card.subtitle}</p>
+                  <span className="hm-slide-cta">
+                    Shop now <ArrowRight size={11} />
+                  </span>
                 </div>
               </div>
             ))}
           </div>
-          <button className="nav-btn right" onClick={scrollRight}>
-            <ChevronRight />
+
+          <button
+            className="hm-nav-btn hm-nav-btn--right"
+            onClick={scrollRight}
+            aria-label="Next">
+            <ChevronRight size={18} />
           </button>
         </div>
 
-        <div className="slider-dots">
+        {/* Dots */}
+        <div className="hm-dots" role="tablist" aria-label="Slider navigation">
           {CARDS.map((_, index) => (
-            <span
+            <button
               key={index}
-              className={`dot ${activeIndex === index ? "active" : ""}`}
+              className={`hm-dot ${activeIndex === index ? "hm-dot--active" : ""}`}
               onClick={() => goToSlide(index)}
+              aria-label={`Go to slide ${index + 1}`}
+              role="tab"
+              aria-selected={activeIndex === index}
             />
           ))}
         </div>
       </section>
 
       {/* ═══════════════ WHY RAJBHOG ═══════════════ */}
-      <section className="why-rajbhog">
-        <div className="why-header">
-          <h2>Why RAJBHOG?</h2>
-          <p>
+      <section className="hm-why">
+        <div className="hm-section-head">
+          <div className="hm-section-badge">
+            <BadgeCheck size={12} />
+            <span>Our Promise</span>
+          </div>
+          <h2 className="hm-section-title">
+            Why <span>RAJBHOG?</span>
+          </h2>
+          <p className="hm-section-sub">
             Your trusted kirana store for purity, quality &amp; fair pricing
           </p>
         </div>
-        <div className="why-grid">
-          <div className="why-card">
-            <div className="why-icon">
-              <Droplet />
-            </div>
-            <h3>Pure &amp; Authentic</h3>
-            <p>Edible oils and groceries sourced with strict quality checks.</p>
-          </div>
-          <div className="why-card">
-            <div className="why-icon">
-              <ShieldCheck />
-            </div>
-            <h3>Quality Assured</h3>
-            <p>Every product is verified before it reaches your home.</p>
-          </div>
-          <div className="why-card">
-            <div className="why-icon">
-              <Store />
-            </div>
-            <h3>Trusted Kirana</h3>
-            <p>Local sourcing with the reliability of a modern brand.</p>
-          </div>
-          <div className="why-card">
-            <div className="why-icon">
-              <IndianRupee />
-            </div>
-            <h3>Fair Pricing</h3>
-            <p>No hidden charges. Honest prices you can trust.</p>
-          </div>
+
+        <div className="hm-why-grid">
+          <WhyCard
+            Icon={Droplet}
+            title="Pure & Authentic"
+            desc="Edible oils and groceries sourced with strict quality checks."
+            color="amber"
+          />
+          <WhyCard
+            Icon={ShieldCheck}
+            title="Quality Assured"
+            desc="Every product is verified before it reaches your home."
+            color="green"
+          />
+          <WhyCard
+            Icon={Store}
+            title="Trusted Kirana"
+            desc="Local sourcing with the reliability of a modern brand."
+            color="blue"
+          />
+          <WhyCard
+            Icon={IndianRupee}
+            title="Fair Pricing"
+            desc="No hidden charges. Honest prices you can trust."
+            color="rose"
+          />
         </div>
       </section>
 
       {/* ═══════════════ KITCHEN SECTION ═══════════════ */}
-      <section className="kitchen-section">
-        <div className="kitchen-header">
-          <h2>What's in your kitchen today?</h2>
-          <p>Everyday essentials that every home needs</p>
-        </div>
-        <div className="kitchen-grid">
-          <div className="kitchen-card">
-            <div className="kitchen-icon">
-              <Droplet />
+      <section className="hm-kitchen">
+        <div className="hm-kitchen-inner">
+          <div className="hm-section-head">
+            <div className="hm-section-badge">
+              <Flame size={12} />
+              <span>Kitchen Essentials</span>
             </div>
-            <h3>Cooking Oils</h3>
-            <p>Mustard, refined &amp; cold-pressed oils</p>
+            <h2 className="hm-section-title">
+              What's in your <span>kitchen</span> today?
+            </h2>
+            <p className="hm-section-sub">
+              Everyday essentials that every home needs
+            </p>
           </div>
-          <div className="kitchen-card">
-            <div className="kitchen-icon">
-              <Wheat />
-            </div>
-            <h3>Rice &amp; Atta</h3>
-            <p>Daily grains for every meal</p>
-          </div>
-          <div className="kitchen-card">
-            <div className="kitchen-icon">
-              <Candy />
-            </div>
-            <h3>Sugar &amp; Staples</h3>
-            <p>Trusted ingredients for daily cooking</p>
-          </div>
-          <div className="kitchen-card">
-            <div className="kitchen-icon">
-              <ShoppingBasket />
-            </div>
-            <h3>Family Essentials</h3>
-            <p>Everyday items chosen for comfort and daily family needs</p>
+
+          <div className="hm-kitchen-grid">
+            <KitchenCard
+              Icon={Droplet}
+              title="Cooking Oils"
+              desc="Mustard, refined & cold-pressed oils"
+            />
+            <KitchenCard
+              Icon={Wheat}
+              title="Rice & Atta"
+              desc="Daily grains for every meal"
+            />
+            <KitchenCard
+              Icon={Candy}
+              title="Sugar & Staples"
+              desc="Trusted ingredients for daily cooking"
+            />
+            <KitchenCard
+              Icon={ShoppingBasket}
+              title="Family Essentials"
+              desc="Everyday items chosen for comfort and daily family needs"
+            />
           </div>
         </div>
       </section>
 
       {/* ═══════════════ CTA SECTION ═══════════════ */}
-      <section className="home-cta">
-        <div className="cta-content">
-          <h2>Start your everyday shopping with RAJBHOG</h2>
-          <p className="cta-subtitle">
+      <section className="hm-cta">
+        <div className="hm-cta-bg" aria-hidden="true" />
+        <div className="hm-cta-inner">
+          <div className="hm-section-badge hm-section-badge--light">
+            <Heart size={12} />
+            <span>Made with care</span>
+          </div>
+
+          <h2 className="hm-cta-title">
+            Start your everyday shopping
+            <br />
+            with RAJBHOG
+          </h2>
+          <p className="hm-cta-sub">
             A modern kirana store built on trust, quality, and everyday needs of
             Indian households.
           </p>
 
-          <div className="cta-points">
-            <div className="cta-point">
-              <span className="cta-point-icon">
-                <Flame />
-              </span>
-              <div>
-                <h4>Pure Essentials</h4>
-                <p>Cooking oils &amp; groceries selected for daily use</p>
-              </div>
-            </div>
-            <div className="cta-point">
-              <span className="cta-point-icon">
-                <ShieldCheck />
-              </span>
-              <div>
-                <h4>Quality Checked</h4>
-                <p>Every product is verified before it reaches you</p>
-              </div>
-            </div>
-            <div className="cta-point">
-              <span className="cta-point-icon">
-                <Heart />
-              </span>
-              <div>
-                <h4>Made with Care</h4>
-                <p>Handpicked for families who deserve the best</p>
-              </div>
-            </div>
+          <div className="hm-cta-points">
+            <CtaPoint
+              Icon={Flame}
+              title="Pure Essentials"
+              desc="Cooking oils & groceries selected for daily use"
+            />
+            <CtaPoint
+              Icon={ShieldCheck}
+              title="Quality Checked"
+              desc="Every product is verified before it reaches you"
+            />
+            <CtaPoint
+              Icon={Heart}
+              title="Made with Care"
+              desc="Handpicked for families who deserve the best"
+            />
           </div>
 
-          <div className="cta-trust-strip">
-            <div className="cta-trust-item">
-              <Award className="cta-trust-icon" />
-              <span className="cta-trust-label">Premium Quality</span>
-            </div>
-            <div className="cta-trust-divider" />
-            <div className="cta-trust-item">
-              <Leaf className="cta-trust-icon" />
-              <span className="cta-trust-label">100% Pure</span>
-            </div>
-            <div className="cta-trust-divider" />
-            <div className="cta-trust-item">
-              <BadgeCheck className="cta-trust-icon" />
-              <span className="cta-trust-label">Quality Assured</span>
-            </div>
-            <div className="cta-trust-divider" />
-            <div className="cta-trust-item">
-              <Truck className="cta-trust-icon" />
-              <span className="cta-trust-label">Doorstep Delivery</span>
-            </div>
-            <div className="cta-trust-divider" />
-            <div className="cta-trust-item">
-              <Clock className="cta-trust-icon" />
-              <span className="cta-trust-label">Always Fresh</span>
-            </div>
+          <div className="hm-trust-strip">
+            <TrustItem Icon={Award} label="Premium Quality" />
+            <span className="hm-trust-div" />
+            <TrustItem Icon={Leaf} label="100% Pure" />
+            <span className="hm-trust-div" />
+            <TrustItem Icon={BadgeCheck} label="Quality Assured" />
+            <span className="hm-trust-div" />
+            <TrustItem Icon={Truck} label="Doorstep Delivery" />
+            <span className="hm-trust-div" />
+            <TrustItem Icon={Clock} label="Always Fresh" />
           </div>
         </div>
       </section>
 
-      {/* ═══════════════ FAQ SECTION ═══════════════ */}
-      <section className="faq-section">
-        {/* Decorative bg blobs */}
-        <div className="faq-bg-blob faq-bg-blob--tl" />
-        <div className="faq-bg-blob faq-bg-blob--br" />
+      {/* ═══════════════ FAQ ═══════════════ */}
+      <section className="hm-faq">
+        <div className="hm-faq-blob hm-faq-blob--tl" aria-hidden="true" />
+        <div className="hm-faq-blob hm-faq-blob--br" aria-hidden="true" />
 
-        {/* Header */}
-        <div className="faq-header">
-          <div className="faq-header-badge">
-            <MessageCircle size={14} />
-            Have Questions?
+        <div className="hm-section-head">
+          <div className="hm-section-badge">
+            <MessageCircle size={12} />
+            <span>Have Questions?</span>
           </div>
-          <h2 className="faq-title">Frequently Asked Questions</h2>
-          <p className="faq-subtitle">
+          <h2 className="hm-section-title">
+            Frequently Asked <span>Questions</span>
+          </h2>
+          <p className="hm-section-sub">
             Everything you need to know about shopping with RAJBHOG — answered
             honestly.
           </p>
         </div>
 
-        {/* Two-column accordion */}
-        <div className="faq-grid">
-          {/* Left column — even items */}
-          <div className="faq-col">
+        <div className="hm-faq-grid">
+          <div className="hm-faq-col">
             {FAQS.filter((_, i) => i % 2 === 0).map((item) => {
               const idx = FAQS.indexOf(item);
-              const isOpen = openFaq === idx;
               return (
-                <div
+                <FaqItem
                   key={idx}
-                  className={`faq-item ${isOpen ? "faq-item--open" : ""}`}>
-                  <button
-                    className="faq-question"
-                    onClick={() => toggleFaq(idx)}
-                    aria-expanded={isOpen}>
-                    <span className="faq-q-num">
-                      {String(idx + 1).padStart(2, "0")}
-                    </span>
-                    <span className="faq-q-text">{item.q}</span>
-                    <span className="faq-chevron">
-                      {isOpen ? <Minus size={15} /> : <Plus size={15} />}
-                    </span>
-                  </button>
-                  {isOpen && (
-                    <div className="faq-answer">
-                      <p>{item.a}</p>
-                    </div>
-                  )}
-                </div>
+                  item={item}
+                  idx={idx}
+                  isOpen={openFaq === idx}
+                  onToggle={toggleFaq}
+                />
               );
             })}
           </div>
-
-          {/* Right column — odd items */}
-          <div className="faq-col">
+          <div className="hm-faq-col">
             {FAQS.filter((_, i) => i % 2 !== 0).map((item) => {
               const idx = FAQS.indexOf(item);
-              const isOpen = openFaq === idx;
               return (
-                <div
+                <FaqItem
                   key={idx}
-                  className={`faq-item ${isOpen ? "faq-item--open" : ""}`}>
-                  <button
-                    className="faq-question"
-                    onClick={() => toggleFaq(idx)}
-                    aria-expanded={isOpen}>
-                    <span className="faq-q-num">
-                      {String(idx + 1).padStart(2, "0")}
-                    </span>
-                    <span className="faq-q-text">{item.q}</span>
-                    <span className="faq-chevron">
-                      {isOpen ? <Minus size={15} /> : <Plus size={15} />}
-                    </span>
-                  </button>
-                  {isOpen && (
-                    <div className="faq-answer">
-                      <p>{item.a}</p>
-                    </div>
-                  )}
-                </div>
+                  item={item}
+                  idx={idx}
+                  isOpen={openFaq === idx}
+                  onToggle={toggleFaq}
+                />
               );
             })}
           </div>
         </div>
 
-        {/* Bottom CTA */}
-        <div className="faq-footer-cta">
-          <div className="faq-cta-icon">
+        <div className="hm-faq-footer">
+          <div className="hm-faq-footer-icon">
             <HelpCircle size={20} />
           </div>
           <div>
-            <p className="faq-cta-title">Still have questions?</p>
-            <p className="faq-cta-sub">
+            <p className="hm-faq-footer-title">Still have questions?</p>
+            <p className="hm-faq-footer-sub">
               Our support team is happy to help you out.{" "}
-              <a href="mailto:rajbhogstore@gmail.com" className="faq-cta-link">
+              <a href="mailto:rajbhogstore@gmail.com" className="hm-faq-link">
                 Contact us →
               </a>
             </p>
@@ -565,69 +673,60 @@ export default function Home() {
       </section>
 
       {/* ═══════════════ FOOTER ═══════════════ */}
-      <footer className="footer">
-        <div className="footer-inner">
-          {/* ── BRAND COLUMN ── */}
-          <div className="footer-col footer-col--brand">
-            <div className="footer-brand-block">
-              <h2 className="footer-logo">
-                RAJ<span>BHOG</span>
-              </h2>
-              <p className="footer-tagline">जो भी खाए, दोस्त बन जाए</p>
+      <footer className="hm-footer">
+        <div className="hm-footer-inner">
+          {/* Brand */}
+          <div className="hm-footer-brand">
+            <div className="hm-footer-logo">
+              <span className="hm-footer-logo-raj">RAJ</span>
+              <span className="hm-footer-logo-bhog">BHOG</span>
             </div>
-            <p className="footer-desc">
+            <p className="hm-footer-tagline">जो भी खाए, दोस्त बन जाए</p>
+            <p className="hm-footer-desc">
               RAJBHOG is your neighbourhood <em>kirana store</em> — built on the
               pillars of <em>purity</em>, <em>quality</em> and{" "}
               <em>honest pricing</em>. Shop without worry, every single day.
             </p>
-            <div className="footer-badges">
-              <span className="footer-badge">
-                <ShieldCheck size={12} /> Pure Essentials
+            <div className="hm-footer-badges">
+              <span className="hm-footer-badge">
+                <ShieldCheck size={11} /> Pure Essentials
               </span>
-              <span className="footer-badge">
-                <Store size={12} /> Local Kirana
+              <span className="hm-footer-badge">
+                <Store size={11} /> Local Kirana
               </span>
-              <span className="footer-badge">
-                <Heart size={12} /> Trusted by Families
+              <span className="hm-footer-badge">
+                <Heart size={11} /> Trusted by Families
               </span>
             </div>
           </div>
 
-          {/* ── QUICK LINKS ── */}
-          <div className="footer-col footer-col--links">
-            <h4 className="footer-col-title">Quick Links</h4>
-            <ul className="footer-links">
-              <li>
-                <a href="/products/edible-oils-ghee">Edible Oils &amp; Ghee</a>
-              </li>
-              <li>
-                <a href="/products/staples-grains">Staples &amp; Grains</a>
-              </li>
-              <li>
-                <a href="/products/spices-masalas">Spices &amp; Masala</a>
-              </li>
-              <li>
-                <a href="/products/pulses-dals">Pulses &amp; Dals</a>
-              </li>
-              <li>
-                <a href="/products/dairy-bakery">Dairy &amp; Bakery</a>
-              </li>
-              <li>
-                <a href="/products/household-essentials">Household</a>
-              </li>
-              <li>
-                <a href="/products/snacks-biscuits">Snacks &amp; Namkeen</a>
-              </li>
+          {/* Links */}
+          <div className="hm-footer-col">
+            <h4 className="hm-footer-col-title">Quick Links</h4>
+            <ul className="hm-footer-links">
+              {[
+                { label: "Edible Oils & Ghee", slug: "edible-oils-ghee" },
+                { label: "Staples & Grains", slug: "staples-grains" },
+                { label: "Spices & Masala", slug: "spices-masalas" },
+                { label: "Pulses & Dals", slug: "pulses-dals" },
+                { label: "Dairy & Bakery", slug: "dairy-bakery" },
+                { label: "Household", slug: "household-essentials" },
+                { label: "Snacks & Namkeen", slug: "snacks-biscuits" },
+              ].map((link) => (
+                <li key={link.slug}>
+                  <a href={`/products/${link.slug}`}>{link.label}</a>
+                </li>
+              ))}
             </ul>
           </div>
 
-          {/* ── CONTACT ── */}
-          <div className="footer-col footer-col--contact">
-            <h4 className="footer-col-title">Get in Touch</h4>
-            <div className="footer-contact-list">
-              <div className="footer-contact-item">
-                <span className="footer-contact-icon">
-                  <MapPin size={15} />
+          {/* Contact */}
+          <div className="hm-footer-col">
+            <h4 className="hm-footer-col-title">Get in Touch</h4>
+            <div className="hm-footer-contacts">
+              <div className="hm-footer-contact">
+                <span className="hm-footer-contact-icon">
+                  <MapPin size={14} />
                 </span>
                 <p>
                   Nokha, Sasaram, Rohtas
@@ -635,9 +734,9 @@ export default function Home() {
                   Bihar — 802215
                 </p>
               </div>
-              <div className="footer-contact-item">
-                <span className="footer-contact-icon">
-                  <Mail size={15} />
+              <div className="hm-footer-contact">
+                <span className="hm-footer-contact-icon">
+                  <Mail size={14} />
                 </span>
                 <a href="mailto:rajbhogstore@gmail.com">
                   rajbhogstore@gmail.com
@@ -645,65 +744,138 @@ export default function Home() {
               </div>
             </div>
 
-            <h4 className="footer-col-title footer-social-title">Follow Us</h4>
-            <div className="footer-socials">
+            <h4 className="hm-footer-col-title" style={{ marginTop: "24px" }}>
+              Follow Us
+            </h4>
+            <div className="hm-footer-socials">
               <a
                 href="https://facebook.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="social-btn social-btn--fb"
+                className="hm-social hm-social--fb"
                 aria-label="Facebook">
-                <Facebook size={16} />
+                <Facebook size={15} />
               </a>
               <a
                 href="https://instagram.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="social-btn social-btn--ig"
+                className="hm-social hm-social--ig"
                 aria-label="Instagram">
-                <Instagram size={16} />
+                <Instagram size={15} />
               </a>
               <a
                 href="https://twitter.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="social-btn social-btn--tw"
-                aria-label="Twitter / X">
-                <Twitter size={16} />
+                className="hm-social hm-social--tw"
+                aria-label="Twitter">
+                <Twitter size={15} />
               </a>
             </div>
           </div>
         </div>
 
-        {/* ── FOOTER BOTTOM ── */}
-        <div className="footer-bottom">
-          <div className="footer-bottom-inner">
-            <span className="footer-copy">
-              © {new Date().getFullYear()} RAJBHOG Stores. All rights reserved.
-            </span>
-            <span className="footer-strip-text">Pure · Trusted · Honest</span>
-          </div>
+        <div className="hm-footer-bottom">
+          <span className="hm-footer-copy">
+            © {new Date().getFullYear()} RAJBHOG Stores. All rights reserved.
+          </span>
+          <span className="hm-footer-strip">Pure · Trusted · Honest</span>
         </div>
       </footer>
     </>
   );
 }
 
-/* ── HERO CARD ── */
-function KiranaCard({ title, subtitle, offer, Icon, onClick }) {
+/* ── SUB-COMPONENTS ─────────────────────────────────────── */
+
+function KiranaCard({ title, subtitle, offer, Icon, color, onClick }) {
   return (
-    <div className="swiggy-card" onClick={onClick} role="button" tabIndex={0}>
-      <div className="card-text">
+    <div
+      className={`hm-kirana-card hm-kirana-card--${color}`}
+      onClick={onClick}
+      role="button"
+      tabIndex={0}>
+      <div className="hm-kirana-icon">
+        <Icon size={22} />
+      </div>
+      <div className="hm-kirana-text">
         <h3>{title}</h3>
         <p>{subtitle}</p>
-        <span className="offer-badge">{offer}</span>
+        <span className="hm-kirana-offer">{offer}</span>
       </div>
-      <div className="card-visual">
-        <Icon />
+      <div className="hm-kirana-arrow">
+        <ArrowRight size={16} />
       </div>
-      <div className="card-arrow">
-        <ArrowRight />
+    </div>
+  );
+}
+
+function WhyCard({ Icon, title, desc, color }) {
+  return (
+    <div className={`hm-why-card hm-why-card--${color}`}>
+      <div className="hm-why-icon">
+        <Icon size={22} />
       </div>
+      <h3>{title}</h3>
+      <p>{desc}</p>
+    </div>
+  );
+}
+
+function KitchenCard({ Icon, title, desc }) {
+  return (
+    <div className="hm-kitchen-card">
+      <div className="hm-kitchen-icon">
+        <Icon size={22} />
+      </div>
+      <h3>{title}</h3>
+      <p>{desc}</p>
+    </div>
+  );
+}
+
+function CtaPoint({ Icon, title, desc }) {
+  return (
+    <div className="hm-cta-point">
+      <span className="hm-cta-point-icon">
+        <Icon size={18} />
+      </span>
+      <div>
+        <h4>{title}</h4>
+        <p>{desc}</p>
+      </div>
+    </div>
+  );
+}
+
+function TrustItem({ Icon, label }) {
+  return (
+    <div className="hm-trust-item">
+      <Icon size={14} />
+      <span>{label}</span>
+    </div>
+  );
+}
+
+function FaqItem({ item, idx, isOpen, onToggle }) {
+  return (
+    <div className={`hm-faq-item ${isOpen ? "hm-faq-item--open" : ""}`}>
+      <button
+        className="hm-faq-q"
+        onClick={() => onToggle(idx)}
+        aria-expanded={isOpen}>
+        <span className="hm-faq-num">{String(idx + 1).padStart(2, "0")}</span>
+        <span className="hm-faq-q-text">{item.q}</span>
+        <span className="hm-faq-chevron">
+          {isOpen ? <Minus size={14} /> : <Plus size={14} />}
+        </span>
+      </button>
+      {isOpen && (
+        <div className="hm-faq-answer">
+          <p>{item.a}</p>
+        </div>
+      )}
     </div>
   );
 }
