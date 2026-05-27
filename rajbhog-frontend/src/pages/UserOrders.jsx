@@ -12,26 +12,30 @@ import {
   Search,
   LayoutGrid,
   List,
-  ArrowRight,
   CalendarDays,
   IndianRupee,
   Trash2,
   Filter,
   RotateCcw,
+  Clock,
+  CheckCircle,
+  AlertCircle,
+  Truck,
+  ChevronRight,
 } from "lucide-react";
 
 import { getMyOrders, cancelOrder, requestReturn } from "../api/user/orderApi";
 import { addReview } from "../api/user/reviewApi";
 import UserReviewModal from "../pages/UserReviewModal";
-import "../styles/UserOrders.css";
 import ReturnModal from "../pages/ReturnModal";
+import "../styles/UserOrders.css";
 
-/* ── status → CSS class ── */
+/* ── Status pill class ── */
 function pillClass(s = "") {
   return "uord__pill uord__pill--" + s.toLowerCase();
 }
 
-/* ── status → top accent colour ── */
+/* ── Status → left-border accent color ── */
 function statusAccent(s = "") {
   const map = {
     PLACED: "#0284c7",
@@ -48,7 +52,7 @@ function statusAccent(s = "") {
   return map[s.toUpperCase()] || "#8b4513";
 }
 
-/* ── format date ── */
+/* ── Format date ── */
 function fmtDate(str) {
   if (!str) return "—";
   return new Date(str).toLocaleDateString("en-IN", {
@@ -58,7 +62,7 @@ function fmtDate(str) {
   });
 }
 
-/* ── filter labels ── */
+/* ── Filter tab config ── */
 const FILTERS = [
   { key: "ALL", label: "All" },
   { key: "PLACED", label: "Placed" },
@@ -66,9 +70,9 @@ const FILTERS = [
   { key: "PACKED", label: "Packed" },
   { key: "OUT_FOR_DELIVERY", label: "On the way" },
   { key: "DELIVERED", label: "Delivered" },
-  { key: "RETURN_REQUESTED", label: "Return Requested" },
-  { key: "RETURN_APPROVED", label: "Return Approved" },
-  { key: "RETURN_REJECTED", label: "Return Rejected" },
+  { key: "RETURN_REQUESTED", label: "Return Req." },
+  { key: "RETURN_APPROVED", label: "Return OK" },
+  { key: "RETURN_REJECTED", label: "Rej." },
   { key: "CANCELLED", label: "Cancelled" },
 ];
 
@@ -82,18 +86,20 @@ export default function UserOrders() {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [returnOrder, setReturnOrder] = useState(null);
-
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("ALL");
   const [viewMode, setViewMode] = useState("list");
 
-  /* ── LOAD — original logic ── */
+  /* ── Load orders ── */
   const loadOrders = async () => {
     try {
       const res = await getMyOrders();
       setOrders(res.data || []);
     } catch {
-      toast.error("Failed to load your orders. Please try again.");
+      toast.error("Couldn't load your orders. Please refresh and try again.", {
+        icon: "⚠️",
+        duration: 3500,
+      });
     } finally {
       setLoading(false);
     }
@@ -103,27 +109,31 @@ export default function UserOrders() {
     loadOrders();
   }, []);
 
-  /* ── CANCEL — original logic ── */
+  /* ── Cancel order ── */
   const handleCancel = async (orderNumber) => {
-    if (!window.confirm("Are you sure you want to cancel this order?")) return;
+    if (!window.confirm("Cancel this order? This action cannot be undone."))
+      return;
     try {
       await cancelOrder(orderNumber);
-      toast.success("Order cancelled successfully");
+      toast.success(`Order #${orderNumber} cancelled successfully.`, {
+        icon: "✅",
+        duration: 3000,
+      });
       loadOrders();
     } catch (e) {
       toast.error(
         e.response?.data?.message ||
           "Unable to cancel this order. Please contact support.",
+        { icon: "❌", duration: 3500 },
       );
     }
   };
 
-  /* ── FILTER + SEARCH (client-side) — original logic ── */
+  /* ── Filter + search (client-side) ── */
   const filtered = useMemo(() => {
     let list = [...orders];
-    if (filter !== "ALL") {
+    if (filter !== "ALL")
       list = list.filter((o) => (o.orderStatus || "").toUpperCase() === filter);
-    }
     if (search.trim()) {
       const kw = search.toLowerCase();
       list = list.filter(
@@ -135,7 +145,7 @@ export default function UserOrders() {
     return list;
   }, [orders, filter, search]);
 
-  /* ── TAB COUNTS — original logic ── */
+  /* ── Tab counts ── */
   const tabCount = (key) =>
     key === "ALL"
       ? orders.length
@@ -146,8 +156,8 @@ export default function UserOrders() {
   if (loading) {
     return (
       <div className="uord__loading-page">
-        <div className="uord__loading-spinner" />
-        <p>Loading your orders…</p>
+        <div className="uord__loading-ring" />
+        <p className="uord__loading-text">Loading your orders…</p>
       </div>
     );
   }
@@ -155,22 +165,23 @@ export default function UserOrders() {
   /* ─────────── EMPTY ─────────── */
   if (!orders.length) {
     return (
-      <div className="uord__empty">
+      <div className="uord__empty-page">
         <div className="uord__empty-card">
-          <div className="uord__empty-icon-wrap">
-            <ShoppingBag size={44} />
+          <div className="uord__empty-icon">
+            <ShoppingBag size={40} />
           </div>
           <h3 className="uord__empty-title">No orders yet</h3>
           <p className="uord__empty-sub">
             You haven't placed any orders with RAJBHOG yet. Explore fresh
-            groceries, cooking oils, spices and more — and place your first
+            groceries, daily staples, spices and more — and place your first
             order today.
           </p>
-          <div className="uord__empty-hint">
-            💡 Tip — Browse categories to find what you need
+          <div className="uord__empty-tip">
+            💡 Browse categories to find what you need
           </div>
-          <button className="uord__btn-browse" onClick={() => navigate("/")}>
-            <ShoppingBag size={16} /> Browse Products
+          <button className="uord__browse-btn" onClick={() => navigate("/")}>
+            <ShoppingBag size={15} />
+            <span>Browse Products</span>
           </button>
         </div>
       </div>
@@ -181,11 +192,11 @@ export default function UserOrders() {
   return (
     <div className="uord__page">
       <div className="uord__inner">
-        {/* ══════════ HEADER ══════════ */}
+        {/* ══ PAGE HEADER ══ */}
         <div className="uord__header">
-          <div className="uord__header-inner">
+          <div className="uord__header-body">
             <div className="uord__header-icon">
-              <Package size={24} />
+              <Package size={22} />
             </div>
             <div className="uord__header-text">
               <h1 className="uord__header-title">My Orders</h1>
@@ -195,18 +206,43 @@ export default function UserOrders() {
               </p>
             </div>
           </div>
+          <div className="uord__header-stats">
+            <div className="uord__stat">
+              <span className="uord__stat-val">
+                {
+                  orders.filter(
+                    (o) => (o.orderStatus || "").toUpperCase() === "DELIVERED",
+                  ).length
+                }
+              </span>
+              <span className="uord__stat-lbl">Delivered</span>
+            </div>
+            <div className="uord__stat-div" />
+            <div className="uord__stat">
+              <span className="uord__stat-val">
+                {
+                  orders.filter((o) =>
+                    [
+                      "PLACED",
+                      "CONFIRMED",
+                      "PACKED",
+                      "OUT_FOR_DELIVERY",
+                    ].includes((o.orderStatus || "").toUpperCase()),
+                  ).length
+                }
+              </span>
+              <span className="uord__stat-lbl">Active</span>
+            </div>
+          </div>
         </div>
 
-        {/* ══════════ CONTROLS  ══════════
-            Row 1: [Search .............. ] [List|Grid]
-            Row 2: [All] [Placed] [Confirmed] ... (scrollable)
-        ══════════════════════════════════ */}
+        {/* ══ CONTROLS ══ */}
         <div className="uord__controls">
-          {/* ── ROW 1: search + view toggle ── */}
-          <div className="uord__controls-row1">
-            <div className="uord__search">
-              <span className="uord__search-ico">
-                <Search size={15} />
+          {/* Row 1: search + view toggle */}
+          <div className="uord__controls-top">
+            <div className="uord__search-wrap">
+              <span className="uord__search-icon">
+                <Search size={14} />
               </span>
               <input
                 type="text"
@@ -219,20 +255,19 @@ export default function UserOrders() {
                 <button
                   className="uord__search-clear"
                   onClick={() => setSearch("")}>
-                  <X size={11} />
+                  <X size={12} />
                 </button>
               )}
             </div>
-
             <div className="uord__view-toggle">
               <button
-                className={`uord__view-btn ${viewMode === "list" ? "uord__view-btn--on" : ""}`}
+                className={`uord__view-btn${viewMode === "list" ? " uord__view-btn--on" : ""}`}
                 onClick={() => setViewMode("list")}
                 title="List view">
                 <List size={15} />
               </button>
               <button
-                className={`uord__view-btn ${viewMode === "grid" ? "uord__view-btn--on" : ""}`}
+                className={`uord__view-btn${viewMode === "grid" ? " uord__view-btn--on" : ""}`}
                 onClick={() => setViewMode("grid")}
                 title="Grid view">
                 <LayoutGrid size={15} />
@@ -240,39 +275,52 @@ export default function UserOrders() {
             </div>
           </div>
 
-          {/* ── ROW 2: filter tabs (horizontally scrollable) ── */}
-          <div className="uord__filter-tabs">
+          {/* Row 2: filter tabs — horizontal scroll */}
+          <div className="uord__filter-row">
             {FILTERS.map((f) => (
               <button
                 key={f.key}
-                className={`uord__ftab ${filter === f.key ? "uord__ftab--on" : ""}`}
+                className={`uord__ftab${filter === f.key ? " uord__ftab--on" : ""}`}
                 onClick={() => setFilter(f.key)}>
-                {f.label}
-                <span className="uord__ftab-badge">{tabCount(f.key)}</span>
+                <span>{f.label}</span>
+                <span className="uord__ftab-count">{tabCount(f.key)}</span>
               </button>
             ))}
           </div>
         </div>
 
-        {/* ══════════ RESULTS META ══════════ */}
-        <div className="uord__meta">
-          <span className="uord__meta-count">
+        {/* ══ RESULTS META ══ */}
+        <div className="uord__results-meta">
+          <span className="uord__results-text">
             Showing <strong>{filtered.length}</strong> of {orders.length} orders
           </span>
+          {(search || filter !== "ALL") && (
+            <button
+              className="uord__clear-all"
+              onClick={() => {
+                setSearch("");
+                setFilter("ALL");
+              }}>
+              <X size={11} /> Clear
+            </button>
+          )}
         </div>
 
-        {/* ══════════ CONTENT ══════════ */}
+        {/* ══ CONTENT ══ */}
         {filtered.length === 0 ? (
+          /* No results */
           <div className="uord__no-results">
-            <Filter size={48} />
-            <h4>No orders match your filter</h4>
-            <p>
+            <div className="uord__no-results-icon">
+              <Filter size={36} />
+            </div>
+            <h4 className="uord__no-results-title">No orders match</h4>
+            <p className="uord__no-results-sub">
               {search
                 ? `No results for "${search}". Try a different order number.`
-                : `You have no "${filter.toLowerCase()}" orders yet.`}
+                : `You have no "${filter.toLowerCase().replace(/_/g, " ")}" orders yet.`}
             </p>
             <button
-              className="uord__btn-clear-filter"
+              className="uord__clear-filter-btn"
               onClick={() => {
                 setFilter("ALL");
                 setSearch("");
@@ -281,74 +329,87 @@ export default function UserOrders() {
             </button>
           </div>
         ) : viewMode === "list" ? (
-          /* ── LIST VIEW ── */
+          /* ══ LIST VIEW ══ */
           <div className="uord__list">
             {filtered.map((order) => {
-              const isDelivered =
-                (order.orderStatus || "").toUpperCase() === "DELIVERED";
-              const canCancel = ["PLACED", "CONFIRMED"].includes(
-                (order.orderStatus || "").toUpperCase(),
+              const status = (order.orderStatus || "").toUpperCase();
+              const isDelivered = status === "DELIVERED";
+              const canCancel = ["PLACED", "CONFIRMED"].includes(status);
+              const canReturn = ["DELIVERED", "RETURN_REJECTED"].includes(
+                status,
               );
               const hasItems = order.items?.length > 0;
-              const cls = (order.orderStatus || "").toLowerCase();
+              const accent = statusAccent(order.orderStatus);
               return (
                 <div
                   key={order.orderNumber}
-                  className={`uord__lrow s-${cls}`}
+                  className="uord__lrow"
+                  style={{ "--row-accent": accent }}
                   onClick={() => navigate(`/user/orders/${order.orderNumber}`)}>
+                  {/* Icon */}
                   <div className="uord__lrow-ico">
-                    <Package size={18} />
+                    <Package size={17} />
                   </div>
 
+                  {/* Info */}
                   <div className="uord__lrow-info">
-                    <div className="uord__lrow-num">#{order.orderNumber}</div>
-                    <div className="uord__lrow-date">
-                      <CalendarDays size={10} style={{ marginRight: 4 }} />
-                      {fmtDate(order.createdAt)}
+                    <p className="uord__lrow-num">#{order.orderNumber}</p>
+                    <div className="uord__lrow-meta">
+                      <span className="uord__lrow-date">
+                        <CalendarDays size={10} />
+                        {fmtDate(order.createdAt)}
+                      </span>
                     </div>
                   </div>
 
+                  {/* Status pill */}
                   <span className={pillClass(order.orderStatus)}>
-                    {order.orderStatus}
+                    {order.orderStatus?.replace(/_/g, " ")}
                   </span>
 
-                  <div className="uord__lrow-mid">
-                    <span className="uord__lrow-amt">
-                      ₹{Number(order.finalAmount).toLocaleString()}
-                    </span>
-                  </div>
+                  {/* Amount */}
+                  <span className="uord__lrow-amt">
+                    ₹{Number(order.finalAmount).toLocaleString()}
+                  </span>
 
+                  {/* Actions — stop propagation so click doesn't open detail */}
                   <div
                     className="uord__lrow-actions"
                     onClick={(e) => e.stopPropagation()}>
                     <button
-                      className="uord__btn-sm uord__btn-sm--view"
+                      className="uord__act-btn uord__act-btn--view"
                       onClick={() =>
                         navigate(`/user/orders/${order.orderNumber}`)
-                      }>
-                      <Eye size={12} /> View
+                      }
+                      title="View order">
+                      <Eye size={13} />
+                      <span>View</span>
                     </button>
                     {canCancel && (
                       <button
-                        className="uord__btn-sm uord__btn-sm--cancel"
-                        onClick={() => handleCancel(order.orderNumber)}>
-                        <Trash2 size={12} /> Cancel
+                        className="uord__act-btn uord__act-btn--cancel"
+                        onClick={() => handleCancel(order.orderNumber)}
+                        title="Cancel order">
+                        <Trash2 size={13} />
+                        <span>Cancel</span>
                       </button>
                     )}
                     {isDelivered && hasItems && (
                       <button
-                        className="uord__btn-sm uord__btn-sm--review"
-                        onClick={() => setReviewItem(order.items[0].id)}>
-                        <Star size={12} /> Review
+                        className="uord__act-btn uord__act-btn--review"
+                        onClick={() => setReviewItem(order.items[0].id)}
+                        title="Write a review">
+                        <Star size={13} />
+                        <span>Review</span>
                       </button>
                     )}
-                    {["DELIVERED", "RETURN_REJECTED"].includes(
-                      (order.orderStatus || "").toUpperCase(),
-                    ) && (
+                    {canReturn && (
                       <button
-                        className="uord__btn-sm uord__btn-sm--return"
-                        onClick={() => setReturnOrder(order.orderNumber)}>
-                        <RotateCcw size={12} /> Return
+                        className="uord__act-btn uord__act-btn--return"
+                        onClick={() => setReturnOrder(order.orderNumber)}
+                        title="Request return">
+                        <RotateCcw size={13} />
+                        <span>Return</span>
                       </button>
                     )}
                   </div>
@@ -357,65 +418,73 @@ export default function UserOrders() {
             })}
           </div>
         ) : (
-          /* ── GRID VIEW ── */
+          /* ══ GRID VIEW ══ */
           <div className="uord__grid">
             {filtered.map((order) => {
-              const isDelivered =
-                (order.orderStatus || "").toUpperCase() === "DELIVERED";
-              const canCancel = ["PLACED", "CONFIRMED"].includes(
-                (order.orderStatus || "").toUpperCase(),
+              const status = (order.orderStatus || "").toUpperCase();
+              const isDelivered = status === "DELIVERED";
+              const canCancel = ["PLACED", "CONFIRMED"].includes(status);
+              const canReturn = ["DELIVERED", "RETURN_REJECTED"].includes(
+                status,
               );
               const hasItems = order.items?.length > 0;
+              const accent = statusAccent(order.orderStatus);
               return (
                 <div
                   key={order.orderNumber}
                   className="uord__gcard"
-                  style={{ "--card-accent": statusAccent(order.orderStatus) }}
+                  style={{ "--card-accent": accent }}
                   onClick={() => navigate(`/user/orders/${order.orderNumber}`)}>
+                  {/* Color-coded top bar */}
+                  <div className="uord__gcard-bar" />
+
+                  {/* Card head */}
                   <div className="uord__gcard-head">
-                    <div className="uord__gcard-num">
-                      <span className="uord__gcard-num-ico">
-                        <Package size={14} />
-                      </span>
-                      <span className="uord__gcard-num-txt">
+                    <div className="uord__gcard-id">
+                      <div className="uord__gcard-pkg-icon">
+                        <Package size={13} />
+                      </div>
+                      <span className="uord__gcard-num">
                         #{order.orderNumber}
                       </span>
                     </div>
                     <span className={pillClass(order.orderStatus)}>
-                      {order.orderStatus}
+                      {order.orderStatus?.replace(/_/g, " ")}
                     </span>
                   </div>
 
+                  {/* Card body */}
                   <div className="uord__gcard-body">
-                    <div className="uord__gcrow">
-                      <div className="uord__gcrow-ico">
+                    <div className="uord__ginfo-row">
+                      <div className="uord__ginfo-icon">
                         <IndianRupee size={13} />
                       </div>
-                      <div className="uord__gcrow-info">
-                        <span className="uord__gcrow-lbl">Order Amount</span>
-                        <span className="uord__gcrow-val uord__gcrow-val--amt">
+                      <div>
+                        <p className="uord__ginfo-label">Order Amount</p>
+                        <p className="uord__ginfo-value uord__ginfo-value--amount">
                           ₹{Number(order.finalAmount).toLocaleString()}
-                        </span>
+                        </p>
                       </div>
                     </div>
-                    <div className="uord__gcrow">
-                      <div className="uord__gcrow-ico">
+                    <div className="uord__ginfo-row">
+                      <div className="uord__ginfo-icon">
                         <CalendarDays size={13} />
                       </div>
-                      <div className="uord__gcrow-info">
-                        <span className="uord__gcrow-lbl">Placed On</span>
-                        <span className="uord__gcrow-val">
+                      <div>
+                        <p className="uord__ginfo-label">Placed On</p>
+                        <p className="uord__ginfo-value">
                           {fmtDate(order.createdAt)}
-                        </span>
+                        </p>
                       </div>
                     </div>
                   </div>
 
+                  {/* Card footer — actions */}
                   <div
                     className="uord__gcard-foot"
                     onClick={(e) => e.stopPropagation()}>
                     <button
-                      className="uord__btn-full uord__btn-full--view"
+                      className="uord__gact-btn uord__gact-btn--view"
                       onClick={() =>
                         navigate(`/user/orders/${order.orderNumber}`)
                       }>
@@ -423,23 +492,21 @@ export default function UserOrders() {
                     </button>
                     {canCancel && (
                       <button
-                        className="uord__btn-full uord__btn-full--cancel"
+                        className="uord__gact-btn uord__gact-btn--cancel"
                         onClick={() => handleCancel(order.orderNumber)}>
                         <Trash2 size={13} /> Cancel
                       </button>
                     )}
                     {isDelivered && hasItems && (
                       <button
-                        className="uord__btn-full uord__btn-full--review"
+                        className="uord__gact-btn uord__gact-btn--review"
                         onClick={() => setReviewItem(order.items[0].id)}>
                         <Star size={13} /> Review
                       </button>
                     )}
-                    {["DELIVERED", "RETURN_REJECTED"].includes(
-                      (order.orderStatus || "").toUpperCase(),
-                    ) && (
+                    {canReturn && (
                       <button
-                        className="uord__btn-full uord__btn-full--return"
+                        className="uord__gact-btn uord__gact-btn--return"
                         onClick={() => setReturnOrder(order.orderNumber)}>
                         <RotateCcw size={13} /> Return
                       </button>
@@ -451,7 +518,7 @@ export default function UserOrders() {
           </div>
         )}
 
-        {/* ══════════ RETURN MODAL ══════════ */}
+        {/* ══ RETURN MODAL ══ */}
         {returnOrder && (
           <ReturnModal
             orderNumber={returnOrder}
@@ -459,28 +526,34 @@ export default function UserOrders() {
             onSubmit={async (reason) => {
               try {
                 await requestReturn(returnOrder, reason);
-                toast.success("Return requested successfully");
+                toast.success("Return request submitted successfully.", {
+                  icon: "✅",
+                  duration: 3000,
+                });
                 setReturnOrder(null);
                 loadOrders();
               } catch (e) {
                 toast.error(
-                  e.response?.data?.message || "Failed to request return",
+                  e.response?.data?.message ||
+                    "Failed to submit return request.",
+                  { icon: "❌", duration: 3500 },
                 );
               }
             }}
           />
         )}
 
-        {/* ══════════ REVIEW MODAL ══════════ */}
+        {/* ══ REVIEW MODAL ══ */}
         {reviewItem && (
           <UserReviewModal
             orderItemId={reviewItem}
             onClose={() => setReviewItem(null)}
             onSubmit={async (data) => {
               await addReview(data);
-              toast.success(
-                "Thank you! Your review has been submitted successfully.",
-              );
+              toast.success("Thank you! Your review has been submitted.", {
+                icon: "⭐",
+                duration: 3000,
+              });
               setReviewItem(null);
             }}
           />
