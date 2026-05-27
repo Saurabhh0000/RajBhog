@@ -17,12 +17,35 @@ import {
   X,
   Headphones,
   Inbox,
+  ChevronRight,
+  ShieldCheck,
+  Hash,
+  SlidersHorizontal,
 } from "lucide-react";
 import toast from "react-hot-toast";
 import { getMyContacts } from "../api/public/contactApi";
 import "../styles/MyContacts.css";
 
-/* ── status → accent colour (top strip on grid card) ── */
+/* ─── Toast styles ─────────────────────────────────────── */
+const toastCfg = {
+  error: {
+    style: {
+      background: "#fff1f2",
+      color: "#9f1239",
+      fontWeight: 700,
+      fontSize: "13.5px",
+      borderLeft: "4px solid #f43f5e",
+      padding: "12px 18px",
+      borderRadius: "12px",
+      boxShadow: "0 8px 24px rgba(244,63,94,0.16)",
+      fontFamily: "'Plus Jakarta Sans', sans-serif",
+    },
+    duration: 4000,
+    icon: "❌",
+  },
+};
+
+/* ─── status → accent colour ───────────────────────────── */
 function statusAccent(status = "") {
   const map = {
     OPEN: "#f59e0b",
@@ -33,7 +56,7 @@ function statusAccent(status = "") {
   return map[status.toUpperCase()] || "#8b4513";
 }
 
-/* ── status → icon ── */
+/* ─── status → icon ────────────────────────────────────── */
 function StatusIcon({ status, size = 14 }) {
   const s = (status || "").toUpperCase();
   if (s === "OPEN") return <AlertCircle size={size} />;
@@ -43,12 +66,12 @@ function StatusIcon({ status, size = 14 }) {
   return <MessageCircle size={size} />;
 }
 
-/* ── readable status label ── */
+/* ─── readable label ───────────────────────────────────── */
 function statusLabel(status = "") {
   return status.replace("_", " ");
 }
 
-/* ── format date ── */
+/* ─── format date ──────────────────────────────────────── */
 function fmtDate(str) {
   if (!str) return "—";
   return new Date(str).toLocaleDateString("en-IN", {
@@ -58,7 +81,7 @@ function fmtDate(str) {
   });
 }
 
-/* ── filter tabs config ── */
+/* ─── filter tabs config ────────────────────────────────── */
 const FILTERS = [
   { key: "ALL", label: "All", Icon: Inbox },
   { key: "OPEN", label: "Open", Icon: AlertCircle },
@@ -77,7 +100,7 @@ export default function MyContacts() {
   const [searchTerm, setSearchTerm] = useState("");
   const [viewMode, setViewMode] = useState("list");
 
-  /* ── LOAD — original logic, improved toast ── */
+  /* ── load ── */
   useEffect(() => {
     loadContacts();
   }, []);
@@ -88,17 +111,20 @@ export default function MyContacts() {
       const res = await getMyContacts();
       setContacts(res.data || []);
     } catch {
-      toast.error("Failed to load support tickets. Please try again.");
+      toast.error(
+        "Failed to load support tickets. Please try again.",
+        toastCfg.error,
+      );
     } finally {
       setLoading(false);
     }
   };
 
-  /* ── STATUS HELPERS — original logic ── */
+  /* ── helpers ── */
   const getStatusIcon = (status) => <StatusIcon status={status} size={14} />;
   const getStatusLabel = (status) => statusLabel(status);
 
-  /* ── FILTER + SEARCH — original logic ── */
+  /* ── filter + search ── */
   const filteredContacts = useMemo(() => {
     return contacts.filter((contact) => {
       const matchesFilter = filter === "ALL" || contact.status === filter;
@@ -109,7 +135,7 @@ export default function MyContacts() {
     });
   }, [contacts, filter, searchTerm]);
 
-  /* ── STATUS COUNTS — original logic ── */
+  /* ── counts ── */
   const statusCounts = {
     ALL: contacts.length,
     OPEN: contacts.filter((c) => c.status === "OPEN").length,
@@ -122,8 +148,11 @@ export default function MyContacts() {
   if (loading) {
     return (
       <div className="mct__loading-page">
-        <div className="mct__loading-spinner" />
-        <p>Loading your support tickets…</p>
+        <div className="mct__loading-ring">
+          <div className="mct__loading-spinner" />
+        </div>
+        <p className="mct__loading-text">Loading your support tickets…</p>
+        <span className="mct__loading-sub">Fetching from RAJBHOG support</span>
       </div>
     );
   }
@@ -133,8 +162,9 @@ export default function MyContacts() {
     return (
       <div className="mct__empty">
         <div className="mct__empty-card">
+          <div className="mct__empty-glow" aria-hidden="true" />
           <div className="mct__empty-icon-wrap">
-            <Headphones size={44} />
+            <Headphones size={40} />
           </div>
           <h3 className="mct__empty-title">No support tickets yet</h3>
           <p className="mct__empty-sub">
@@ -142,7 +172,11 @@ export default function MyContacts() {
             here so you can track their progress and status.
           </p>
           <div className="mct__empty-hint">
-            💡 Tip — Use the Contact Us page to raise a new support request
+            <span className="mct__empty-hint-icon">💡</span>
+            <span>
+              Use the <strong>Contact Us</strong> page to raise a new support
+              request
+            </span>
           </div>
         </div>
       </div>
@@ -155,9 +189,17 @@ export default function MyContacts() {
       <div className="mct__inner">
         {/* ══════════ HERO HEADER ══════════ */}
         <div className="mct__header">
+          <span
+            className="mct__header-blob mct__header-blob-1"
+            aria-hidden="true"
+          />
+          <span
+            className="mct__header-blob mct__header-blob-2"
+            aria-hidden="true"
+          />
           <div className="mct__header-inner">
             <div className="mct__header-icon">
-              <Headphones size={24} />
+              <Headphones size={22} />
             </div>
             <div className="mct__header-text">
               <h1 className="mct__header-title">My Support Tickets</h1>
@@ -166,63 +208,45 @@ export default function MyContacts() {
                 raised with RAJBHOG support
               </p>
             </div>
+            <div className="mct__header-badge">
+              <ShieldCheck size={14} />
+              <span>RAJBHOG Support</span>
+            </div>
           </div>
         </div>
 
         {/* ══════════ STAT CARDS ══════════ */}
         <div className="mct__stats">
-          <div className="mct__stat mct__stat--total">
-            <div className="mct__stat-icon">
-              <Inbox size={18} />
-            </div>
-            <div className="mct__stat-info">
-              <span className="mct__stat-label">Total Tickets</span>
-              <strong className="mct__stat-value">{statusCounts.ALL}</strong>
-            </div>
-          </div>
-
-          <div className="mct__stat mct__stat--open">
-            <div className="mct__stat-icon">
-              <AlertCircle size={18} />
-            </div>
-            <div className="mct__stat-info">
-              <span className="mct__stat-label">Open</span>
-              <strong className="mct__stat-value">{statusCounts.OPEN}</strong>
-            </div>
-          </div>
-
-          <div className="mct__stat mct__stat--inprog">
-            <div className="mct__stat-icon">
-              <Clock size={18} />
-            </div>
-            <div className="mct__stat-info">
-              <span className="mct__stat-label">In Progress</span>
-              <strong className="mct__stat-value">
-                {statusCounts.IN_PROGRESS}
-              </strong>
-            </div>
-          </div>
-
-          <div className="mct__stat mct__stat--resolved">
-            <div className="mct__stat-icon">
-              <CheckCircle size={18} />
-            </div>
-            <div className="mct__stat-info">
-              <span className="mct__stat-label">Resolved</span>
-              <strong className="mct__stat-value">
-                {statusCounts.RESOLVED}
-              </strong>
-            </div>
-          </div>
-          <div className="mct__stat mct__stat--closed">
-            <div className="mct__stat-icon">
-              <XCircle size={18} />
-            </div>
-            <div className="mct__stat-info">
-              <span className="mct__stat-label">Closed</span>
-              <strong className="mct__stat-value">{statusCounts.CLOSED}</strong>
-            </div>
-          </div>
+          <StatCard
+            mod="total"
+            icon={<Inbox size={18} />}
+            label="Total Tickets"
+            value={statusCounts.ALL}
+          />
+          <StatCard
+            mod="open"
+            icon={<AlertCircle size={18} />}
+            label="Open"
+            value={statusCounts.OPEN}
+          />
+          <StatCard
+            mod="inprog"
+            icon={<Clock size={18} />}
+            label="In Progress"
+            value={statusCounts.IN_PROGRESS}
+          />
+          <StatCard
+            mod="resolved"
+            icon={<CheckCircle size={18} />}
+            label="Resolved"
+            value={statusCounts.RESOLVED}
+          />
+          <StatCard
+            mod="closed"
+            icon={<XCircle size={18} />}
+            label="Closed"
+            value={statusCounts.CLOSED}
+          />
         </div>
 
         {/* ══════════ CONTROLS BAR ══════════ */}
@@ -248,29 +272,30 @@ export default function MyContacts() {
             )}
           </div>
 
-          <div className="mct__ctrl-div" />
-
-          {/* filter tabs with icons */}
-          <div className="mct__filter-tabs">
-            {FILTERS.map(({ key, label, Icon }) => (
-              <button
-                key={key}
-                className={[
-                  "mct__ftab",
-                  `mct__ftab--${key.toLowerCase()}`,
-                  filter === key ? "mct__ftab--on" : "",
-                ].join(" ")}
-                onClick={() => setFilter(key)}>
-                <Icon size={13} />
-                {label}
-                <span className="mct__ftab-badge">
-                  {statusCounts[key] ?? 0}
-                </span>
-              </button>
-            ))}
+          {/* filter section label */}
+          <div className="mct__ctrl-section">
+            <span className="mct__ctrl-label">
+              <SlidersHorizontal size={13} /> Filter
+            </span>
+            <div className="mct__filter-tabs">
+              {FILTERS.map(({ key, label, Icon }) => (
+                <button
+                  key={key}
+                  className={[
+                    "mct__ftab",
+                    `mct__ftab--${key.toLowerCase()}`,
+                    filter === key ? "mct__ftab--on" : "",
+                  ].join(" ")}
+                  onClick={() => setFilter(key)}>
+                  <Icon size={13} />
+                  <span className="mct__ftab-label">{label}</span>
+                  <span className="mct__ftab-badge">
+                    {statusCounts[key] ?? 0}
+                  </span>
+                </button>
+              ))}
+            </div>
           </div>
-
-          <div className="mct__ctrl-div" />
 
           {/* view toggle */}
           <div className="mct__view-toggle">
@@ -290,19 +315,33 @@ export default function MyContacts() {
         </div>
 
         {/* ══════════ RESULTS META ══════════ */}
-        <div className="mct__meta">
+        <div className="mct__meta-bar">
           <span className="mct__meta-count">
             Showing <strong>{filteredContacts.length}</strong> of{" "}
             {contacts.length} tickets
           </span>
+          {(filter !== "ALL" || searchTerm) && (
+            <button
+              className="mct__meta-clear"
+              onClick={() => {
+                setFilter("ALL");
+                setSearchTerm("");
+              }}>
+              <X size={11} /> Clear filters
+            </button>
+          )}
         </div>
 
         {/* ══════════ CONTENT ══════════ */}
         {filteredContacts.length === 0 ? (
           <div className="mct__no-results">
-            <Filter size={48} />
-            <h4>No tickets match your search</h4>
-            <p>
+            <div className="mct__no-results-icon">
+              <Filter size={36} />
+            </div>
+            <h4 className="mct__no-results-title">
+              No tickets match your search
+            </h4>
+            <p className="mct__no-results-sub">
               {searchTerm
                 ? `No results for "${searchTerm}". Try different keywords.`
                 : `You have no "${getStatusLabel(filter)}" tickets right now.`}
@@ -317,76 +356,94 @@ export default function MyContacts() {
             </button>
           </div>
         ) : viewMode === "list" ? (
-          /* ── LIST VIEW ── */
+          /* ────── LIST VIEW ────── */
           <div className="mct__list">
             {filteredContacts.map((c) => {
               const cls = c.status.toLowerCase();
               return (
                 <div key={c.id} className={`mct__lrow s-${cls}`}>
+                  {/* left icon */}
                   <div className="mct__lrow-ico">
-                    <MessageCircle size={17} />
+                    <MessageCircle size={16} />
                   </div>
 
+                  {/* body */}
                   <div className="mct__lrow-info">
                     <div className="mct__lrow-subject">{c.subject}</div>
-                    <div className="mct__lrow-msg">{c.message}</div>
+                    <div className="mct__lrow-msg">"{c.message}"</div>
+
                     <div className="mct__lrow-meta">
                       {c.name && (
-                        <span className="mct__lrow-meta-item">
+                        <span className="mct__meta-chip">
                           <User size={11} /> {c.name}
                         </span>
                       )}
                       {c.email && (
-                        <span className="mct__lrow-meta-item">
+                        <span className="mct__meta-chip">
                           <Mail size={11} /> {c.email}
                         </span>
                       )}
                       {c.phone && (
-                        <span className="mct__lrow-meta-item">
+                        <span className="mct__meta-chip">
                           <Phone size={11} /> {c.phone}
                         </span>
                       )}
-                      {c.resolutionMessage && (
-                        <div className="mct__resolution">
+                    </div>
+
+                    {c.resolutionMessage && (
+                      <div className="mct__resolution">
+                        <ShieldCheck size={13} className="mct__res-icon" />
+                        <div>
                           <strong>Resolution:</strong> {c.resolutionMessage}
                           <div className="mct__resolution-note">
                             ✔ Updated by support team
                           </div>
                         </div>
-                      )}
-                    </div>
+                      </div>
+                    )}
                   </div>
 
+                  {/* pill */}
                   <span className={`mct__pill mct__pill--${cls}`}>
                     {getStatusIcon(c.status)}
                     {getStatusLabel(c.status)}
                   </span>
 
+                  {/* right meta */}
                   <div className="mct__lrow-right">
-                    <span className="mct__lrow-id">#{c.id}</span>
+                    <span className="mct__lrow-id">
+                      <Hash size={9} />
+                      {c.id}
+                    </span>
                     <span className="mct__lrow-date">
                       <Calendar size={10} /> {fmtDate(c.createdAt)}
                     </span>
                   </div>
+
+                  <ChevronRight size={14} className="mct__lrow-chevron" />
                 </div>
               );
             })}
           </div>
         ) : (
-          /* ── GRID VIEW — premium, no overlap ── */
+          /* ────── GRID VIEW ────── */
           <div className="mct__grid">
             {filteredContacts.map((c) => {
               const cls = c.status.toLowerCase();
-
               return (
                 <div
                   key={c.id}
                   className="mct__gcard"
                   style={{ "--card-accent": statusAccent(c.status) }}>
-                  {/* HEAD: ticket id + date + status pill */}
+                  {/* top accent strip */}
+                  <span className="mct__gcard-strip" aria-hidden="true" />
+
+                  {/* head */}
                   <div className="mct__gcard-head">
                     <div className="mct__gcard-head-left">
-                      <span className="mct__gcard-id">Ticket #{c.id}</span>
+                      <span className="mct__gcard-id">
+                        <Hash size={9} /> Ticket {c.id}
+                      </span>
                       <span className="mct__gcard-date">
                         <Calendar size={11} /> {fmtDate(c.createdAt)}
                       </span>
@@ -397,20 +454,23 @@ export default function MyContacts() {
                     </span>
                   </div>
 
-                  {/* BODY: subject + message + meta chips */}
+                  {/* body */}
                   <div className="mct__gcard-body">
                     <p className="mct__gcard-subject">{c.subject}</p>
                     <p className="mct__gcard-msg">"{c.message}"</p>
+
                     {c.resolutionMessage && (
                       <div className="mct__resolution">
-                        <strong>Resolution:</strong> {c.resolutionMessage}
-                        <div className="mct__resolution-note">
-                          ✔ Updated by support team
+                        <ShieldCheck size={13} className="mct__res-icon" />
+                        <div>
+                          <strong>Resolution:</strong> {c.resolutionMessage}
+                          <div className="mct__resolution-note">
+                            ✔ Updated by support team
+                          </div>
                         </div>
                       </div>
                     )}
 
-                    {/* contact meta */}
                     {(c.name || c.email || c.phone) && (
                       <div className="mct__gcard-meta">
                         {c.name && (
@@ -432,40 +492,35 @@ export default function MyContacts() {
                     )}
                   </div>
 
-                  {/* FOOTER: status indicator + ticket id */}
+                  {/* foot */}
                   <div className="mct__gcard-foot">
                     <span className={`mct__gcard-status-row s-${cls}`}>
-                      {c.status === "RESOLVED" && (
-                        <>
-                          <CheckCircle size={14} /> Resolved
-                        </>
-                      )}
-
-                      {c.status === "CLOSED" && (
-                        <>
-                          <XCircle size={14} /> Closed
-                        </>
-                      )}
-
-                      {c.status === "IN_PROGRESS" && (
-                        <>
-                          <Clock size={14} /> In Progress
-                        </>
-                      )}
-
-                      {c.status === "OPEN" && (
-                        <>
-                          <AlertCircle size={14} /> Open
-                        </>
-                      )}
+                      <StatusIcon status={c.status} size={13} />
+                      {getStatusLabel(c.status)}
                     </span>
-                    <span className="mct__gcard-ticket-id">#{c.id}</span>
+                    <span className="mct__gcard-ticket-id">
+                      <Hash size={9} />
+                      {c.id}
+                    </span>
                   </div>
                 </div>
               );
             })}
           </div>
         )}
+      </div>
+    </div>
+  );
+}
+
+/* ── StatCard sub-component ─────────────────────────────── */
+function StatCard({ mod, icon, label, value }) {
+  return (
+    <div className={`mct__stat mct__stat--${mod}`}>
+      <div className="mct__stat-icon">{icon}</div>
+      <div className="mct__stat-info">
+        <span className="mct__stat-label">{label}</span>
+        <strong className="mct__stat-value">{value}</strong>
       </div>
     </div>
   );
