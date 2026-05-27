@@ -1,6 +1,7 @@
 // src/layouts/UserLayout.jsx
 import { useState, useEffect } from "react";
 import Navbar from "../components/Navbar";
+import UserFooter from "../components/UserFooter";
 import Sidebar from "../components/Sidebar";
 import { Outlet } from "react-router-dom";
 import "../styles/UserLayout.css";
@@ -69,6 +70,7 @@ export default function UserLayout() {
         <main className="main-content">
           <Outlet context={{ profile }} />
         </main>
+        <UserFooter />
         {/* 🔥 Mandatory Dialog */}
         <ProfileSetupDialog open={showDialog} onSuccess={handleProfileSaved} />
       </div>
