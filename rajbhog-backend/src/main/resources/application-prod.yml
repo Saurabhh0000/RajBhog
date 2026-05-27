@@ -14,13 +14,14 @@ spring:
     open-in-view: false
     hibernate:
       ddl-auto: update
-
     show-sql: false
-
     properties:
       hibernate:
         format_sql: false
         dialect: org.hibernate.dialect.PostgreSQLDialect
+
+  main:
+    lazy-initialization: true
 
 jwt:
   secret: ${JWT_SECRET}
@@ -33,7 +34,6 @@ brevo:
 springdoc:
   swagger-ui:
     path: /swagger-ui.html
-
   api-docs:
     path: /v3/api-docs
 
@@ -50,3 +50,12 @@ rajbhog:
 razorpay:
   keyId: ${RAZORPAY_KEY}
   keySecret: ${RAZORPAY_SECRET}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      show-details: never
