@@ -506,27 +506,52 @@
 .rb-label-icon { color: var(--rb-btn-bg); font-size: 10px; }
 
 .rb-input-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+
+  width: 100%;
+  height: 56px;
+
   border: 1.5px solid var(--rb-input-border);
   border-radius: var(--rb-radius-sm);
+
   background: var(--rb-input-bg);
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease;
 }
 .rb-input-icon {
   position: absolute;
-  left: 15px; top: 50%;
+  left: 16px;
+  top: 50%;
   transform: translateY(-50%);
-  color: var(--rb-text-muted);
-  font-size: 13px;
+
+  color: var(--rb-btn-bg);
+  font-size: 14px;
+
   pointer-events: none;
-  display: flex; align-items: center;
-  transition: color 0.2s ease;
 }
 .rb-input-wrap:focus-within {
   border-color: var(--rb-input-focus);
+  background: #fff;
 }
 .rb-input {
+  width: 100%;
+  height: 100%;
+
   border: none;
+  outline: none;
   background: transparent;
+
+  padding: 0 16px 0 46px;
+
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--rb-text-primary);
+
   box-shadow: none;
 }
 .rb-input::placeholder {
@@ -623,7 +648,6 @@
 }
 
 .rb-trust-chip {
-  flex: 1;
   min-width: 0;
 
   display: flex;
@@ -631,8 +655,7 @@
   justify-content: center;
   gap: 6px;
 
-  padding: 10px 14px;
-  height: 52px;
+  padding: 5px 14px;
 
   background: var(--rb-input-bg);
   border: 1.5px solid var(--rb-input-border);
