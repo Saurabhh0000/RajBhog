@@ -4,7 +4,7 @@
    Fonts: Cinzel (display) + DM Sans (body)
    ============================================================ */
 
-@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700;9..40,800&family=DM+Serif+Display:ital@0;1&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800;900&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700;9..40,800&display=swap');
 
 /* ─── Reset inside page scope ────────────────────────────── */
 .hm-hero *, .hm-slider-section *, .hm-why *, .hm-kitchen *,
@@ -65,7 +65,7 @@
   --hm-shadow-hero:     0 20px 60px rgba(28,10,0,.40);
 
   /* Typography */
-  --font-display:       'Cinzel', Georgia, serif;
+  --font-display: 'Sora', system-ui, sans-serif;
   --font-serif:         'DM Serif Display', Georgia, serif;
   --font-body:          'DM Sans', system-ui, sans-serif;
 }
