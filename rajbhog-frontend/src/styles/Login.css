@@ -1,51 +1,51 @@
 /* ============================================================
-   RAJBHOG — Login Page  |  rb-* prefix  |  zero global bleed
-   Redesigned: Cinzel + DM Sans | Warm luxury editorial
+   RAJBHOG — Login Page  |  rb-* prefix  |  Brand Palette v2
+   Fonts: Cinzel (display) + DM Sans (body)
+   Color system: Exact brand swatches from design spec
    ============================================================ */
 
-@import url("https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=DM+Serif+Display:ital@0;1&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=DM+Serif+Display:ital@0;1&display=swap");
 
-/* ─── Design Tokens ─────────────────────────────────────── */
+/* ─── Brand Design Tokens ────────────────────────────────── */
 .rb-auth-page {
-  --rb-orange:        #ff6a00;
-  --rb-orange-deep:   #c94e00;
-  --rb-orange-glow:   #ff8c38;
-  --rb-orange-light:  #fff7ed;
-  --rb-orange-mid:    #fed7aa;
-  --rb-orange-soft:   #fff3e6;
-  --rb-orange-border: rgba(255, 140, 60, 0.22);
-  --rb-orange-dim:    rgba(255, 106, 0, 0.07);
 
-  --rb-white:    #ffffff;
-  --rb-cream:    #fdf8f2;
-  --rb-surface:  #fffcf8;
-  --rb-dark:     #0c0a08;
-  --rb-dark-2:   #1a1208;
-  --rb-body:     #3d2e1e;
-  --rb-muted:    #7a6254;
-  --rb-line:     #f0dbc8;
-  --rb-input-bg: #faf6f1;
+  /* — Left Panel Palette — */
+  --rb-panel-bg:          #7C2D12;   /* deepest brown — left panel bg */
+  --rb-panel-hover:       #6B2410;   /* feature row hover */
+  --rb-panel-brand:       #FED7AA;   /* logo text, panel h1 */
+  --rb-panel-body:        #FDBA74;   /* tagline, descriptions */
+  --rb-panel-icon:        #FB923C;   /* icons, decorative accents */
 
-  --rb-success:        #15803d;
-  --rb-success-bg:     #f0fdf4;
-  --rb-success-border: #bbf7d0;
-  --rb-error:          #dc2626;
-  --rb-error-bg:       #fef2f2;
-  --rb-error-border:   #fecaca;
+  /* — Form / Right Panel Palette — */
+  --rb-form-bg:           #FFFFFF;   /* right form background */
+  --rb-text-primary:      #1C0A00;   /* form headings */
+  --rb-text-body:         #44403C;   /* labels, helper text */
+  --rb-text-muted:        #78716C;   /* placeholders, muted links */
+  --rb-btn-bg:            #C2410C;   /* CTA button */
+  --rb-btn-hover:         #9A3412;   /* button hover */
+  --rb-input-bg:          #FFF7ED;   /* input field bg */
+  --rb-input-border:      #FED7AA;   /* default input border */
+  --rb-input-focus:       #C2410C;   /* focus border + ring */
+  --rb-trust-green:       #16A34A;   /* lock / shield icon */
+  --rb-page-bg:           #FFF7ED;   /* page background (ivory) */
 
-  --rb-shadow-card:  0 32px 80px rgba(180, 80, 0, 0.13), 0 2px 8px rgba(0,0,0,0.05);
-  --rb-shadow-btn:   0 8px 28px rgba(255, 100, 0, 0.40);
-  --rb-shadow-input: 0 0 0 3px rgba(255, 106, 0, 0.15);
-  --rb-shadow-glow:  0 0 60px rgba(255, 106, 0, 0.18);
+  /* — Derived / Compound — */
+  --rb-panel-border:      rgba(254, 215, 170, 0.18);  /* subtle border on panel elements */
+  --rb-input-focus-ring:  rgba(194, 65, 12, 0.18);    /* #C2410C soft ring */
+  --rb-btn-shadow:        0 8px 28px rgba(194, 65, 12, 0.38);
+  --rb-card-shadow:       0 24px 64px rgba(124, 45, 18, 0.12), 0 2px 8px rgba(0,0,0,0.06);
+  --rb-panel-shadow-in:   inset 0 1px 0 rgba(254,215,170,0.08);
 
-  --rb-radius:    28px;
-  --rb-radius-md: 18px;
-  --rb-radius-sm: 13px;
-  --rb-radius-xs: 9px;
+  /* — Radii — */
+  --rb-radius:    26px;
+  --rb-radius-md: 16px;
+  --rb-radius-sm: 12px;
+  --rb-radius-xs: 8px;
 
+  /* — Typography — */
   --rb-font-display: "Cinzel", Georgia, serif;
   --rb-font-serif:   "DM Serif Display", Georgia, serif;
-  --rb-font-body:    "Plus Jakarta Sans", system-ui, sans-serif;
+  --rb-font-body:    "DM Sans", system-ui, sans-serif;
 }
 
 /* ─── Reset inside scope ─────────────────────────────────── */
@@ -55,92 +55,72 @@
   padding: 0;
 }
 
-/* ─── Page wrapper ───────────────────────────────────────── */
+/* ─── Page Wrapper ───────────────────────────────────────── */
 .rb-auth-page {
   min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
   font-family: var(--rb-font-body);
-  background:
-    radial-gradient(ellipse 80% 70% at 0% 50%, rgba(255, 130, 20, 0.12) 0%, transparent 60%),
-    radial-gradient(ellipse 60% 55% at 100% 0%, rgba(255, 70, 0, 0.08) 0%, transparent 55%),
-    radial-gradient(ellipse 50% 45% at 50% 100%, rgba(255, 120, 0, 0.06) 0%, transparent 50%),
-    linear-gradient(155deg, #fef9f3 0%, #fdf3e7 45%, #fef6ee 100%);
-  padding: 96px 16px 24px;
+  background: var(--rb-page-bg);
+  /* Warm ivory with soft radial depth */
+  background-image:
+    radial-gradient(ellipse 70% 60% at 10% 40%, rgba(124, 45, 18, 0.07) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 50% at 90% 10%, rgba(251, 146, 60, 0.06) 0%, transparent 55%),
+    radial-gradient(ellipse 40% 40% at 50% 95%, rgba(194, 65, 12, 0.04) 0%, transparent 50%);
+  padding: 96px 16px 32px;
+  position: relative;
   overflow: hidden;
 }
 
-/* Ambient noise grain overlay */
+/* Subtle grain texture */
 .rb-auth-page::before {
   content: '';
   position: fixed;
   inset: 0;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");
   pointer-events: none;
   z-index: 0;
-  opacity: 0.6;
 }
 
-/* ─── Outer shell ────────────────────────────────────────── */
+/* ─── Outer Shell ────────────────────────────────────────── */
 .rb-auth-shell {
   display: flex;
   width: 100%;
-  max-width: 1100px;
+  max-width: 1080px;
   min-height: 680px;
-  background: var(--rb-white);
+  background: var(--rb-form-bg);
   border-radius: var(--rb-radius);
-  box-shadow: var(--rb-shadow-card);
+  box-shadow: var(--rb-card-shadow);
   overflow: hidden;
-  border: 1.5px solid var(--rb-orange-border);
+  border: 1.5px solid rgba(124, 45, 18, 0.10);
   position: relative;
   z-index: 1;
-  animation: rb-shell-in 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
-}
-
-@keyframes rb-shell-in {
-  from { opacity: 0; transform: translateY(24px) scale(0.98); }
-  to   { opacity: 1; transform: translateY(0) scale(1); }
 }
 
 /* ══════════════════════════════════════════════════════════
-   BRAND PANEL — left column
+   BRAND PANEL — Left Column  (#7C2D12 dominant)
 ══════════════════════════════════════════════════════════ */
 .rb-brand-panel {
   width: 46%;
   flex-shrink: 0;
   position: relative;
   overflow: hidden;
-  background: linear-gradient(148deg, #ff8300 0%, #ff4800 42%, #c93000 100%);
+  background: var(--rb-panel-bg);
   display: flex;
   align-items: stretch;
 }
 
-/* Decorative geometric rings */
-.rb-blob { position: absolute; border-radius: 50%; pointer-events: none; }
-.rb-blob-1 {
-  top: -80px; right: -80px;
-  width: 280px; height: 280px;
-  border: 40px solid rgba(255,255,255,0.07);
-  background: transparent;
-}
-.rb-blob-2 {
-  bottom: -100px; left: -100px;
-  width: 320px; height: 320px;
-  border: 50px solid rgba(0,0,0,0.07);
-  background: transparent;
-}
-.rb-blob-3 {
-  top: 38%; left: 42%;
-  transform: translate(-50%, -50%);
-  width: 440px; height: 440px;
-  border: 1px solid rgba(255,255,255,0.08);
-  background: radial-gradient(ellipse at center, rgba(255,255,255,0.04) 0%, transparent 70%);
-}
-.rb-blob-4 {
-  top: 22%; right: -30px;
-  width: 100px; height: 100px;
-  background: rgba(255,255,255,0.08);
+/* Rich layered panel background */
+.rb-brand-panel::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 90% 60% at -10% 20%, #9A3412 0%, transparent 55%),
+    radial-gradient(ellipse 70% 50% at 110% 80%, #6B2410 0%, transparent 50%),
+    linear-gradient(165deg, #7C2D12 0%, #6B2410 60%, #5C1E0A 100%);
+  pointer-events: none;
 }
 
 /* Diagonal stripe texture */
@@ -149,19 +129,46 @@
   position: absolute;
   inset: 0;
   background-image: repeating-linear-gradient(
-    -45deg,
+    -55deg,
     transparent,
-    transparent 28px,
-    rgba(255,255,255,0.025) 28px,
-    rgba(255,255,255,0.025) 29px
+    transparent 30px,
+    rgba(254, 215, 170, 0.025) 30px,
+    rgba(254, 215, 170, 0.025) 31px
   );
   pointer-events: none;
+}
+
+/* Decorative rings */
+.rb-blob { position: absolute; border-radius: 50%; pointer-events: none; }
+.rb-blob-1 {
+  top: -90px; right: -90px;
+  width: 290px; height: 290px;
+  border: 42px solid rgba(254, 215, 170, 0.07);
+  background: transparent;
+}
+.rb-blob-2 {
+  bottom: -110px; left: -110px;
+  width: 340px; height: 340px;
+  border: 55px solid rgba(107, 36, 16, 0.5);
+  background: transparent;
+}
+.rb-blob-3 {
+  top: 38%; left: 44%;
+  transform: translate(-50%, -50%);
+  width: 460px; height: 460px;
+  border: 1px solid rgba(254, 215, 170, 0.06);
+  background: radial-gradient(ellipse at center, rgba(251, 146, 60, 0.05) 0%, transparent 65%);
+}
+.rb-blob-4 {
+  top: 20%; right: -24px;
+  width: 90px; height: 90px;
+  background: rgba(251, 146, 60, 0.10);
 }
 
 .rb-brand-inner {
   position: relative;
   z-index: 1;
-  padding: 48px 42px;
+  padding: 48px 40px;
   display: flex;
   flex-direction: column;
   gap: 28px;
@@ -174,155 +181,168 @@
   align-items: center;
   gap: 14px;
 }
+
 .rb-logo-icon {
-  width: 54px; height: 54px;
-  background: rgba(255,255,255,0.15);
-  backdrop-filter: blur(8px);
-  border: 1.5px solid rgba(255,255,255,0.25);
-  color: var(--rb-white);
-  border-radius: 18px;
+  width: 52px; height: 52px;
+  background: rgba(251, 146, 60, 0.18);
+  border: 1.5px solid rgba(253, 186, 116, 0.35);
+  color: var(--rb-panel-icon);
+  border-radius: 16px;
   display: flex; align-items: center; justify-content: center;
-  font-size: 22px;
+  font-size: 20px;
   flex-shrink: 0;
-  transition: transform 0.25s ease, background 0.25s ease;
+  transition: background 0.25s ease, border-color 0.25s ease, transform 0.25s ease;
 }
 .rb-logo-icon:hover {
-  transform: scale(1.08) rotate(-6deg);
-  background: rgba(255,255,255,0.22);
+  background: rgba(251, 146, 60, 0.28);
+  border-color: rgba(253, 186, 116, 0.55);
+  transform: scale(1.07) rotate(-5deg);
 }
+
 .rb-logo-text { display: flex; align-items: baseline; gap: 0; }
 .rb-logo-raj {
   font-family: var(--rb-font-display);
-  font-size: 34px; font-weight: 900;
-  letter-spacing: 2px;
-  color: var(--rb-white);
+  font-size: 32px; font-weight: 900;
+  letter-spacing: 2.5px;
+  color: var(--rb-panel-brand);
   line-height: 1;
-  text-shadow: 0 2px 12px rgba(0,0,0,0.2);
+  text-shadow: 0 2px 12px rgba(0,0,0,0.25);
 }
 .rb-logo-bhog {
   font-family: var(--rb-font-display);
-  font-size: 34px; font-weight: 900;
-  letter-spacing: 2px;
-  color: var(--rb-orange-deep);
-  background: var(--rb-white);
-  border-radius: 10px;
-  padding: 3px 10px;
+  font-size: 32px; font-weight: 900;
+  letter-spacing: 2.5px;
+  color: var(--rb-panel-bg);
+  background: var(--rb-panel-brand);
+  border-radius: 9px;
+  padding: 2px 10px;
   margin-left: 6px;
   line-height: 1;
-  text-shadow: none;
-  box-shadow: 0 4px 14px rgba(0,0,0,0.14);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.18);
+  transition: background 0.25s ease;
 }
 
 /* ─── Tagline ────────────────────────────────────────────── */
-.rb-brand-headline { display: flex; flex-direction: column; gap: 8px; }
+.rb-brand-headline { display: flex; flex-direction: column; gap: 10px; }
 .rb-brand-tag {
   font-family: var(--rb-font-serif);
   font-style: italic;
-  font-size: 18px; font-weight: 400;
-  color: rgba(255,255,255,0.97);
-  letter-spacing: 0.2px;
+  font-size: 19px; font-weight: 400;
+  color: var(--rb-panel-brand);
+  letter-spacing: 0.3px;
   line-height: 1.3;
 }
 .rb-brand-desc {
   font-size: 13.5px; font-weight: 400;
-  color: rgba(255,255,255,0.76);
+  color: var(--rb-panel-body);
   line-height: 1.75;
 }
 
 /* ─── Highlights ─────────────────────────────────────────── */
-.rb-highlights { display: flex; flex-direction: column; gap: 6px; }
+.rb-highlights { display: flex; flex-direction: column; gap: 4px; }
+
 .rb-hl-item {
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 9px 12px;
-  border-radius: 13px;
-  transition: background 0.2s ease, transform 0.2s ease;
+  padding: 10px 12px;
+  border-radius: 12px;
+  transition: background 0.22s ease, transform 0.22s ease;
   cursor: default;
 }
 .rb-hl-item:hover {
-  background: rgba(255,255,255,0.10);
-  transform: translateX(3px);
+  background: var(--rb-panel-hover);
+  transform: translateX(4px);
 }
 .rb-hl-dot {
-  width: 32px; height: 32px;
-  border-radius: 10px;
+  width: 30px; height: 30px;
+  border-radius: 9px;
   display: flex; align-items: center; justify-content: center;
-  font-size: 12px;
-  color: var(--rb-white);
+  font-size: 11px;
+  color: #fff;
   flex-shrink: 0;
-  transition: transform 0.2s ease;
+  transition: transform 0.22s ease;
 }
-.rb-hl-item:hover .rb-hl-dot { transform: scale(1.12) rotate(-4deg); }
-.rb-hl-amber  { background: rgba(251,191,36,0.35); }
-.rb-hl-green  { background: rgba(34,197,94,0.30);  }
-.rb-hl-sky    { background: rgba(14,165,233,0.30); }
-.rb-hl-rose   { background: rgba(244,63,94,0.28);  }
-.rb-hl-text { font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.92); line-height: 1.4; }
+.rb-hl-item:hover .rb-hl-dot { transform: scale(1.12); }
+.rb-hl-amber  { background: rgba(251, 146, 60, 0.40); }
+.rb-hl-green  { background: rgba(22, 163, 74, 0.38);  }
+.rb-hl-sky    { background: rgba(14, 165, 233, 0.32); }
+.rb-hl-rose   { background: rgba(239, 68, 68, 0.30);  }
+.rb-hl-text {
+  font-size: 13px; font-weight: 500;
+  color: var(--rb-panel-body);
+  line-height: 1.4;
+}
 
-/* ─── Feature grid ───────────────────────────────────────── */
+/* ─── Feature Grid ───────────────────────────────────────── */
 .rb-feat-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 10px;
 }
+
 .rb-feat-card {
   display: flex;
   align-items: center;
   gap: 11px;
-  background: rgba(255,255,255,0.10);
-  border-radius: 16px;
+  background: rgba(254, 215, 170, 0.07);
+  border-radius: 14px;
   padding: 13px 14px;
-  border: 1px solid rgba(255,255,255,0.14);
+  border: 1px solid rgba(254, 215, 170, 0.14);
   cursor: default;
   transition: background 0.22s ease, transform 0.22s ease, border-color 0.22s ease;
 }
 .rb-feat-card:hover {
-  background: rgba(255,255,255,0.20);
+  background: var(--rb-panel-hover);
   transform: translateY(-3px);
-  border-color: rgba(255,255,255,0.28);
+  border-color: rgba(253, 186, 116, 0.30);
 }
 .rb-feat-ico {
   width: 36px; height: 36px;
-  border-radius: 11px;
+  border-radius: 10px;
   display: flex; align-items: center; justify-content: center;
-  font-size: 15px;
-  color: var(--rb-white);
+  font-size: 14px;
+  color: #fff;
   flex-shrink: 0;
-  transition: transform 0.2s ease;
+  transition: transform 0.22s ease;
 }
 .rb-feat-card:hover .rb-feat-ico { transform: scale(1.1) rotate(-4deg); }
-.rb-feat-orange .rb-feat-ico { background: linear-gradient(135deg, #ffb84a, #ff5800); }
-.rb-feat-sky    .rb-feat-ico { background: linear-gradient(135deg, #38bdf8, #0277bd); }
-.rb-feat-green  .rb-feat-ico { background: linear-gradient(135deg, #4ade80, #15803d); }
-.rb-feat-violet .rb-feat-ico { background: linear-gradient(135deg, #c084fc, #7e22ce); }
-.rb-feat-body   { display: flex; flex-direction: column; gap: 2px; }
-.rb-feat-label  { font-family: var(--rb-font-body); font-size: 12.5px; font-weight: 800; color: var(--rb-white); line-height: 1; }
-.rb-feat-sub    { font-size: 11px; color: rgba(255,255,255,0.70); line-height: 1.4; }
 
-/* ─── Brand footer ───────────────────────────────────────── */
+.rb-feat-orange .rb-feat-ico { background: linear-gradient(135deg, #FB923C, #C2410C); }
+.rb-feat-sky    .rb-feat-ico { background: linear-gradient(135deg, #38bdf8, #0369a1); }
+.rb-feat-green  .rb-feat-ico { background: linear-gradient(135deg, #4ade80, #16A34A); }
+.rb-feat-violet .rb-feat-ico { background: linear-gradient(135deg, #c084fc, #7c3aed); }
+
+.rb-feat-body  { display: flex; flex-direction: column; gap: 2px; }
+.rb-feat-label { font-size: 12.5px; font-weight: 700; color: var(--rb-panel-brand); line-height: 1; font-family: var(--rb-font-body); }
+.rb-feat-sub   { font-size: 11px; color: var(--rb-panel-body); line-height: 1.4; }
+
+/* ─── Brand Footer Pills ─────────────────────────────────── */
 .rb-brand-footer { display: flex; flex-wrap: wrap; gap: 8px; }
+
 .rb-brand-footer-pill {
   display: inline-flex;
   align-items: center;
   gap: 7px;
-  background: rgba(255,255,255,0.12);
-  border: 1px solid rgba(255,255,255,0.20);
-  color: rgba(255,255,255,0.92);
-  font-size: 11.5px; font-weight: 700;
+  background: rgba(254, 215, 170, 0.10);
+  border: 1px solid rgba(253, 186, 116, 0.22);
+  color: var(--rb-panel-body);
+  font-size: 11.5px; font-weight: 600;
   padding: 6px 14px;
   border-radius: 999px;
   cursor: default;
-  transition: background 0.2s ease, transform 0.2s ease;
   font-family: var(--rb-font-body);
+  transition: background 0.22s ease, border-color 0.22s ease, color 0.22s ease, transform 0.22s ease;
 }
 .rb-brand-footer-pill:hover {
-  background: rgba(255,255,255,0.24);
+  background: rgba(251, 146, 60, 0.22);
+  border-color: rgba(251, 146, 60, 0.40);
+  color: var(--rb-panel-brand);
   transform: translateY(-2px);
 }
 
 /* ══════════════════════════════════════════════════════════
-   FORM PANEL — right column
+   FORM PANEL — Right Column  (#FFFFFF base)
 ══════════════════════════════════════════════════════════ */
 .rb-form-panel {
   flex: 1;
@@ -331,26 +351,26 @@
   justify-content: center;
   position: relative;
   overflow: hidden;
-  background: var(--rb-cream);
+  background: var(--rb-form-bg);
 }
 
-/* Soft warm radial backdrop */
+/* Warm glow orbs */
 .rb-form-panel::before {
   content: '';
   position: absolute;
-  top: -60px; right: -60px;
-  width: 300px; height: 300px;
+  top: -80px; right: -80px;
+  width: 320px; height: 320px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(255,140,30,0.06) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(124, 45, 18, 0.05) 0%, transparent 70%);
   pointer-events: none;
 }
 .rb-form-panel::after {
   content: '';
   position: absolute;
-  bottom: -60px; left: -40px;
-  width: 240px; height: 240px;
+  bottom: -60px; left: -50px;
+  width: 260px; height: 260px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(255,80,0,0.04) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(251, 146, 60, 0.04) 0%, transparent 70%);
   pointer-events: none;
 }
 
@@ -360,46 +380,40 @@
   position: relative;
   z-index: 1;
   width: 100%;
-  max-width: 440px;
-  padding: 56px 52px;
+  max-width: 430px;
+  padding: 52px 48px;
   display: flex;
   flex-direction: column;
-  animation: rb-form-in 0.5s 0.15s cubic-bezier(0.22, 1, 0.36, 1) both;
-}
-
-@keyframes rb-form-in {
-  from { opacity: 0; transform: translateX(16px); }
-  to   { opacity: 1; transform: translateX(0); }
 }
 
 /* Mobile logo — hidden on desktop */
 .rb-mobile-logo { display: none; }
 
-/* ─── Form card ──────────────────────────────────────────── */
+/* ─── Form Card ──────────────────────────────────────────── */
 .rb-form-card {
   width: 100%;
   display: flex;
   flex-direction: column;
 }
 
-/* ─── Step indicator ─────────────────────────────────────── */
+/* ─── Step Indicator ─────────────────────────────────────── */
 .rb-step-indicator {
   display: flex;
   align-items: center;
   gap: 6px;
-  margin-bottom: 28px;
+  margin-bottom: 26px;
 }
 .rb-step-dot {
   width: 6px; height: 6px;
   border-radius: 50%;
-  background: var(--rb-orange-mid);
-  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  background: var(--rb-input-border);
+  transition: all 0.3s ease;
 }
 .rb-step-dot.active {
-  background: var(--rb-orange);
-  width: 28px;
+  background: var(--rb-btn-bg);
+  width: 26px;
   border-radius: 999px;
-  box-shadow: 0 2px 8px rgba(255,106,0,0.35);
+  box-shadow: 0 2px 8px rgba(194, 65, 12, 0.35);
 }
 
 /* ─── Badge ──────────────────────────────────────────────── */
@@ -412,33 +426,33 @@
   font-size: 11.5px; font-weight: 700;
   margin-bottom: 20px;
   width: fit-content;
-  background: var(--rb-orange-soft);
-  color: #a84800;
-  border: 1.5px solid rgba(255,160,60,0.30);
+  background: var(--rb-input-bg);
+  color: var(--rb-btn-bg);
+  border: 1.5px solid rgba(194, 65, 12, 0.20);
   cursor: default;
   font-family: var(--rb-font-body);
   letter-spacing: 0.1px;
-  transition: transform 0.22s ease, box-shadow 0.22s ease, background 0.22s ease;
+  transition: background 0.22s ease, color 0.22s ease, border-color 0.22s ease, transform 0.22s ease, box-shadow 0.22s ease;
 }
 .rb-badge:hover {
-  background: linear-gradient(135deg, #ff8f00, #ff4300);
-  color: var(--rb-white);
+  background: var(--rb-btn-bg);
+  color: #fff;
   border-color: transparent;
   transform: translateY(-2px);
-  box-shadow: 0 6px 18px rgba(255,106,0,0.28);
+  box-shadow: 0 6px 18px rgba(194, 65, 12, 0.28);
 }
 .rb-badge--blue {
   background: #eff8ff;
   color: #0369a1;
-  border-color: #bae6fd;
+  border-color: rgba(3, 105, 161, 0.22);
 }
 .rb-badge--blue:hover {
-  background: linear-gradient(135deg, #38bdf8, #0277bd);
-  color: var(--rb-white);
+  background: #0369a1;
+  color: #fff;
   border-color: transparent;
 }
 
-/* ─── Decorative title ornament ──────────────────────────── */
+/* ─── Ornament ───────────────────────────────────────────── */
 .rb-form-ornament {
   display: flex;
   align-items: center;
@@ -446,123 +460,132 @@
   margin-bottom: 10px;
 }
 .rb-form-ornament-line {
-  flex: 1;
-  height: 1px;
-  background: linear-gradient(to right, var(--rb-orange-mid), transparent);
+  flex: 1; height: 1px;
+  background: linear-gradient(to right, var(--rb-input-border), transparent);
 }
 .rb-form-ornament-dot {
   width: 5px; height: 5px;
   border-radius: 50%;
-  background: var(--rb-orange);
-  box-shadow: 0 0 6px rgba(255,106,0,0.5);
+  background: var(--rb-btn-bg);
+  box-shadow: 0 0 6px rgba(194, 65, 12, 0.45);
 }
 
-/* ─── Title & subtitle ───────────────────────────────────── */
+/* ─── Title & Subtitle ───────────────────────────────────── */
 .rb-form-title {
   font-family: var(--rb-font-display);
-  font-size: 27px; font-weight: 900;
-  color: var(--rb-dark);
+  font-size: 26px; font-weight: 900;
+  color: var(--rb-text-primary);
   letter-spacing: 1px;
   line-height: 1.2;
   margin-bottom: 10px;
 }
 .rb-form-sub {
   font-size: 13.5px; font-weight: 400;
-  color: var(--rb-muted);
-  line-height: 1.75;
-  margin-bottom: 28px;
+  color: var(--rb-text-muted);
+  line-height: 1.7;
+  margin-bottom: 26px;
 }
-.rb-email-hl { color: var(--rb-orange-deep); font-weight: 700; }
+.rb-email-hl { color: var(--rb-btn-bg); font-weight: 700; }
 
-/* ─── Input field ────────────────────────────────────────── */
+/* ─── Input Fields ───────────────────────────────────────── */
 .rb-field { margin-bottom: 20px; }
+
 .rb-label {
   display: flex;
   align-items: center;
   gap: 7px;
-  font-size: 11px; font-weight: 800;
-  color: var(--rb-body);
-  margin-bottom: 9px;
+  font-size: 11px; font-weight: 700;
+  color: var(--rb-text-body);
+  margin-bottom: 8px;
   font-family: var(--rb-font-body);
-  letter-spacing: 1.2px;
+  letter-spacing: 1.1px;
   text-transform: uppercase;
 }
-.rb-label-icon { color: var(--rb-orange); font-size: 11px; }
+.rb-label-icon { color: var(--rb-btn-bg); font-size: 10px; }
+
 .rb-input-wrap { position: relative; }
+
 .rb-input-icon {
   position: absolute;
-  left: 16px; top: 50%;
+  left: 15px; top: 50%;
   transform: translateY(-50%);
-  color: var(--rb-orange);
-  font-size: 14px;
+  color: var(--rb-text-muted);
+  font-size: 13px;
   pointer-events: none;
   display: flex; align-items: center;
-  opacity: 0.7;
-  transition: opacity 0.2s ease;
+  transition: color 0.2s ease;
 }
-.rb-input-wrap:focus-within .rb-input-icon { opacity: 1; }
+.rb-input-wrap:focus-within .rb-input-icon { color: var(--rb-btn-bg); }
+
 .rb-input {
   width: 100%;
-  padding: 14px 16px 14px 48px;
-  border: 1.5px solid #ede3d6;
-  border-radius: 14px;
+  padding: 13px 15px 13px 44px;
+  border: 1.5px solid var(--rb-input-border);
+  border-radius: var(--rb-radius-sm);
   font-size: 14.5px; font-weight: 500;
-  color: var(--rb-dark);
-  background: var(--rb-white);
+  color: var(--rb-text-primary);
+  background: var(--rb-input-bg);
   outline: none;
   font-family: var(--rb-font-body);
   transition: border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
 }
-.rb-input::placeholder { color: #c8bdb4; font-weight: 400; }
-.rb-input:hover  { border-color: #f0bb70; }
-.rb-input:focus  {
-  border-color: var(--rb-orange);
-  box-shadow: var(--rb-shadow-input);
-  background: var(--rb-white);
+.rb-input::placeholder {
+  color: var(--rb-text-muted);
+  font-weight: 400;
+}
+.rb-input:hover {
+  border-color: #FDBA74;
+}
+.rb-input:focus {
+  border-color: var(--rb-input-focus);
+  box-shadow: 0 0 0 3px var(--rb-input-focus-ring);
+  background: #fff;
 }
 
-/* ─── Primary button ─────────────────────────────────────── */
+/* ─── Primary CTA Button ─────────────────────────────────── */
 .rb-btn-primary {
   width: 100%;
-  padding: 15px 22px;
-  border-radius: 14px;
-  background: linear-gradient(135deg, #ff8c00 0%, #ff3d00 100%);
-  color: var(--rb-white);
+  padding: 14px 22px;
+  border-radius: var(--rb-radius-sm);
+  background: var(--rb-btn-bg);
+  color: #fff;
   border: none;
-  font-size: 15px; font-weight: 800;
+  font-size: 15px; font-weight: 700;
   cursor: pointer;
   display: flex; align-items: center; justify-content: center;
   gap: 10px;
-  box-shadow: var(--rb-shadow-btn);
+  box-shadow: var(--rb-btn-shadow);
   font-family: var(--rb-font-body);
   letter-spacing: 0.3px;
   position: relative;
   overflow: hidden;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: background 0.22s ease, transform 0.22s ease, box-shadow 0.22s ease;
 }
+/* Subtle top-highlight sheen */
 .rb-btn-primary::before {
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(135deg, rgba(255,255,255,0.15), transparent 60%);
+  background: linear-gradient(180deg, rgba(255,255,255,0.12) 0%, transparent 55%);
   pointer-events: none;
 }
 .rb-btn-primary:hover:not(:disabled) {
+  background: var(--rb-btn-hover);
   transform: translateY(-2px);
-  box-shadow: 0 16px 40px rgba(255,80,0,0.46);
+  box-shadow: 0 14px 36px rgba(124, 45, 18, 0.42);
 }
 .rb-btn-primary:active:not(:disabled) {
   transform: translateY(0);
-  box-shadow: 0 4px 12px rgba(255,80,0,0.28);
+  box-shadow: 0 4px 12px rgba(124, 45, 18, 0.28);
 }
-.rb-btn-primary:disabled { opacity: 0.65; cursor: not-allowed; }
-.rb-btn-icon { font-size: 13px; transition: transform 0.2s ease; }
-.rb-btn-primary:hover:not(:disabled) .rb-btn-icon { transform: translateX(3px); }
+.rb-btn-primary:disabled { opacity: 0.60; cursor: not-allowed; }
+.rb-btn-icon { font-size: 13px; transition: transform 0.22s ease; }
+.rb-btn-primary:hover:not(:disabled) .rb-btn-icon { transform: translateX(4px); }
 
 /* ─── Spinner ────────────────────────────────────────────── */
 .rb-spinner {
   width: 16px; height: 16px;
-  border: 2.5px solid rgba(255,255,255,0.32);
+  border: 2.5px solid rgba(255,255,255,0.30);
   border-top-color: #fff;
   border-radius: 50%;
   flex-shrink: 0;
@@ -575,99 +598,112 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  margin: 22px 0 0;
+  margin: 20px 0 0;
 }
 .rb-divider-line {
-  flex: 1;
-  height: 1px;
-  background: linear-gradient(to right, transparent, #e8d5c0, transparent);
+  flex: 1; height: 1px;
+  background: linear-gradient(to right, transparent, var(--rb-input-border), transparent);
 }
 .rb-divider-text {
-  font-size: 10.5px; font-weight: 800;
-  color: #c4aa94;
+  font-size: 10.5px; font-weight: 700;
+  color: var(--rb-text-muted);
   text-transform: uppercase;
   letter-spacing: 1.2px;
   white-space: nowrap;
   font-family: var(--rb-font-body);
 }
 
-/* ─── Trust chips ────────────────────────────────────────── */
+/* ─── Trust Chips ────────────────────────────────────────── */
 .rb-trust-row {
   display: flex;
   justify-content: flex-start;
   flex-wrap: wrap;
   gap: 8px;
-  margin-top: 16px;
+  margin-top: 14px;
 }
+
 .rb-trust-chip {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  background: var(--rb-white);
-  border: 1.5px solid #ede3d6;
+  background: var(--rb-input-bg);
+  border: 1.5px solid var(--rb-input-border);
   border-radius: 999px;
   padding: 6px 13px;
-  font-size: 11.5px; font-weight: 700;
-  color: var(--rb-body);
+  font-size: 11.5px; font-weight: 600;
+  color: var(--rb-text-body);
   cursor: default;
   font-family: var(--rb-font-body);
-  transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+  transition: background 0.22s ease, border-color 0.22s ease, color 0.22s ease, transform 0.22s ease, box-shadow 0.22s ease;
 }
 .rb-trust-chip:hover {
-  background: linear-gradient(135deg, #ff8c00, #ff3d00);
-  color: var(--rb-white);
-  border-color: transparent;
+  background: var(--rb-btn-bg);
+  color: #fff;
+  border-color: var(--rb-btn-bg);
   transform: translateY(-2px);
+  box-shadow: 0 4px 14px rgba(194, 65, 12, 0.28);
 }
 
-/* ─── Mobile feature strip — hidden desktop ──────────────── */
+/* Green lock chip — special */
+.rb-trust-chip--secure {
+  color: var(--rb-trust-green);
+  border-color: rgba(22, 163, 74, 0.30);
+  background: rgba(22, 163, 74, 0.05);
+}
+.rb-trust-chip--secure:hover {
+  background: var(--rb-trust-green);
+  color: #fff;
+  border-color: var(--rb-trust-green);
+  box-shadow: 0 4px 14px rgba(22, 163, 74, 0.28);
+}
+
+/* ─── Mobile feature strip ───────────────────────────────── */
 .rb-mobile-strip { display: none; }
 
-/* ──────────────────────────────────────────────────────────
+/* ══════════════════════════════════════════════════════════
    OTP STEP
-────────────────────────────────────────────────────────── */
+══════════════════════════════════════════════════════════ */
 .rb-otp-info-card {
   display: flex;
   align-items: flex-start;
   gap: 13px;
-  background: var(--rb-white);
-  border: 1.5px solid #f0d9bc;
+  background: var(--rb-input-bg);
+  border: 1.5px solid var(--rb-input-border);
   border-radius: var(--rb-radius-sm);
   padding: 14px 16px;
-  margin-bottom: 24px;
-  box-shadow: 0 2px 8px rgba(200,100,0,0.06);
+  margin-bottom: 22px;
 }
 .rb-otp-info-icon {
   width: 36px; height: 36px;
-  background: linear-gradient(135deg, #ffb347, #ff5f00);
-  border-radius: 11px;
+  background: linear-gradient(135deg, #FB923C, #C2410C);
+  border-radius: 10px;
   display: flex; align-items: center; justify-content: center;
   color: #fff;
   font-size: 14px;
   flex-shrink: 0;
 }
-.rb-otp-info-body { display: flex; flex-direction: column; gap: 2px; }
+.rb-otp-info-body { display: flex; flex-direction: column; gap: 3px; }
 .rb-otp-info-title {
-  font-family: var(--rb-font-body);
-  font-size: 11px; font-weight: 800;
-  color: var(--rb-muted);
+  font-size: 10.5px; font-weight: 700;
+  color: var(--rb-text-muted);
   text-transform: uppercase;
   letter-spacing: 0.8px;
+  font-family: var(--rb-font-body);
 }
 .rb-otp-info-email {
   font-size: 13.5px; font-weight: 700;
-  color: var(--rb-orange-deep);
+  color: var(--rb-btn-bg);
   word-break: break-all;
 }
 
 .rb-otp-label {
-  font-family: var(--rb-font-body);
-  font-size: 11px; font-weight: 800;
-  color: var(--rb-body);
+  font-size: 11px; font-weight: 700;
+  color: var(--rb-text-body);
   text-transform: uppercase;
   letter-spacing: 1px;
   margin-bottom: 12px;
   display: block;
+  font-family: var(--rb-font-body);
 }
 
 .rb-otp-row {
@@ -681,35 +717,35 @@
   min-width: 0;
   max-width: 54px;
   height: 60px;
-  border-radius: 14px;
+  border-radius: 12px;
   text-align: center;
   font-size: 24px; font-weight: 900;
   font-family: var(--rb-font-display);
-  border: 1.5px solid #ede3d6;
-  background: var(--rb-white);
-  color: var(--rb-dark);
+  border: 1.5px solid var(--rb-input-border);
+  background: var(--rb-input-bg);
+  color: var(--rb-text-primary);
   outline: none;
-  letter-spacing: 0;
   transition: border-color 0.18s ease, background 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease;
 }
-.rb-otp-box:hover  { border-color: #f0bb70; }
-.rb-otp-box:focus  {
-  border-color: var(--rb-orange);
-  box-shadow: 0 0 0 3px rgba(255,106,0,0.13);
+.rb-otp-box:hover { border-color: #FDBA74; }
+.rb-otp-box:focus {
+  border-color: var(--rb-input-focus);
+  box-shadow: 0 0 0 3px var(--rb-input-focus-ring);
   transform: scale(1.06);
+  background: #fff;
 }
-.rb-otp-row.rb-otp-error   .rb-otp-box {
+.rb-otp-row.rb-otp-error .rb-otp-box {
   border-color: #ef4444;
   background: #fff5f5;
-  box-shadow: 0 0 0 3px rgba(239,68,68,0.10);
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.10);
 }
 .rb-otp-row.rb-otp-success .rb-otp-box {
-  border-color: #22c55e;
-  background: #f0fdf4;
-  box-shadow: 0 0 0 3px rgba(34,197,94,0.12);
+  border-color: var(--rb-trust-green);
+  background: rgba(22, 163, 74, 0.04);
+  box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.12);
 }
 
-/* ─── Inline feedback ────────────────────────────────────── */
+/* ─── Inline Feedback Messages ───────────────────────────── */
 .rb-inline-msg {
   display: flex;
   align-items: center;
@@ -722,14 +758,14 @@
   border: 1.5px solid transparent;
 }
 .rb-inline-error {
-  color: var(--rb-error);
-  background: var(--rb-error-bg);
-  border-color: var(--rb-error-border);
+  color: #b91c1c;
+  background: #fef2f2;
+  border-color: #fecaca;
 }
 .rb-inline-success {
-  color: var(--rb-success);
-  background: var(--rb-success-bg);
-  border-color: var(--rb-success-border);
+  color: #15803d;
+  background: #f0fdf4;
+  border-color: #bbf7d0;
 }
 
 /* ─── Resend / Back ──────────────────────────────────────── */
@@ -744,35 +780,37 @@
   align-items: center;
   gap: 7px;
   font-size: 13px; font-weight: 500;
-  color: var(--rb-muted);
+  color: var(--rb-text-muted);
   font-family: var(--rb-font-body);
-  background: var(--rb-white);
+  background: var(--rb-input-bg);
   padding: 8px 16px;
   border-radius: 999px;
-  border: 1.5px solid #ede3d6;
+  border: 1.5px solid var(--rb-input-border);
 }
-.rb-timer strong { color: var(--rb-orange-deep); font-weight: 800; }
+.rb-timer strong { color: var(--rb-btn-bg); font-weight: 800; }
+
 .rb-link-btn {
   display: inline-flex;
   align-items: center;
   gap: 7px;
-  background: var(--rb-orange-soft);
-  border: 1.5px solid rgba(255,160,60,0.30);
+  background: var(--rb-input-bg);
+  border: 1.5px solid var(--rb-input-border);
   font-size: 13px; font-weight: 700;
-  color: var(--rb-orange-deep);
+  color: var(--rb-btn-bg);
   cursor: pointer;
   font-family: var(--rb-font-body);
-  padding: 9px 20px;
+  padding: 8px 20px;
   border-radius: 999px;
-  transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+  transition: background 0.22s ease, color 0.22s ease, border-color 0.22s ease, transform 0.22s ease, box-shadow 0.22s ease;
 }
 .rb-link-btn:hover {
-  background: linear-gradient(135deg, #ff8c00, #ff3d00);
-  color: var(--rb-white);
+  background: var(--rb-btn-bg);
+  color: #fff;
   border-color: transparent;
   transform: translateY(-2px);
-  box-shadow: 0 6px 18px rgba(255,80,0,0.28);
+  box-shadow: 0 6px 18px rgba(194, 65, 12, 0.28);
 }
+
 .rb-back-btn {
   display: flex;
   align-items: center;
@@ -781,17 +819,382 @@
   width: 100%;
   background: none; border: none;
   font-size: 13px; font-weight: 600;
-  color: #b0a098;
+  color: var(--rb-text-muted);
   cursor: pointer;
-  margin-top: 14px;
+  margin-top: 12px;
   font-family: var(--rb-font-body);
   padding: 9px;
   border-radius: 10px;
   transition: color 0.18s ease, background 0.18s ease;
 }
 .rb-back-btn:hover {
-  color: var(--rb-orange);
-  background: var(--rb-orange-soft);
+  color: var(--rb-btn-bg);
+  background: var(--rb-input-bg);
+}
+
+/* ══════════════════════════════════════════════════════════
+   TOAST / TOASTER  — beautiful branded toasts
+══════════════════════════════════════════════════════════ */
+.rb-toast-container {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  pointer-events: none;
+}
+.rb-toast {
+  pointer-events: all;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px 18px;
+  border-radius: 14px;
+  min-width: 300px;
+  max-width: 380px;
+  background: #fff;
+  border: 1.5px solid var(--rb-input-border);
+  box-shadow: 0 12px 40px rgba(124, 45, 18, 0.14), 0 2px 8px rgba(0,0,0,0.06);
+  font-family: var(--rb-font-body);
+  position: relative;
+  overflow: hidden;
+}
+/* Left accent bar */
+.rb-toast::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 4px;
+  border-radius: 14px 0 0 14px;
+}
+.rb-toast--success::before { background: var(--rb-trust-green); }
+.rb-toast--error::before   { background: #ef4444; }
+.rb-toast--info::before    { background: var(--rb-btn-bg); }
+
+.rb-toast-icon {
+  width: 34px; height: 34px;
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+.rb-toast--success .rb-toast-icon { background: rgba(22,163,74,0.10); color: var(--rb-trust-green); }
+.rb-toast--error   .rb-toast-icon { background: rgba(239,68,68,0.10); color: #ef4444; }
+.rb-toast--info    .rb-toast-icon { background: rgba(194,65,12,0.10);  color: var(--rb-btn-bg); }
+
+.rb-toast-body { flex: 1; display: flex; flex-direction: column; gap: 2px; }
+.rb-toast-title {
+  font-size: 13.5px; font-weight: 700;
+  color: var(--rb-text-primary);
+  line-height: 1.3;
+}
+.rb-toast-msg {
+  font-size: 12.5px; font-weight: 400;
+  color: var(--rb-text-muted);
+  line-height: 1.5;
+}
+.rb-toast-close {
+  background: none; border: none;
+  cursor: pointer;
+  color: var(--rb-text-muted);
+  font-size: 12px;
+  padding: 2px;
+  border-radius: 5px;
+  flex-shrink: 0;
+  opacity: 0.6;
+  transition: opacity 0.18s ease, background 0.18s ease;
+}
+.rb-toast-close:hover { opacity: 1; background: var(--rb-input-bg); }
+
+/* ══════════════════════════════════════════════════════════
+   PRODUCT / ITEM CARDS  — grid & list views
+══════════════════════════════════════════════════════════ */
+
+/* ─── Grid Card ──────────────────────────────────────────── */
+.rb-card {
+  background: #fff;
+  border-radius: 18px;
+  border: 1.5px solid var(--rb-input-border);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+  position: relative;
+  transition: box-shadow 0.25s ease, transform 0.25s ease, border-color 0.25s ease;
+}
+.rb-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 50px rgba(124, 45, 18, 0.14), 0 4px 12px rgba(0,0,0,0.06);
+  border-color: #FDBA74;
+}
+
+/* Image container */
+.rb-card-img-wrap {
+  position: relative;
+  overflow: hidden;
+  background: var(--rb-input-bg);
+  aspect-ratio: 4/3;
+}
+.rb-card-img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.30s ease;
+}
+.rb-card:hover .rb-card-img { transform: scale(1.04); }
+
+/* Badge overlay */
+.rb-card-badge-wrap {
+  position: absolute;
+  top: 10px; left: 10px;
+  display: flex; gap: 6px;
+  flex-wrap: wrap;
+}
+.rb-card-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 10.5px; font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-family: var(--rb-font-body);
+  letter-spacing: 0.3px;
+}
+.rb-card-badge--sale {
+  background: var(--rb-btn-bg);
+  color: #fff;
+}
+.rb-card-badge--new {
+  background: var(--rb-trust-green);
+  color: #fff;
+}
+.rb-card-badge--hot {
+  background: #7C2D12;
+  color: var(--rb-panel-brand);
+}
+
+/* Wishlist button */
+.rb-card-wishlist {
+  position: absolute;
+  top: 10px; right: 10px;
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.90);
+  border: 1.5px solid var(--rb-input-border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px;
+  color: var(--rb-text-muted);
+  cursor: pointer;
+  transition: background 0.20s ease, color 0.20s ease, border-color 0.20s ease, transform 0.20s ease;
+}
+.rb-card-wishlist:hover {
+  background: #fff;
+  color: var(--rb-btn-bg);
+  border-color: var(--rb-btn-bg);
+  transform: scale(1.12);
+}
+.rb-card-wishlist.active {
+  background: var(--rb-btn-bg);
+  color: #fff;
+  border-color: var(--rb-btn-bg);
+}
+
+/* Card body */
+.rb-card-body {
+  padding: 14px 16px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+}
+.rb-card-category {
+  font-size: 10.5px; font-weight: 700;
+  color: var(--rb-btn-bg);
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  font-family: var(--rb-font-body);
+}
+.rb-card-name {
+  font-size: 14.5px; font-weight: 700;
+  color: var(--rb-text-primary);
+  line-height: 1.3;
+  font-family: var(--rb-font-body);
+  /* Clamp to 2 lines */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.rb-card-rating {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+}
+.rb-card-stars { color: #FB923C; letter-spacing: 1px; }
+.rb-card-rating-count { color: var(--rb-text-muted); font-weight: 500; font-size: 11px; }
+
+.rb-card-price-row {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-top: 2px;
+}
+.rb-card-price {
+  font-size: 18px; font-weight: 800;
+  color: var(--rb-btn-bg);
+  font-family: var(--rb-font-body);
+  line-height: 1;
+}
+.rb-card-mrp {
+  font-size: 13px; font-weight: 500;
+  color: var(--rb-text-muted);
+  text-decoration: line-through;
+}
+.rb-card-discount {
+  font-size: 11.5px; font-weight: 700;
+  color: var(--rb-trust-green);
+  background: rgba(22, 163, 74, 0.08);
+  padding: 2px 7px;
+  border-radius: 999px;
+}
+
+.rb-card-footer {
+  padding: 0 16px 14px;
+}
+.rb-card-add-btn {
+  width: 100%;
+  padding: 10px;
+  border-radius: 10px;
+  background: var(--rb-btn-bg);
+  color: #fff;
+  border: none;
+  font-size: 13.5px; font-weight: 700;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  gap: 8px;
+  font-family: var(--rb-font-body);
+  transition: background 0.22s ease, transform 0.22s ease, box-shadow 0.22s ease;
+  box-shadow: 0 4px 14px rgba(194, 65, 12, 0.25);
+}
+.rb-card-add-btn:hover {
+  background: var(--rb-btn-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 8px 22px rgba(124, 45, 18, 0.32);
+}
+
+/* ─── List Card ──────────────────────────────────────────── */
+.rb-list-card {
+  background: #fff;
+  border-radius: 16px;
+  border: 1.5px solid var(--rb-input-border);
+  display: flex;
+  align-items: stretch;
+  overflow: hidden;
+  cursor: pointer;
+  position: relative;
+  transition: box-shadow 0.25s ease, transform 0.25s ease, border-color 0.25s ease;
+}
+.rb-list-card:hover {
+  transform: translateX(4px);
+  box-shadow: 0 12px 36px rgba(124, 45, 18, 0.12), 0 2px 8px rgba(0,0,0,0.05);
+  border-color: #FDBA74;
+}
+.rb-list-card-img-wrap {
+  width: 120px;
+  flex-shrink: 0;
+  overflow: hidden;
+  background: var(--rb-input-bg);
+}
+.rb-list-card-img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.30s ease;
+}
+.rb-list-card:hover .rb-list-card-img { transform: scale(1.06); }
+.rb-list-card-body {
+  flex: 1;
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 6px;
+}
+.rb-list-card-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.rb-list-card-add-btn {
+  padding: 8px 16px;
+  border-radius: 8px;
+  background: var(--rb-btn-bg);
+  color: #fff;
+  border: none;
+  font-size: 12.5px; font-weight: 700;
+  cursor: pointer;
+  font-family: var(--rb-font-body);
+  transition: background 0.22s ease, transform 0.22s ease, box-shadow 0.22s ease;
+  box-shadow: 0 3px 10px rgba(194, 65, 12, 0.22);
+}
+.rb-list-card-add-btn:hover {
+  background: var(--rb-btn-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(124, 45, 18, 0.28);
+}
+
+/* ══════════════════════════════════════════════════════════
+   NAVBAR — #7C2D12 background  (site-wide)
+══════════════════════════════════════════════════════════ */
+.rb-navbar {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 1000;
+  background: var(--rb-panel-bg);
+  border-bottom: 1px solid rgba(254, 215, 170, 0.15);
+  height: 60px;
+  display: flex;
+  align-items: center;
+  padding: 0 24px;
+  gap: 16px;
+}
+.rb-navbar-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+.rb-navbar-logo .rb-logo-raj {
+  color: var(--rb-panel-brand);
+  font-size: 22px; letter-spacing: 2px;
+  text-shadow: 0 1px 8px rgba(0,0,0,0.20);
+}
+.rb-navbar-logo .rb-logo-bhog {
+  font-size: 22px; letter-spacing: 2px;
+  color: var(--rb-panel-bg);
+  background: var(--rb-panel-brand);
+  border-radius: 7px;
+  padding: 1px 8px;
+  margin-left: 4px;
+}
+.rb-navbar-links {
+  display: flex; align-items: center; gap: 4px; margin-left: auto;
+}
+.rb-nav-link {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 7px 14px;
+  border-radius: 8px;
+  font-size: 13.5px; font-weight: 600;
+  color: var(--rb-panel-body);
+  text-decoration: none;
+  font-family: var(--rb-font-body);
+  transition: background 0.20s ease, color 0.20s ease;
+}
+.rb-nav-link:hover {
+  background: var(--rb-panel-hover);
+  color: var(--rb-panel-brand);
+}
+.rb-nav-link.active {
+  background: rgba(251, 146, 60, 0.20);
+  color: var(--rb-panel-brand);
 }
 
 /* ══════════════════════════════════════════════════════════
@@ -804,9 +1207,9 @@
     min-height: unset;
   }
   .rb-brand-panel { width: 100%; }
-  .rb-brand-inner { padding: 34px 32px; gap: 20px; }
+  .rb-brand-inner { padding: 32px 32px; gap: 18px; }
   .rb-form-panel  { justify-content: flex-start; }
-  .rb-form-inner  { padding: 44px 40px; max-width: 100%; }
+  .rb-form-inner  { padding: 40px 36px; max-width: 100%; }
   .rb-form-card   { max-width: 100%; }
   .rb-highlights  {
     flex-direction: row;
@@ -814,12 +1217,12 @@
     gap: 6px;
   }
   .rb-hl-item {
-    background: rgba(255,255,255,0.10);
+    background: rgba(254, 215, 170, 0.08);
     border-radius: 999px;
-    padding: 6px 13px;
+    padding: 6px 12px;
     gap: 7px;
   }
-  .rb-hl-dot { width: 26px; height: 26px; font-size: 10px; border-radius: 8px; }
+  .rb-hl-dot { width: 24px; height: 24px; font-size: 10px; border-radius: 7px; }
   .rb-hl-text { font-size: 12px; }
 }
 
@@ -830,8 +1233,10 @@
   .rb-auth-page {
     padding: 0;
     align-items: flex-start;
-    background: #d94800;
+    background: var(--rb-panel-bg);
+    background-image: none;
   }
+  .rb-auth-page::before { display: none; }
 
   .rb-auth-shell {
     border-radius: 0;
@@ -845,149 +1250,155 @@
   /* Brand panel → slim header bar */
   .rb-brand-panel { width: 100%; flex-shrink: 0; min-height: unset; }
   .rb-blob { display: none; }
-  .rb-brand-panel::after { display: none; }
+  .rb-brand-panel::before { display: none; }
+  .rb-brand-panel::after  { display: none; }
   .rb-brand-inner {
-    padding: 18px 20px 16px;
+    padding: 16px 20px 14px;
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
     gap: 0;
   }
-  .rb-logo-icon { width: 42px; height: 42px; font-size: 18px; border-radius: 14px; }
-  .rb-logo-raj  { font-size: 24px; letter-spacing: 1.5px; }
-  .rb-logo-bhog { font-size: 24px; letter-spacing: 1.5px; padding: 2px 8px; margin-left: 4px; border-radius: 8px; }
+  .rb-logo-icon  { width: 40px; height: 40px; font-size: 17px; border-radius: 13px; }
+  .rb-logo-raj   { font-size: 22px; letter-spacing: 1.5px; }
+  .rb-logo-bhog  { font-size: 22px; letter-spacing: 1.5px; padding: 2px 8px; margin-left: 4px; border-radius: 7px; }
 
   .rb-brand-headline,
   .rb-highlights,
   .rb-feat-grid,
   .rb-brand-footer { display: none; }
 
-  /* White card lifts up from brand bar */
+  /* White card lifts from brand bar */
   .rb-form-panel {
     width: 100%;
     flex: 1;
-    background: var(--rb-cream);
-    border-radius: 24px 24px 0 0;
-    margin-top: 12px;
+    background: var(--rb-page-bg);
+    border-radius: 22px 22px 0 0;
+    margin-top: 10px;
     align-items: flex-start;
     min-height: 0;
   }
-
   .rb-form-inner {
-    padding: 28px 22px 40px;
+    padding: 26px 20px 40px;
     align-items: flex-start;
     width: 100%;
     max-width: 100%;
-    animation: none;
   }
 
-  /* Mobile logo strip inside form panel */
+  /* Mobile logo inside form panel */
   .rb-mobile-logo {
     display: flex;
     align-items: center;
     gap: 10px;
-    margin-bottom: 22px;
-    padding-bottom: 18px;
-    border-bottom: 1.5px solid #f0e0cc;
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 1.5px solid var(--rb-input-border);
     width: 100%;
   }
   .rb-mobile-logo .rb-logo-raj {
-    color: var(--rb-dark);
-    font-size: 22px;
+    color: var(--rb-text-primary);
+    font-size: 21px;
     text-shadow: none;
   }
   .rb-mobile-logo .rb-logo-bhog {
-    font-size: 22px;
-    background: linear-gradient(135deg, #ff8c00, #ff3d00);
-    color: white;
-    box-shadow: 0 3px 10px rgba(255,80,0,0.28);
+    font-size: 21px;
+    background: var(--rb-btn-bg);
+    color: #fff;
+    box-shadow: 0 3px 10px rgba(194, 65, 12, 0.28);
   }
   .rb-logo-icon-sm {
-    width: 40px; height: 40px;
-    background: linear-gradient(135deg, #ff8c00, #ff3d00);
-    color: var(--rb-white);
-    border-radius: 13px;
+    width: 38px; height: 38px;
+    background: linear-gradient(135deg, #FB923C, #C2410C);
+    color: #fff;
+    border-radius: 12px;
     display: flex; align-items: center; justify-content: center;
-    font-size: 16px;
-    box-shadow: 0 4px 14px rgba(255,80,0,0.30);
+    font-size: 15px;
+    box-shadow: 0 4px 14px rgba(194, 65, 12, 0.30);
     flex-shrink: 0;
-    transition: transform 0.2s ease;
+    transition: transform 0.22s ease;
   }
   .rb-logo-icon-sm:hover { transform: scale(1.08) rotate(-5deg); }
 
-  .rb-form-card   { max-width: 100%; }
-  .rb-step-indicator { margin-bottom: 20px; }
+  .rb-form-card    { max-width: 100%; }
+  .rb-step-indicator { margin-bottom: 18px; }
 
-  .rb-badge         { font-size: 11px; padding: 5px 13px; margin-bottom: 16px; }
-  .rb-form-title    { font-size: 22px; letter-spacing: 0.5px; }
-  .rb-form-sub      { font-size: 13px; margin-bottom: 22px; }
-  .rb-label         { font-size: 10.5px; margin-bottom: 7px; }
-  .rb-input         { font-size: 14px; padding: 13px 13px 13px 44px; }
-  .rb-field         { margin-bottom: 16px; }
-  .rb-btn-primary   { padding: 14px 18px; font-size: 14.5px; border-radius: 13px; }
-  .rb-divider       { margin: 18px 0 0; }
-  .rb-trust-row     { margin-top: 14px; gap: 7px; }
-  .rb-trust-chip    { padding: 6px 11px; font-size: 11px; }
+  .rb-badge       { font-size: 11px; padding: 5px 12px; margin-bottom: 14px; }
+  .rb-form-title  { font-size: 22px; letter-spacing: 0.5px; }
+  .rb-form-sub    { font-size: 13px; margin-bottom: 20px; }
+  .rb-label       { font-size: 10.5px; margin-bottom: 7px; }
+  .rb-input       { font-size: 16px; padding: 13px 13px 13px 44px; }
+  .rb-field       { margin-bottom: 16px; }
+  .rb-btn-primary { padding: 14px 18px; font-size: 15px; border-radius: 12px; }
+  .rb-divider     { margin: 18px 0 0; }
+  .rb-trust-row   { margin-top: 12px; gap: 7px; }
+  .rb-trust-chip  { padding: 6px 10px; font-size: 11px; }
 
   /* Mobile feature strip */
   .rb-mobile-strip {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 10px;
-    margin-top: 24px;
-    padding-top: 20px;
-    border-top: 1.5px solid #f0e0cc;
+    margin-top: 22px;
+    padding-top: 18px;
+    border-top: 1.5px solid var(--rb-input-border);
   }
   .rb-mf-item {
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 6px;
-    font-size: 10px; font-weight: 700;
-    color: var(--rb-muted);
+    font-size: 10px; font-weight: 600;
+    color: var(--rb-text-muted);
     text-align: center;
     font-family: var(--rb-font-body);
   }
   .rb-mf-ico {
     width: 40px; height: 40px;
-    border-radius: 13px;
+    border-radius: 12px;
     display: flex; align-items: center; justify-content: center;
-    font-size: 15px;
-    color: var(--rb-white);
-    transition: transform 0.2s ease;
+    font-size: 14px;
+    color: #fff;
+    transition: transform 0.22s ease;
   }
   .rb-mf-ico:hover { transform: translateY(-2px); }
-  .rb-mf-orange { background: linear-gradient(135deg, #ffb84a, #ff5800); }
-  .rb-mf-sky    { background: linear-gradient(135deg, #38bdf8, #0277bd); }
-  .rb-mf-green  { background: linear-gradient(135deg, #4ade80, #15803d); }
-  .rb-mf-violet { background: linear-gradient(135deg, #c084fc, #7e22ce); }
+  .rb-mf-orange { background: linear-gradient(135deg, #FB923C, #C2410C); }
+  .rb-mf-sky    { background: linear-gradient(135deg, #38bdf8, #0369a1); }
+  .rb-mf-green  { background: linear-gradient(135deg, #4ade80, #16A34A); }
+  .rb-mf-violet { background: linear-gradient(135deg, #c084fc, #7c3aed); }
 
   /* OTP mobile */
-  .rb-otp-info-card   { padding: 12px 14px; margin-bottom: 20px; }
-  .rb-otp-info-title  { font-size: 10.5px; }
-  .rb-otp-info-email  { font-size: 13px; }
-  .rb-otp-row         { gap: 8px; margin-bottom: 18px; }
-  .rb-otp-box         { height: 56px; font-size: 22px; border-radius: 13px; }
-  .rb-inline-msg      { font-size: 12.5px; padding: 10px 13px; margin-bottom: 16px; }
-  .rb-resend-row      { margin-top: 16px; }
-  .rb-timer           { font-size: 12.5px; padding: 7px 14px; }
+  .rb-otp-info-card  { padding: 12px 14px; margin-bottom: 18px; }
+  .rb-otp-info-title { font-size: 10.5px; }
+  .rb-otp-info-email { font-size: 13px; }
+  .rb-otp-row        { gap: 8px; margin-bottom: 18px; }
+  .rb-otp-box        { height: 56px; font-size: 22px; border-radius: 12px; }
+  .rb-inline-msg     { font-size: 12.5px; padding: 10px 13px; margin-bottom: 14px; }
+  .rb-resend-row     { margin-top: 14px; }
+  .rb-timer          { font-size: 12.5px; padding: 7px 14px; }
+
+  /* Toast mobile */
+  .rb-toast-container { top: 12px; right: 12px; left: 12px; }
+  .rb-toast { min-width: 0; max-width: 100%; }
+
+  /* List card mobile */
+  .rb-list-card-img-wrap { width: 90px; }
 }
 
 /* ══════════════════════════════════════════════════════════
    SMALL MOBILE  ≤ 390px
 ══════════════════════════════════════════════════════════ */
 @media (max-width: 390px) {
-  .rb-form-inner    { padding: 22px 18px 34px; }
-  .rb-brand-inner   { padding: 16px 16px 14px; }
-  .rb-logo-raj, .rb-logo-bhog { font-size: 21px; }
-  .rb-logo-icon     { width: 36px; height: 36px; font-size: 15px; }
+  .rb-form-inner    { padding: 20px 16px 34px; }
+  .rb-brand-inner   { padding: 14px 14px 12px; }
+  .rb-logo-raj, .rb-logo-bhog { font-size: 20px; }
+  .rb-logo-icon     { width: 36px; height: 36px; font-size: 14px; }
   .rb-form-title    { font-size: 20px; }
   .rb-form-sub      { font-size: 12.5px; }
-  .rb-btn-primary   { padding: 13px 15px; font-size: 14px; }
-  .rb-otp-box       { height: 50px; font-size: 20px; border-radius: 12px; }
+  .rb-btn-primary   { padding: 13px 14px; font-size: 14.5px; }
+  .rb-otp-box       { height: 50px; font-size: 20px; border-radius: 11px; }
   .rb-otp-row       { gap: 6px; }
   .rb-trust-chip    { padding: 5px 9px; font-size: 10.5px; }
-  .rb-mf-ico        { width: 36px; height: 36px; font-size: 13px; border-radius: 11px; }
+  .rb-mf-ico        { width: 36px; height: 36px; font-size: 13px; border-radius: 10px; }
   .rb-mf-item       { font-size: 9.5px; }
 }
 
@@ -996,7 +1407,9 @@
 .rb-input:focus-visible,
 .rb-otp-box:focus-visible,
 .rb-link-btn:focus-visible,
-.rb-back-btn:focus-visible {
-  outline: 2px solid var(--rb-orange);
+.rb-back-btn:focus-visible,
+.rb-card-add-btn:focus-visible,
+.rb-list-card-add-btn:focus-visible {
+  outline: 2.5px solid var(--rb-input-focus);
   outline-offset: 3px;
 }

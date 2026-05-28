@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import { sendOtp, verifyOtp } from "../api/admin/authApi";
 import { addToCart } from "../api/user/cartApi";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -25,17 +25,100 @@ import {
   faBagShopping,
   faCircleCheck,
   faKey,
+  faXmark,
+  faCircleInfo,
+  faSparkles,
 } from "@fortawesome/free-solid-svg-icons";
 import "../styles/Login.css";
 import Navbar from "../components/Navbar";
 
-/* ──────────────────────────────────────────────────────────
-   Inline alert
-────────────────────────────────────────────────────────── */
+/* ══════════════════════════════════════════════════════════
+   TOAST SYSTEM — Branded, beautiful toasts
+══════════════════════════════════════════════════════════ */
+
+let toastId = 0;
+const toastListeners = new Set();
+
+function emitToast(toast) {
+  toastListeners.forEach((cb) => cb(toast));
+}
+
+export const toast = {
+  success: (title, msg) =>
+    emitToast({ id: ++toastId, type: "success", title, msg }),
+  error: (title, msg) =>
+    emitToast({ id: ++toastId, type: "error", title, msg }),
+  info: (title, msg) => emitToast({ id: ++toastId, type: "info", title, msg }),
+};
+
+const TOAST_ICONS = {
+  success: faCheckCircle,
+  error: faCircleExclamation,
+  info: faCircleInfo,
+};
+
+const TOAST_TITLES = {
+  success: "Success",
+  error: "Oops!",
+  info: "Info",
+};
+
+function ToastItem({ toast: t, onRemove }) {
+  useEffect(() => {
+    const timer = setTimeout(() => onRemove(t.id), 4200);
+    return () => clearTimeout(timer);
+  }, [t.id, onRemove]);
+
+  return (
+    <div className={`rb-toast rb-toast--${t.type}`} role="alert">
+      <div className="rb-toast-icon">
+        <FontAwesomeIcon icon={TOAST_ICONS[t.type]} />
+      </div>
+      <div className="rb-toast-body">
+        <div className="rb-toast-title">{t.title || TOAST_TITLES[t.type]}</div>
+        {t.msg && <div className="rb-toast-msg">{t.msg}</div>}
+      </div>
+      <button
+        className="rb-toast-close"
+        onClick={() => onRemove(t.id)}
+        aria-label="Dismiss">
+        <FontAwesomeIcon icon={faXmark} />
+      </button>
+    </div>
+  );
+}
+
+function ToastContainer() {
+  const [toasts, setToasts] = useState([]);
+
+  useEffect(() => {
+    const handler = (t) => setToasts((prev) => [...prev, t]);
+    toastListeners.add(handler);
+    return () => toastListeners.delete(handler);
+  }, []);
+
+  const remove = useCallback((id) => {
+    setToasts((prev) => prev.filter((t) => t.id !== id));
+  }, []);
+
+  if (!toasts.length) return null;
+
+  return (
+    <div className="rb-toast-container" aria-live="polite">
+      {toasts.map((t) => (
+        <ToastItem key={t.id} toast={t} onRemove={remove} />
+      ))}
+    </div>
+  );
+}
+
+/* ══════════════════════════════════════════════════════════
+   INLINE ALERT — within the form
+══════════════════════════════════════════════════════════ */
 function InlineAlert({ type, message, onDismiss }) {
   if (!message) return null;
   return (
-    <div className={`rb-inline-msg rb-inline-${type}`}>
+    <div className={`rb-inline-msg rb-inline-${type}`} role="alert">
       <FontAwesomeIcon
         icon={type === "error" ? faCircleExclamation : faCheckCircle}
       />
@@ -54,16 +137,16 @@ function InlineAlert({ type, message, onDismiss }) {
             flexShrink: 0,
           }}
           aria-label="Dismiss">
-          ✕
+          <FontAwesomeIcon icon={faXmark} />
         </button>
       )}
     </div>
   );
 }
 
-/* ──────────────────────────────────────────────────────────
-   Main Login component
-────────────────────────────────────────────────────────── */
+/* ══════════════════════════════════════════════════════════
+   MAIN LOGIN COMPONENT
+══════════════════════════════════════════════════════════ */
 export default function Login() {
   const [email, setEmail] = useState("");
   const [step, setStep] = useState("EMAIL");
@@ -93,37 +176,42 @@ export default function Login() {
   const showAlert = (type, message) => setAlert({ type, message });
   const clearAlert = () => setAlert({ type: "", message: "" });
 
-  /* Send OTP */
+  /* ─── Send OTP ─────────────────────────────────────────── */
   const handleSendOtp = async () => {
     clearAlert();
     if (!email.trim()) {
       showAlert("error", "Please enter your email address.");
+      toast.error("Missing Email", "Enter your email to continue.");
       return;
     }
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       showAlert("error", "Enter a valid email address.");
+      toast.error("Invalid Email", "Please check your email format.");
       return;
     }
     try {
       setLoading(true);
       await sendOtp(email);
       showAlert("success", "OTP sent! Check your inbox.");
+      toast.success("OTP Sent! 📬", `We've sent a 6-digit code to ${email}`);
       setStep("OTP");
       setTimer(30);
     } catch {
       showAlert("error", "Failed to send OTP. Please try again.");
+      toast.error("Delivery Failed", "Couldn't send OTP. Try again.");
     } finally {
       setLoading(false);
     }
   };
 
-  /* Verify OTP */
+  /* ─── Verify OTP ───────────────────────────────────────── */
   const handleVerifyOtp = async () => {
     clearAlert();
     const otpValue = otp.join("");
     if (otpValue.length !== 6) {
       showAlert("error", "Please enter the complete 6-digit OTP.");
+      toast.error("Incomplete OTP", "Fill all 6 digits to continue.");
       return;
     }
     try {
@@ -131,11 +219,15 @@ export default function Login() {
       const res = await verifyOtp(email, otpValue);
       setOtpStatus("success");
       const name = email.split("@")[0];
-      showAlert(
-        "success",
+      const welcomeMsg = res.data.isNewUser
+        ? `Welcome aboard, ${name}! 🎉 Your account is ready.`
+        : `Great to see you again, ${name}! 🙏`;
+      showAlert("success", welcomeMsg);
+      toast.success(
+        res.data.isNewUser ? "Welcome to RajBhog! 🛒" : "Welcome back! 🙏",
         res.data.isNewUser
-          ? `Welcome, ${name}! Setting up your profile…`
-          : `Welcome back, ${name}!`,
+          ? "Your neighbourhood kirana is ready."
+          : "Your cart and orders are waiting.",
       );
       localStorage.setItem("token", res.data.token);
       localStorage.setItem("role", res.data.role);
@@ -145,9 +237,10 @@ export default function Login() {
         try {
           await addToCart(JSON.parse(pendingCart));
           localStorage.removeItem("pendingCart");
+          toast.info("Cart Restored", "We've added your item back to cart.");
           setTimeout(() => {
             window.location.href = "/user/cart";
-          }, 800);
+          }, 900);
           return;
         } catch (err) {
           console.error(err);
@@ -157,22 +250,23 @@ export default function Login() {
       setTimeout(() => {
         window.location.href =
           res.data.role === "ADMIN" ? "/admin/dashboard" : "/user/dashboard";
-      }, 800);
+      }, 900);
     } catch {
       setOtpStatus("error");
       setOtp(["", "", "", "", "", ""]);
       showAlert("error", "Invalid OTP. Please check and try again.");
+      toast.error("Wrong Code", "The OTP doesn't match. Please try again.");
       setTimeout(() => {
         setOtpStatus("");
         clearAlert();
         document.getElementById("otp-0")?.focus();
-      }, 2000);
+      }, 2200);
     } finally {
       setLoading(false);
     }
   };
 
-  /* OTP handlers */
+  /* ─── OTP Handlers ─────────────────────────────────────── */
   const handleOtpChange = (index, value) => {
     const v = value.replace(/\D/g, "").slice(-1);
     const n = [...otp];
@@ -207,6 +301,8 @@ export default function Login() {
   return (
     <>
       <Navbar />
+      <ToastContainer />
+
       <div className="rb-auth-page">
         <div className="rb-auth-shell">
           {/* ══ LEFT — BRAND PANEL ══ */}
@@ -233,7 +329,7 @@ export default function Login() {
                 <p className="rb-brand-tag">जो भी खाए, दोस्त बन जाए</p>
                 <p className="rb-brand-desc">
                   Your neighbourhood kirana, now online. Fresh groceries
-                  delivered straight from your local store.
+                  delivered straight from your local store to your doorstep.
                 </p>
               </div>
 
@@ -337,7 +433,6 @@ export default function Login() {
                     <span>Trusted by thousands in your city</span>
                   </div>
 
-                  {/* Ornament line */}
                   <div className="rb-form-ornament" aria-hidden="true">
                     <span className="rb-form-ornament-line" />
                     <span className="rb-form-ornament-dot" />
@@ -410,7 +505,7 @@ export default function Login() {
                   </div>
 
                   <div className="rb-trust-row">
-                    <span className="rb-trust-chip">
+                    <span className="rb-trust-chip rb-trust-chip--secure">
                       <FontAwesomeIcon icon={faShieldHalved} /> Secure Login
                     </span>
                     <span className="rb-trust-chip">
@@ -455,7 +550,6 @@ export default function Login() {
                     <span>Verification Step</span>
                   </div>
 
-                  {/* Ornament line */}
                   <div className="rb-form-ornament" aria-hidden="true">
                     <span className="rb-form-ornament-line" />
                     <span className="rb-form-ornament-dot" />
@@ -554,7 +648,9 @@ export default function Login() {
   );
 }
 
-/* ── Sub-components ──────────────────────────────────────── */
+/* ══════════════════════════════════════════════════════════
+   SUB-COMPONENTS
+══════════════════════════════════════════════════════════ */
 const HighlightRow = ({ icon, color, text }) => (
   <div className="rb-hl-item">
     <span className={`rb-hl-dot rb-hl-${color}`} aria-hidden="true">
@@ -584,3 +680,210 @@ const MobileFeature = ({ icon, color, label }) => (
     <span className="rb-mf-label">{label}</span>
   </div>
 );
+
+/* ══════════════════════════════════════════════════════════
+   PRODUCT CARD COMPONENTS  — for grid / list views
+   (Import and use these wherever you render product listings)
+══════════════════════════════════════════════════════════ */
+
+/**
+ * GridCard — use in grid view
+ * Props: product { id, name, category, price, mrp, discount, rating,
+ *                  reviewCount, image, isNew, isSale, isHot }
+ * onAddToCart(product), onWishlist(product)
+ */
+export function GridCard({ product, onAddToCart, onWishlist, isWishlisted }) {
+  const discount =
+    product.discount ||
+    (product.mrp && product.price
+      ? Math.round(((product.mrp - product.price) / product.mrp) * 100)
+      : null);
+
+  const stars = Math.round(product.rating || 0);
+  const starStr = "★".repeat(stars) + "☆".repeat(5 - stars);
+
+  return (
+    <div className="rb-card">
+      <div className="rb-card-img-wrap">
+        {product.image ? (
+          <img
+            className="rb-card-img"
+            src={product.image}
+            alt={product.name}
+            loading="lazy"
+          />
+        ) : (
+          <div
+            style={{
+              width: "100%",
+              height: "100%",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              fontSize: "36px",
+              color: "#FDBA74",
+            }}>
+            🛒
+          </div>
+        )}
+
+        {/* Badges */}
+        <div className="rb-card-badge-wrap">
+          {product.isSale && (
+            <span className="rb-card-badge rb-card-badge--sale">SALE</span>
+          )}
+          {product.isNew && (
+            <span className="rb-card-badge rb-card-badge--new">NEW</span>
+          )}
+          {product.isHot && (
+            <span className="rb-card-badge rb-card-badge--hot">🔥 HOT</span>
+          )}
+        </div>
+
+        {/* Wishlist */}
+        {onWishlist && (
+          <button
+            className={`rb-card-wishlist${isWishlisted ? " active" : ""}`}
+            onClick={(e) => {
+              e.stopPropagation();
+              onWishlist(product);
+            }}
+            aria-label="Add to wishlist">
+            {isWishlisted ? "♥" : "♡"}
+          </button>
+        )}
+      </div>
+
+      <div className="rb-card-body">
+        {product.category && (
+          <div className="rb-card-category">{product.category}</div>
+        )}
+        <div className="rb-card-name">{product.name}</div>
+
+        {product.rating > 0 && (
+          <div className="rb-card-rating">
+            <span className="rb-card-stars">{starStr}</span>
+            {product.reviewCount > 0 && (
+              <span className="rb-card-rating-count">
+                ({product.reviewCount})
+              </span>
+            )}
+          </div>
+        )}
+
+        <div className="rb-card-price-row">
+          <span className="rb-card-price">₹{product.price}</span>
+          {product.mrp && product.mrp > product.price && (
+            <span className="rb-card-mrp">₹{product.mrp}</span>
+          )}
+          {discount > 0 && (
+            <span className="rb-card-discount">{discount}% off</span>
+          )}
+        </div>
+      </div>
+
+      <div className="rb-card-footer">
+        <button
+          className="rb-card-add-btn"
+          onClick={() => onAddToCart && onAddToCart(product)}>
+          <FontAwesomeIcon icon={faBagShopping} />
+          Add to Cart
+        </button>
+      </div>
+    </div>
+  );
+}
+
+/**
+ * ListCard — use in list view
+ * Same props as GridCard
+ */
+export function ListCard({ product, onAddToCart, onWishlist, isWishlisted }) {
+  const discount =
+    product.discount ||
+    (product.mrp && product.price
+      ? Math.round(((product.mrp - product.price) / product.mrp) * 100)
+      : null);
+
+  const stars = Math.round(product.rating || 0);
+  const starStr = "★".repeat(stars) + "☆".repeat(5 - stars);
+
+  return (
+    <div className="rb-list-card">
+      <div className="rb-list-card-img-wrap">
+        {product.image ? (
+          <img
+            className="rb-list-card-img"
+            src={product.image}
+            alt={product.name}
+            loading="lazy"
+          />
+        ) : (
+          <div
+            style={{
+              width: "100%",
+              height: "100%",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              fontSize: "28px",
+              color: "#FDBA74",
+            }}>
+            🛒
+          </div>
+        )}
+      </div>
+
+      <div className="rb-list-card-body">
+        <div>
+          {product.category && (
+            <div className="rb-card-category" style={{ marginBottom: 4 }}>
+              {product.category}
+            </div>
+          )}
+          <div className="rb-card-name">{product.name}</div>
+
+          {product.rating > 0 && (
+            <div className="rb-card-rating" style={{ marginTop: 4 }}>
+              <span className="rb-card-stars">{starStr}</span>
+              {product.reviewCount > 0 && (
+                <span className="rb-card-rating-count">
+                  ({product.reviewCount})
+                </span>
+              )}
+            </div>
+          )}
+        </div>
+
+        <div className="rb-list-card-actions">
+          <div className="rb-card-price-row" style={{ flex: 1 }}>
+            <span className="rb-card-price">₹{product.price}</span>
+            {product.mrp && product.mrp > product.price && (
+              <span className="rb-card-mrp">₹{product.mrp}</span>
+            )}
+            {discount > 0 && (
+              <span className="rb-card-discount">{discount}% off</span>
+            )}
+          </div>
+
+          <button
+            className="rb-list-card-add-btn"
+            onClick={() => onAddToCart && onAddToCart(product)}>
+            <FontAwesomeIcon icon={faBagShopping} />
+            Add
+          </button>
+
+          {onWishlist && (
+            <button
+              className={`rb-card-wishlist${isWishlisted ? " active" : ""}`}
+              style={{ position: "static", width: 34, height: 34 }}
+              onClick={() => onWishlist(product)}
+              aria-label="Wishlist">
+              {isWishlisted ? "♥" : "♡"}
+            </button>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
