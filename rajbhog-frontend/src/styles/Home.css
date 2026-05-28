@@ -324,9 +324,28 @@
    SLIDER SECTION
    ============================================================ */
 .hm-slider-section {
+  position: relative;
+  overflow: hidden;
+
   padding: 76px 0 58px;
-  background: var(--hm-page-bg);
-  background-image: radial-gradient(ellipse 60% 40% at 0% 50%, rgba(124,45,18,.05) 0%, transparent 55%);
+
+  background:
+    radial-gradient(circle at 10% 20%, rgba(251,146,60,.10) 0%, transparent 28%),
+    radial-gradient(circle at 90% 80%, rgba(194,65,12,.08) 0%, transparent 32%),
+    linear-gradient(180deg, #fffaf5 0%, #fff7ed 100%);
+}
+.hm-slider-section::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+
+  background-image:
+    radial-gradient(rgba(124,45,18,.03) 1px, transparent 1px);
+
+  background-size: 22px 22px;
+
+  opacity: .55;
+  pointer-events: none;
 }
 .hm-slider-section .hm-section-head { padding: 0 5%; }
 
