@@ -251,7 +251,7 @@ export default function Home() {
     const handleScroll = () => {
       if (heroRef.current) {
         const scrollY = window.scrollY;
-        setParallaxY(scrollY * 0.38);
+        setParallaxY(scrollY * 0.18);
       }
     };
     window.addEventListener("scroll", handleScroll, { passive: true });
@@ -324,7 +324,9 @@ export default function Home() {
         {/* Parallax background layer */}
         <div
           className="hm-hero-bg"
-          style={{ transform: `translateY(${parallaxY}px)` }}
+          style={{
+            transform: `translate3d(0, ${parallaxY}px, 0)`,
+          }}
           aria-hidden="true"
         />
         {/* Grain texture overlay */}
