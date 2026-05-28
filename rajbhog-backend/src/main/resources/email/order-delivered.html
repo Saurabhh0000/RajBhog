@@ -1,107 +1,980 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Order Delivered</title>
-</head>
+<!doctype html>
+<html
+  lang="en"
+  xmlns:v="urn:schemas-microsoft-com:vml"
+  xmlns:o="urn:schemas-microsoft-com:office:office">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta
+      name="format-detection"
+      content="telephone=no, date=no, address=no, email=no" />
+    <title>Your Rajbhog Order Has Been Delivered!</title>
 
-<body style="margin:0; padding:0; background:#f8fafc; font-family: Arial, sans-serif;">
+    <!--[if mso]>
+      <noscript>
+        <xml
+          ><o:OfficeDocumentSettings
+            ><o:PixelsPerInch>96</o:PixelsPerInch></o:OfficeDocumentSettings
+          ></xml
+        >
+      </noscript>
+    <![endif]-->
 
-  <table width="100%" cellpadding="0" cellspacing="0" style="padding:20px;">
-    <tr>
-      <td align="center">
+    <style type="text/css">
+      /* ── Reset ── */
+      body,
+      table,
+      td,
+      p,
+      a,
+      h1,
+      h2,
+      h3 {
+        -webkit-text-size-adjust: 100%;
+        -ms-text-size-adjust: 100%;
+        margin: 0;
+        padding: 0;
+      }
+      table,
+      td {
+        border-collapse: collapse;
+        mso-table-lspace: 0pt;
+        mso-table-rspace: 0pt;
+      }
+      img {
+        border: 0;
+        display: block;
+        height: auto;
+        line-height: 100%;
+        outline: none;
+        text-decoration: none;
+      }
+      a {
+        text-decoration: none;
+      }
 
-        <!-- MAIN CARD -->
-        <table width="100%" max-width="500" cellpadding="0" cellspacing="0"
-               style="background:#ffffff; border-radius:16px; overflow:hidden; box-shadow:0 10px 30px rgba(0,0,0,0.08);">
+      /* ── Hover (modern clients) ── */
+      .cta-btn:hover {
+        background: linear-gradient(
+          135deg,
+          #f97316 0%,
+          #dc2626 100%
+        ) !important;
+        box-shadow: 0 6px 20px rgba(234, 88, 12, 0.5) !important;
+      }
+      .rate-link:hover {
+        opacity: 0.88;
+      }
 
-          <!-- HEADER -->
-          <tr>
-            <td style="background:linear-gradient(135deg,#16a34a,#15803d); padding:20px; text-align:center; color:white;">
-              <h1 style="margin:0; font-size:22px;">Rajbhog</h1>
-              <p style="margin:6px 0 0; font-size:13px;">
-                जो भी खाए, दोस्त बन जाए ❤️
-              </p>
-            </td>
-          </tr>
+      /* ── Mobile ── */
+      @media only screen and (max-width: 600px) {
+        .email-wrap {
+          padding: 0 !important;
+        }
+        .email-card {
+          border-radius: 0 !important;
+          width: 100% !important;
+        }
+        .hpad {
+          padding-left: 18px !important;
+          padding-right: 18px !important;
+        }
+        .hero-title {
+          font-size: 24px !important;
+        }
+        .hero-emoji {
+          font-size: 48px !important;
+        }
+        .stat-wrap {
+          display: block !important;
+        }
+        .stat-cell {
+          display: block !important;
+          width: 100% !important;
+          padding: 10px 16px !important;
+          border-right: none !important;
+          border-bottom: 1px solid #fde8c8 !important;
+        }
+        .stat-cell:last-child {
+          border-bottom: none !important;
+        }
+        .trust-cell {
+          padding: 0 8px !important;
+        }
+        .trust-emoji {
+          font-size: 18px !important;
+        }
+        .items-th {
+          font-size: 10px !important;
+          padding: 10px 12px !important;
+        }
+        .items-td {
+          padding: 10px 12px !important;
+          font-size: 13px !important;
+        }
+        .footer-logo {
+          font-size: 14px !important;
+        }
+        .mobile-hide {
+          display: none !important;
+        }
+      }
 
-          <!-- SUCCESS ICON -->
-          <tr>
-            <td style="text-align:center; padding:25px 20px;">
-              <div style="font-size:40px;">🎉</div>
-              <h2 style="margin:10px 0; color:#16a34a;">Order Delivered</h2>
-              <p style="color:#64748b; font-size:14px;">
-                Your order has been delivered successfully!
-              </p>
-            </td>
-          </tr>
+      @media only screen and (max-width: 400px) {
+        .hero-title {
+          font-size: 21px !important;
+        }
+        .total-amt {
+          font-size: 22px !important;
+        }
+      }
+    </style>
+  </head>
 
-          <!-- ORDER INFO -->
-          <tr>
-            <td style="padding:0 20px 10px;">
-              <p style="margin:6px 0;"><b>Order ID:</b> {{ORDER_NUMBER}}</p>
-              <p style="margin:6px 0;"><b>Total Paid:</b> ₹{{TOTAL}}</p>
-            </td>
-          </tr>
+  <!--
+  ==============================================================
+  RAJBHOG — Order Delivered Email Template
+  Template variables:
+    {{ORDER_NUMBER}} — Order reference number
+    {{TOTAL}}        — Total amount paid (number only, ₹ added in template)
+    {{ITEMS}}        — <tr> rows with inline styles (see format below)
+    {{YEAR}}         — Current year
 
-          <!-- ITEMS -->
-          <tr>
-            <td style="padding:10px 20px;">
-              <table width="100%" cellpadding="8" cellspacing="0"
-                     style="border-collapse: collapse; font-size:13px;">
+  Expected {{ITEMS}} row format:
+  <tr>
+    <td class="items-td" style="padding:12px 16px; color:#374151; font-size:13.5px; font-weight:500; border-bottom:1px solid #f0e4d4;">Product Name (unit)</td>
+    <td class="items-td" style="padding:12px 12px; text-align:center; color:#374151; font-size:13.5px; border-bottom:1px solid #f0e4d4;">2</td>
+    <td class="items-td" style="padding:12px 16px; text-align:right; color:#4b240b; font-size:13.5px; font-weight:800; border-bottom:1px solid #f0e4d4;">₹160</td>
+  </tr>
+  ==============================================================
+-->
 
-                <tr style="background:#f1f5f9;">
-                  <th align="left">Item</th>
-                  <th align="center">Qty</th>
-                  <th align="right">Price</th>
-                </tr>
+  <body
+    style="
+      margin: 0;
+      padding: 0;
+      background: #fef9f5;
+      font-family: Arial, Helvetica, sans-serif;
+    ">
+    <!-- ════ Inbox preview text (hidden) ════ -->
+    <div
+      style="
+        display: none;
+        max-height: 0;
+        overflow: hidden;
+        font-size: 1px;
+        color: #fef9f5;
+        line-height: 1px;
+        mso-hide: all;
+      ">
+      Your Rajbhog order has arrived! 🎉 Thank you for shopping with us. Tap to
+      rate your experience.
+      &nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;
+    </div>
 
-                {{ITEMS}}
+    <!-- ════ OUTER WRAPPER ════ -->
+    <table
+      class="email-wrap"
+      role="presentation"
+      width="100%"
+      cellpadding="0"
+      cellspacing="0"
+      style="background: #fef9f5; padding: 36px 16px 48px">
+      <tr>
+        <td align="center">
+          <!-- ══════════════════════════════════
+             MAIN CARD
+        ══════════════════════════════════ -->
+          <table
+            class="email-card"
+            role="presentation"
+            width="100%"
+            style="
+              max-width: 580px;
+              background: #ffffff;
+              border-radius: 20px;
+              overflow: hidden;
+              box-shadow:
+                0 8px 40px rgba(100, 50, 0, 0.13),
+                0 2px 8px rgba(0, 0, 0, 0.07);
+            ">
+            <!-- ══ 1. HEADER BAND ══ -->
+            <tr>
+              <td
+                bgcolor="#4b240b"
+                style="
+                  background: linear-gradient(
+                    145deg,
+                    #3d1c08 0%,
+                    #5e2e0e 40%,
+                    #8b4513 100%
+                  );
+                  padding: 26px 28px 24px;
+                  text-align: center;
+                ">
+                <!-- Logo pill -->
+                <table
+                  role="presentation"
+                  cellpadding="0"
+                  cellspacing="0"
+                  align="center">
+                  <tr>
+                    <td
+                      style="
+                        background: rgba(255, 255, 255, 0.12);
+                        border: 1px solid rgba(255, 255, 255, 0.22);
+                        border-radius: 12px;
+                        padding: 8px 20px;
+                        text-align: center;
+                      ">
+                      <span
+                        style="
+                          font-size: 21px;
+                          font-weight: 900;
+                          color: #ffffff;
+                          letter-spacing: -0.5px;
+                          font-family: Arial, Helvetica, sans-serif;
+                        "
+                        >RAJ</span
+                      ><!--
+                 --><span
+                        style="
+                          font-size: 21px;
+                          font-weight: 900;
+                          color: #7a3f16;
+                          background: #ffffff;
+                          padding: 2px 9px;
+                          border-radius: 7px;
+                          margin-left: 4px;
+                          letter-spacing: -0.5px;
+                          font-family: Arial, Helvetica, sans-serif;
+                        "
+                        >BHOG</span
+                      >
+                    </td>
+                  </tr>
+                </table>
 
-              </table>
-            </td>
-          </tr>
+                <!-- Tagline -->
+                <p
+                  style="
+                    margin: 12px 0 0;
+                    font-size: 12.5px;
+                    color: rgba(255, 255, 255, 0.7);
+                    letter-spacing: 0.3px;
+                    font-family: Arial, Helvetica, sans-serif;
+                  ">
+                  जो भी खाए, दोस्त बन जाए &nbsp;❤️
+                </p>
+              </td>
+            </tr>
 
-          <!-- REVIEW SECTION -->
-          <tr>
-            <td style="padding:20px; text-align:center;">
-              <h3 style="margin:0;">How was your experience? ⭐</h3>
-              <p style="font-size:13px; color:#64748b;">
-                Your feedback helps us improve and serve you better.
-              </p>
+            <!-- ══ 2. HERO — DELIVERED CELEBRATION ══ -->
+            <tr>
+              <td
+                bgcolor="#fffbf5"
+                style="
+                  background: linear-gradient(180deg, #fff7ed 0%, #ffffff 60%);
+                  padding: 36px 28px 28px;
+                  text-align: center;
+                ">
+                <!-- Big emoji -->
+                <p
+                  class="hero-emoji"
+                  style="margin: 0 0 18px; font-size: 54px; line-height: 1">
+                  🎉
+                </p>
 
-              <a href="http://localhost:5173/user/orders"
-                 style="display:inline-block; margin-top:10px;
-                        background:#f97316; color:white;
-                        padding:12px 20px; border-radius:8px;
-                        text-decoration:none; font-size:14px;">
-                Rate Your Order
-              </a>
-            </td>
-          </tr>
+                <!-- Status badge -->
+                <table
+                  role="presentation"
+                  cellpadding="0"
+                  cellspacing="0"
+                  align="center"
+                  style="margin: 0 auto 18px">
+                  <tr>
+                    <td
+                      bgcolor="#ecfdf5"
+                      style="
+                        background: #ecfdf5;
+                        border: 1.5px solid #a7f3d0;
+                        border-radius: 100px;
+                        padding: 7px 18px;
+                        text-align: center;
+                      ">
+                      <span
+                        style="
+                          font-size: 12px;
+                          font-weight: 700;
+                          color: #047857;
+                          text-transform: uppercase;
+                          letter-spacing: 1px;
+                          font-family: Arial, Helvetica, sans-serif;
+                        "
+                        >✔ &nbsp;Delivered Successfully</span
+                      >
+                    </td>
+                  </tr>
+                </table>
 
-          <!-- THANK YOU -->
-          <tr>
-            <td style="padding:0 20px 20px; text-align:center;">
-              <p style="font-size:14px; color:#334155;">
-                Thank you for choosing <b>Rajbhog</b> ❤️
-              </p>
-            </td>
-          </tr>
+                <!-- Headline -->
+                <h1
+                  class="hero-title"
+                  style="
+                    margin: 0 0 12px;
+                    font-size: 27px;
+                    font-weight: 900;
+                    color: #1a0d04;
+                    letter-spacing: -0.5px;
+                    line-height: 1.25;
+                    font-family: Arial, Helvetica, sans-serif;
+                  ">
+                  Your order is here!
+                </h1>
 
-          <!-- FOOTER -->
-          <tr>
-            <td style="background:#f1f5f9; padding:15px; text-align:center; font-size:12px; color:#64748b;">
-              © {{YEAR}} Rajbhog. All rights reserved.
-            </td>
-          </tr>
+                <!-- Sub-text -->
+                <p
+                  style="
+                    margin: 0 auto;
+                    font-size: 14px;
+                    color: #6b7280;
+                    line-height: 1.7;
+                    max-width: 380px;
+                    font-family: Arial, Helvetica, sans-serif;
+                  ">
+                  Your Rajbhog order has been delivered safely to your doorstep.
+                  We hope you love every item. 🛍️
+                </p>
+              </td>
+            </tr>
 
-        </table>
+            <!-- ══ 3. ORDER SUMMARY BOX ══ -->
+            <tr>
+              <td class="hpad" style="padding: 0 28px 24px">
+                <table
+                  role="presentation"
+                  width="100%"
+                  cellpadding="0"
+                  cellspacing="0"
+                  bgcolor="#fff7ed"
+                  style="
+                    background: #fff7ed;
+                    border: 1.5px solid #fde8c8;
+                    border-radius: 16px;
+                    overflow: hidden;
+                  ">
+                  <!-- Order # and Total -->
+                  <tr>
+                    <td style="padding: 0">
+                      <table
+                        class="stat-wrap"
+                        role="presentation"
+                        width="100%"
+                        cellpadding="0"
+                        cellspacing="0">
+                        <tr>
+                          <!-- Order number -->
+                          <td
+                            class="stat-cell"
+                            style="
+                              padding: 16px 20px;
+                              border-right: 1px solid #fde8c8;
+                              width: 50%;
+                            ">
+                            <p
+                              style="
+                                margin: 0 0 5px;
+                                font-size: 10px;
+                                font-weight: 700;
+                                text-transform: uppercase;
+                                letter-spacing: 0.9px;
+                                color: #b08050;
+                                font-family: Arial, Helvetica, sans-serif;
+                              ">
+                              Order Number
+                            </p>
+                            <p
+                              style="
+                                margin: 0;
+                                font-size: 17px;
+                                font-weight: 800;
+                                color: #4b240b;
+                                font-family:
+                                  &quot;Courier New&quot;, Courier, monospace;
+                                letter-spacing: 0.5px;
+                              ">
+                              #{{ORDER_NUMBER}}
+                            </p>
+                          </td>
 
-      </td>
-    </tr>
-  </table>
+                          <!-- Total -->
+                          <td
+                            class="stat-cell"
+                            style="
+                              padding: 16px 20px;
+                              width: 50%;
+                              text-align: right;
+                            ">
+                            <p
+                              style="
+                                margin: 0 0 5px;
+                                font-size: 10px;
+                                font-weight: 700;
+                                text-transform: uppercase;
+                                letter-spacing: 0.9px;
+                                color: #b08050;
+                                font-family: Arial, Helvetica, sans-serif;
+                              ">
+                              Amount Paid
+                            </p>
+                            <p
+                              class="total-amt"
+                              style="
+                                margin: 0;
+                                font-size: 24px;
+                                font-weight: 900;
+                                color: #059669;
+                                font-family:
+                                  &quot;Courier New&quot;, Courier, monospace;
+                                letter-spacing: -0.5px;
+                              ">
+                              ₹{{TOTAL}}
+                            </p>
+                          </td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
 
-</body>
+                  <!-- Status row -->
+                  <tr>
+                    <td
+                      bgcolor="#fef3e2"
+                      style="
+                        background: #fef3e2;
+                        border-top: 1px solid #fde8c8;
+                        padding: 11px 20px;
+                      ">
+                      <table
+                        role="presentation"
+                        width="100%"
+                        cellpadding="0"
+                        cellspacing="0">
+                        <tr>
+                          <td>
+                            <span
+                              style="
+                                font-size: 12px;
+                                color: #7c5830;
+                                font-weight: 600;
+                                font-family: Arial, Helvetica, sans-serif;
+                              ">
+                              📍 Delivered to your address
+                            </span>
+                          </td>
+                          <td align="right">
+                            <span
+                              style="
+                                display: inline-block;
+                                background: #ecfdf5;
+                                border: 1px solid #a7f3d0;
+                                border-radius: 6px;
+                                padding: 4px 11px;
+                                font-size: 11.5px;
+                                font-weight: 800;
+                                color: #047857;
+                                font-family: Arial, Helvetica, sans-serif;
+                              ">
+                              ✓ &nbsp;Paid
+                            </span>
+                          </td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+
+            <!-- ══ 4. ITEMS TABLE ══ -->
+            <tr>
+              <td class="hpad" style="padding: 0 28px 28px">
+                <!-- Section label -->
+                <p
+                  style="
+                    margin: 0 0 12px;
+                    font-size: 11px;
+                    font-weight: 700;
+                    color: #9a7050;
+                    text-transform: uppercase;
+                    letter-spacing: 0.8px;
+                    font-family: Arial, Helvetica, sans-serif;
+                  ">
+                  🛍️ &nbsp;Items Ordered
+                </p>
+
+                <table
+                  role="presentation"
+                  width="100%"
+                  cellpadding="0"
+                  cellspacing="0"
+                  style="
+                    border: 1.5px solid #e8d5bf;
+                    border-radius: 14px;
+                    overflow: hidden;
+                    font-size: 13.5px;
+                  ">
+                  <!-- Table header -->
+                  <tr
+                    bgcolor="#4b240b"
+                    style="
+                      background: linear-gradient(
+                        135deg,
+                        #4b240b 0%,
+                        #7a3f16 100%
+                      );
+                    ">
+                    <th
+                      class="items-th"
+                      align="left"
+                      style="
+                        padding: 11px 16px;
+                        color: #ffffff;
+                        font-size: 11px;
+                        font-weight: 700;
+                        text-transform: uppercase;
+                        letter-spacing: 0.7px;
+                        font-family: Arial, Helvetica, sans-serif;
+                        border: none;
+                      ">
+                      Item
+                    </th>
+                    <th
+                      class="items-th"
+                      align="center"
+                      style="
+                        padding: 11px 12px;
+                        color: #ffffff;
+                        font-size: 11px;
+                        font-weight: 700;
+                        text-transform: uppercase;
+                        letter-spacing: 0.7px;
+                        font-family: Arial, Helvetica, sans-serif;
+                        border: none;
+                        white-space: nowrap;
+                      ">
+                      Qty
+                    </th>
+                    <th
+                      class="items-th"
+                      align="right"
+                      style="
+                        padding: 11px 16px;
+                        color: #ffffff;
+                        font-size: 11px;
+                        font-weight: 700;
+                        text-transform: uppercase;
+                        letter-spacing: 0.7px;
+                        font-family: Arial, Helvetica, sans-serif;
+                        border: none;
+                        white-space: nowrap;
+                      ">
+                      Price
+                    </th>
+                  </tr>
+
+                  <!-- Dynamic items rows — backend injects <tr> elements here -->
+                  {{ITEMS}}
+                </table>
+              </td>
+            </tr>
+
+            <!-- ══ 5. DASHED DIVIDER ══ -->
+            <tr>
+              <td class="hpad" style="padding: 0 28px 4px">
+                <table
+                  role="presentation"
+                  width="100%"
+                  cellpadding="0"
+                  cellspacing="0">
+                  <tr>
+                    <td
+                      style="
+                        border-top: 2px dashed #fde8c8;
+                        font-size: 0;
+                        line-height: 0;
+                      ">
+                      &nbsp;
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+
+            <!-- ══ 6. RATE YOUR ORDER CTA ══ -->
+            <tr>
+              <td
+                class="hpad"
+                style="padding: 32px 28px 28px; text-align: center">
+                <!-- Star icon -->
+                <p style="margin: 0 0 14px; font-size: 38px; line-height: 1">
+                  ⭐
+                </p>
+
+                <h2
+                  style="
+                    margin: 0 0 10px;
+                    font-size: 20px;
+                    font-weight: 800;
+                    color: #1a0d04;
+                    letter-spacing: -0.3px;
+                    font-family: Arial, Helvetica, sans-serif;
+                  ">
+                  How was your experience?
+                </h2>
+
+                <p
+                  style="
+                    margin: 0 0 22px;
+                    font-size: 13.5px;
+                    color: #6b7280;
+                    line-height: 1.7;
+                    font-family: Arial, Helvetica, sans-serif;
+                  ">
+                  Your feedback helps us improve and serve you better.
+                  <br />It only takes 30 seconds — we'd love to hear from you!
+                </p>
+
+                <!-- CTA Button -->
+                <table
+                  role="presentation"
+                  cellpadding="0"
+                  cellspacing="0"
+                  align="center">
+                  <tr>
+                    <td
+                      bgcolor="#ea580c"
+                      style="
+                        background: linear-gradient(
+                          135deg,
+                          #f97316 0%,
+                          #ea580c 100%
+                        );
+                        border-radius: 12px;
+                        text-align: center;
+                        box-shadow: 0 6px 18px rgba(234, 88, 12, 0.38);
+                      ">
+                      <a
+                        class="cta-btn"
+                        href="http://localhost:5173/user/orders"
+                        style="
+                          display: inline-block;
+                          padding: 15px 36px;
+                          font-size: 15px;
+                          font-weight: 800;
+                          color: #ffffff;
+                          text-decoration: none;
+                          letter-spacing: 0.2px;
+                          font-family: Arial, Helvetica, sans-serif;
+                          white-space: nowrap;
+                        ">
+                        ⭐ &nbsp;Rate Your Order
+                      </a>
+                    </td>
+                  </tr>
+                </table>
+
+                <p
+                  style="
+                    margin: 14px 0 0;
+                    font-size: 11.5px;
+                    color: #9ca3af;
+                    font-family: Arial, Helvetica, sans-serif;
+                  ">
+                  Click the button above to leave your review
+                </p>
+              </td>
+            </tr>
+
+            <!-- ══ 7. TRUST BADGES ROW ══ -->
+            <tr>
+              <td class="hpad" style="padding: 0 28px 28px">
+                <table
+                  role="presentation"
+                  width="100%"
+                  cellpadding="0"
+                  cellspacing="0"
+                  bgcolor="#f0fdf4"
+                  style="
+                    background: #f0fdf4;
+                    border: 1.5px solid #bbf7d0;
+                    border-radius: 14px;
+                  ">
+                  <tr>
+                    <td style="padding: 14px 12px; text-align: center">
+                      <table
+                        role="presentation"
+                        cellpadding="0"
+                        cellspacing="0"
+                        align="center">
+                        <tr>
+                          <td
+                            class="trust-cell"
+                            style="
+                              padding: 0 14px;
+                              text-align: center;
+                              border-right: 1px solid #bbf7d0;
+                            ">
+                            <p
+                              class="trust-emoji"
+                              style="
+                                margin: 0 0 4px;
+                                font-size: 22px;
+                                line-height: 1;
+                              ">
+                              🛡️
+                            </p>
+                            <p
+                              style="
+                                margin: 0;
+                                font-size: 11px;
+                                font-weight: 800;
+                                color: #047857;
+                                font-family: Arial, Helvetica, sans-serif;
+                              ">
+                              Secure
+                            </p>
+                            <p
+                              style="
+                                margin: 0;
+                                font-size: 10px;
+                                color: #78716c;
+                                font-family: Arial, Helvetica, sans-serif;
+                              ">
+                              Payments
+                            </p>
+                          </td>
+
+                          <td
+                            class="trust-cell"
+                            style="
+                              padding: 0 14px;
+                              text-align: center;
+                              border-right: 1px solid #bbf7d0;
+                            ">
+                            <p
+                              class="trust-emoji"
+                              style="
+                                margin: 0 0 4px;
+                                font-size: 22px;
+                                line-height: 1;
+                              ">
+                              ⚡
+                            </p>
+                            <p
+                              style="
+                                margin: 0;
+                                font-size: 11px;
+                                font-weight: 800;
+                                color: #047857;
+                                font-family: Arial, Helvetica, sans-serif;
+                              ">
+                              Fast
+                            </p>
+                            <p
+                              style="
+                                margin: 0;
+                                font-size: 10px;
+                                color: #78716c;
+                                font-family: Arial, Helvetica, sans-serif;
+                              ">
+                              Delivery
+                            </p>
+                          </td>
+
+                          <td
+                            class="trust-cell"
+                            style="
+                              padding: 0 14px;
+                              text-align: center;
+                              border-right: 1px solid #bbf7d0;
+                            ">
+                            <p
+                              class="trust-emoji"
+                              style="
+                                margin: 0 0 4px;
+                                font-size: 22px;
+                                line-height: 1;
+                              ">
+                              🌿
+                            </p>
+                            <p
+                              style="
+                                margin: 0;
+                                font-size: 11px;
+                                font-weight: 800;
+                                color: #047857;
+                                font-family: Arial, Helvetica, sans-serif;
+                              ">
+                              Fresh
+                            </p>
+                            <p
+                              style="
+                                margin: 0;
+                                font-size: 10px;
+                                color: #78716c;
+                                font-family: Arial, Helvetica, sans-serif;
+                              ">
+                              Always
+                            </p>
+                          </td>
+
+                          <td
+                            class="trust-cell"
+                            style="padding: 0 14px; text-align: center">
+                            <p
+                              class="trust-emoji"
+                              style="
+                                margin: 0 0 4px;
+                                font-size: 22px;
+                                line-height: 1;
+                              ">
+                              🤝
+                            </p>
+                            <p
+                              style="
+                                margin: 0;
+                                font-size: 11px;
+                                font-weight: 800;
+                                color: #047857;
+                                font-family: Arial, Helvetica, sans-serif;
+                              ">
+                              Local
+                            </p>
+                            <p
+                              style="
+                                margin: 0;
+                                font-size: 10px;
+                                color: #78716c;
+                                font-family: Arial, Helvetica, sans-serif;
+                              ">
+                              Kirana
+                            </p>
+                          </td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+
+            <!-- ══ 8. THANK YOU ROW ══ -->
+            <tr>
+              <td class="hpad" style="padding: 0 28px 28px; text-align: center">
+                <p
+                  style="
+                    margin: 0;
+                    font-size: 14px;
+                    color: #4b5563;
+                    line-height: 1.75;
+                    font-family: Arial, Helvetica, sans-serif;
+                  ">
+                  Thank you for choosing
+                  <strong style="color: #7a3f16; font-weight: 800"
+                    >Rajbhog</strong
+                  >
+                  — your trusted neighbourhood kirana, now online. 🏪
+                </p>
+              </td>
+            </tr>
+
+            <!-- ══ 9. FOOTER ══ -->
+            <tr>
+              <td
+                bgcolor="#3d1c08"
+                style="
+                  background: linear-gradient(
+                    145deg,
+                    #3d1c08 0%,
+                    #5e2e0e 55%,
+                    #7a3f16 100%
+                  );
+                  padding: 22px 28px 20px;
+                  text-align: center;
+                ">
+                <!-- Footer logo -->
+                <p
+                  class="footer-logo"
+                  style="
+                    margin: 0 0 8px;
+                    font-size: 15px;
+                    font-weight: 900;
+                    color: #ffffff;
+                    letter-spacing: -0.3px;
+                    font-family: Arial, Helvetica, sans-serif;
+                  ">
+                  RAJ<!--
+             --><span
+                    style="
+                      color: #7a3f16;
+                      background: #ffffff;
+                      padding: 1px 7px;
+                      border-radius: 6px;
+                      margin-left: 3px;
+                      font-size: 15px;
+                      font-weight: 900;
+                    "
+                    >BHOG</span
+                  >
+                </p>
+
+                <!-- Copyright -->
+                <p
+                  style="
+                    margin: 0 0 6px;
+                    font-size: 11px;
+                    color: rgba(255, 255, 255, 0.6);
+                    font-family: Arial, Helvetica, sans-serif;
+                  ">
+                  © {{YEAR}} Rajbhog. All rights reserved.
+                </p>
+
+                <!-- Unsubscribe note -->
+                <p
+                  style="
+                    margin: 0;
+                    font-size: 10.5px;
+                    color: rgba(255, 255, 255, 0.45);
+                    font-family: Arial, Helvetica, sans-serif;
+                  ">
+                  You're receiving this because you placed an order with us.
+                </p>
+              </td>
+            </tr>
+          </table>
+          <!-- /MAIN CARD -->
+
+          <!-- ── Below-card help text ── -->
+          <p
+            style="
+              margin: 20px 0 0;
+              font-size: 11.5px;
+              color: #9ca3af;
+              text-align: center;
+              font-family: Arial, Helvetica, sans-serif;
+            ">
+            Questions? Reply to this email or contact&nbsp;
+            <a
+              href="mailto:support@rajbhog.com"
+              style="color: #7a3f16; font-weight: 600">
+              support@rajbhog.com
+            </a>
+          </p>
+        </td>
+      </tr>
+    </table>
+  </body>
 </html>
