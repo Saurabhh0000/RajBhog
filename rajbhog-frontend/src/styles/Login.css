@@ -171,7 +171,7 @@
   padding: 48px 40px;
   display: flex;
   flex-direction: column;
-  gap: 28px;
+  gap: 16px;
   width: 100%;
 }
 
@@ -223,7 +223,7 @@
 }
 
 /* ─── Tagline ────────────────────────────────────────────── */
-.rb-brand-headline { display: flex; flex-direction: column; gap: 10px; }
+.rb-brand-headline { display: flex; flex-direction: column; gap: 4px; }
 .rb-brand-tag {
   font-family: var(--rb-font-serif);
   font-style: italic;
@@ -540,7 +540,7 @@
 }
 .rb-input:focus {
   border-color: var(--rb-input-focus);
-  box-shadow: 0 0 0 3px var(--rb-input-focus-ring);
+  box-shadow: 0 0 12px rgba(194, 65, 12, 0.12);
   background: #fff;
 }
 
@@ -618,10 +618,11 @@
 /* ─── Trust Chips ────────────────────────────────────────── */
 .rb-trust-row {
   display: flex;
-  justify-content: flex-start;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 14px;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: nowrap;
+  gap: 10px;
+  margin-top: 16px;
 }
 
 .rb-trust-chip {
@@ -1332,8 +1333,18 @@
   .rb-field       { margin-bottom: 16px; }
   .rb-btn-primary { padding: 14px 18px; font-size: 15px; border-radius: 12px; }
   .rb-divider     { margin: 18px 0 0; }
-  .rb-trust-row   { margin-top: 12px; gap: 7px; }
-  .rb-trust-chip  { padding: 6px 10px; font-size: 11px; }
+.rb-trust-row {
+  margin-top: 12px;
+  gap: 6px;
+  justify-content: center;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.rb-trust-row::-webkit-scrollbar {
+  display: none;
+}  .rb-trust-chip  { padding: 6px 10px; font-size: 11px; }
 
   /* Mobile feature strip */
   .rb-mobile-strip {
