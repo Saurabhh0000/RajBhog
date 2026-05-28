@@ -45,56 +45,6 @@ function methodClass(method = "") {
   return "default";
 }
 
-/* ── Beautiful toast helpers ── */
-const toastSuccess = (msg) =>
-  toast.success(msg, {
-    style: {
-      background: "#ecfdf5",
-      color: "#065f46",
-      border: "1px solid #6ee7b7",
-      borderRadius: "12px",
-      fontFamily: "'IBM Plex Sans', sans-serif",
-      fontWeight: 600,
-      fontSize: "13.5px",
-      padding: "12px 18px",
-      boxShadow: "0 4px 20px rgba(5,150,105,0.18)",
-    },
-    iconTheme: { primary: "#059669", secondary: "#ecfdf5" },
-    duration: 3000,
-  });
-
-const toastError = (msg) =>
-  toast.error(msg, {
-    style: {
-      background: "#fef2f2",
-      color: "#991b1b",
-      border: "1px solid #fca5a5",
-      borderRadius: "12px",
-      fontFamily: "'IBM Plex Sans', sans-serif",
-      fontWeight: 600,
-      fontSize: "13.5px",
-      padding: "12px 18px",
-      boxShadow: "0 4px 20px rgba(239,68,68,0.16)",
-    },
-    iconTheme: { primary: "#ef4444", secondary: "#fef2f2" },
-    duration: 4000,
-  });
-
-const toastLoading = (msg) =>
-  toast.loading(msg, {
-    style: {
-      background: "#f0f9ff",
-      color: "#0369a1",
-      border: "1px solid #7dd3fc",
-      borderRadius: "12px",
-      fontFamily: "'IBM Plex Sans', sans-serif",
-      fontWeight: 600,
-      fontSize: "13.5px",
-      padding: "12px 18px",
-      boxShadow: "0 4px 20px rgba(3,105,161,0.14)",
-    },
-  });
-
 /* ============================================================
    MAIN COMPONENT — all backend logic unchanged
    ============================================================ */
@@ -110,7 +60,7 @@ export default function AdminPayments() {
     setLoading(true);
     fetchAllPayments()
       .then((res) => setPayments(res.data))
-      .catch(() => toastError("💳 Could not fetch payments. Please try again."))
+      .catch(() => toast.error("Failed to load payments"))
       .finally(() => setLoading(false));
   };
 
@@ -141,29 +91,14 @@ export default function AdminPayments() {
   };
 
   const changeStatus = (orderNumber, status) => {
-    const statusLabels = {
-      PAID: { emoji: "✅", text: "marked as Paid" },
-      PENDING: { emoji: "⏳", text: "set to Pending" },
-      REFUNDED: { emoji: "↩️", text: "marked as Refunded" },
-    };
-    const tid = toastLoading(`Updating payment status…`);
     updatePaymentStatus(orderNumber, status)
       .then(() => {
-        toast.dismiss(tid);
-        const { emoji, text } = statusLabels[status] || {
-          emoji: "✔️",
-          text: "updated",
-        };
-        toastSuccess(`${emoji} Order #${orderNumber} ${text} successfully!`);
+        toast.success("Payment status updated");
         loadPayments();
       })
-      .catch((e) => {
-        toast.dismiss(tid);
-        toastError(
-          e?.response?.data?.message ||
-            "🚫 Action not allowed. This payment cannot be updated.",
-        );
-      });
+      .catch((e) =>
+        toast.error(e?.response?.data?.message || "Action not allowed"),
+      );
   };
 
   /* ============================================================ */
@@ -331,7 +266,7 @@ export default function AdminPayments() {
         {loading ? (
           <div className="apay__loading">
             <div className="apay__spinner" />
-            <p>Fetching payment records…</p>
+            <p>Loading payments…</p>
           </div>
         ) : filtered.length === 0 ? (
           <div className="apay__empty">
@@ -341,8 +276,8 @@ export default function AdminPayments() {
             <h3>No Payments Found</h3>
             <p>
               {search || statusFilter !== "ALL" || methodFilter !== "ALL"
-                ? "Try adjusting your filters or search query."
-                : "All payment records will appear here once transactions are made."}
+                ? "Try adjusting your filters or search."
+                : "All payment records will appear here."}
             </p>
           </div>
         ) : viewMode === "grid" ? (
@@ -356,6 +291,7 @@ export default function AdminPayments() {
             ))}
           </div>
         ) : (
+          /* List — scrollable table on desktop, stacked cards on mobile */
           <div className="apay__list-panel">
             {/* Desktop table */}
             <div className="apay__table-scroll">
@@ -513,31 +449,42 @@ function TableRow({ payment: p, onStatusChange }) {
 
   return (
     <tr className={`apay__tr apay__tr--${cfg.cls}`}>
+      {/* order no */}
       <td>
         <div className="apay__td-order">
           <span className="apay__td-hash">#</span>
           {p.orderNumber}
         </div>
       </td>
+
+      {/* amount */}
       <td>
         <span className="apay__td-amount">
           ₹{Number(p.amount).toLocaleString("en-IN")}
         </span>
       </td>
+
+      {/* method */}
       <td>
         <span className={`apay__method-pill ${mCls}`}>
           {p.paymentMethod || "—"}
         </span>
       </td>
+
+      {/* status */}
       <td>
         <span className={`apay__status-badge ${cfg.cls}`}>
           <FontAwesomeIcon icon={cfg.icon} />
           {cfg.label}
         </span>
       </td>
+
+      {/* transaction id */}
       <td>
         <span className="apay__td-txn">{p.transactionId || "—"}</span>
       </td>
+
+      {/* date */}
       <td>
         <span className="apay__td-date">
           {new Date(p.createdAt).toLocaleDateString("en-IN", {
@@ -547,6 +494,8 @@ function TableRow({ payment: p, onStatusChange }) {
           })}
         </span>
       </td>
+
+      {/* update select */}
       <td>
         <select
           className="apay__td-sel"
