@@ -50,6 +50,58 @@ const getInitials = (name = "") =>
     .map((w) => w[0]?.toUpperCase() ?? "")
     .join("");
 
+/* ── Beautiful toast helpers ── */
+const toastSuccess = (msg) =>
+  toast.success(msg, {
+    duration: 3500,
+    style: {
+      background: "#1a5c3a",
+      color: "#ffffff",
+      fontWeight: "700",
+      fontSize: "13.5px",
+      borderRadius: "14px",
+      boxShadow: "0 8px 32px rgba(26,92,58,0.35)",
+      border: "1px solid rgba(255,255,255,0.12)",
+      padding: "14px 18px",
+      maxWidth: "380px",
+    },
+    iconTheme: { primary: "#4ade80", secondary: "#1a5c3a" },
+  });
+
+const toastError = (msg) =>
+  toast.error(msg, {
+    duration: 4000,
+    style: {
+      background: "#7f1d1d",
+      color: "#ffffff",
+      fontWeight: "700",
+      fontSize: "13.5px",
+      borderRadius: "14px",
+      boxShadow: "0 8px 32px rgba(127,29,29,0.35)",
+      border: "1px solid rgba(255,255,255,0.1)",
+      padding: "14px 18px",
+      maxWidth: "380px",
+    },
+    iconTheme: { primary: "#f87171", secondary: "#7f1d1d" },
+  });
+
+const toastWarning = (msg) =>
+  toast(msg, {
+    duration: 3500,
+    icon: "✍️",
+    style: {
+      background: "#78350f",
+      color: "#fff7ed",
+      fontWeight: "700",
+      fontSize: "13.5px",
+      borderRadius: "14px",
+      boxShadow: "0 8px 32px rgba(120,53,15,0.35)",
+      border: "1px solid rgba(255,255,255,0.1)",
+      padding: "14px 18px",
+      maxWidth: "380px",
+    },
+  });
+
 /* ============================================================
    MAIN COMPONENT — ALL ORIGINAL LOGIC PRESERVED
    ============================================================ */
@@ -66,10 +118,7 @@ export default function AdminContacts() {
     fetchAllContacts()
       .then((res) => setContacts(res.data))
       .catch(() =>
-        toast.error("Failed to load contacts. Please refresh.", {
-          icon: "⚠️",
-          duration: 3500,
-        }),
+        toastError("Unable to load contacts. Please refresh and try again."),
       )
       .finally(() => setLoading(false));
   };
@@ -108,17 +157,18 @@ export default function AdminContacts() {
     if (data && typeof data.status === "string") finalStatus = data.status;
 
     if (!finalStatus || typeof finalStatus !== "string") {
-      toast.error("Invalid status selected.", { icon: "❌", duration: 3000 });
+      toastError("Please select a valid status before updating.");
       return;
     }
     if (
       (finalStatus === "RESOLVED" || finalStatus === "CLOSED") &&
       (!data?.message || data.message.trim() === "")
     ) {
-      toast.error("Please enter a resolution message before updating.", {
-        icon: "✍️",
-        duration: 3500,
-      });
+      toastWarning(
+        "Please enter a resolution message before marking as " +
+          finalStatus.toLowerCase() +
+          ".",
+      );
       return;
     }
 
@@ -127,18 +177,14 @@ export default function AdminContacts() {
       resolutionMessage: data?.message || "",
     })
       .then(() => {
-        toast.success("Status updated & confirmation email sent to customer.", {
-          icon: "✅",
-          duration: 3000,
-        });
+        toastSuccess(
+          "Status updated! A confirmation email has been sent to the customer. 🎉",
+        );
         setResolutionMap({});
         loadContacts();
       })
       .catch(() =>
-        toast.error("Failed to update status. Please try again.", {
-          icon: "❌",
-          duration: 3500,
-        }),
+        toastError("Oops! Status update failed. Please try again in a moment."),
       );
   };
 
@@ -297,7 +343,7 @@ export default function AdminContacts() {
                   setSearch("");
                   setStatusFilter("ALL");
                 }}>
-                <FontAwesomeIcon icon={faTimes} /> Clear
+                <FontAwesomeIcon icon={faTimes} /> Clear filters
               </button>
             )}
           </div>
@@ -307,7 +353,7 @@ export default function AdminContacts() {
         {loading ? (
           <div className="acm__loading-state">
             <div className="acm__spinner" />
-            <p>Loading contacts…</p>
+            <p>Fetching customer contacts…</p>
           </div>
         ) : filtered.length === 0 ? (
           <div className="acm__empty-state">
@@ -400,7 +446,7 @@ function ContactCard({
 
   return (
     <div className={`acm__card acm__card--${sm.mod}`}>
-      {/* Colored top accent bar */}
+      {/* Colored gradient top bar */}
       <div className="acm__card-bar" />
 
       {/* Head */}
@@ -490,7 +536,7 @@ function ContactCard({
           <>
             <textarea
               className="acm__resolution-textarea"
-              placeholder="Enter resolution message to send to customer…"
+              placeholder="Write a resolution message for the customer…"
               rows={3}
               value={resolutionMap[c.id]?.message || ""}
               onChange={(e) =>
@@ -626,7 +672,7 @@ function ListRow({
               </p>
               <textarea
                 className="acm__resolution-textarea"
-                placeholder="Enter resolution message to send to customer…"
+                placeholder="Write a resolution message for the customer…"
                 rows={3}
                 value={resolutionMap[c.id]?.message || ""}
                 onChange={(e) =>
