@@ -4,7 +4,7 @@
    Fonts: Cinzel (display) + DM Sans (body)
    ============================================================ */
 
-@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700;9..40,800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800;900&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700;9..40,800&display=swap');
 
 /* ─── Design Tokens ──────────────────────────────────────── */
 .contact-page {
@@ -50,7 +50,7 @@
   --cp-radius-xs:       8px;
 
   /* Typography */
-  --cp-font-display:    'Cinzel', Georgia, serif;
+  --cp-font-display:    'Sora', system-ui, sans-serif;
   --cp-font-body:       'DM Sans', system-ui, sans-serif;
 }
 
@@ -366,10 +366,12 @@
 .input-group textarea:hover { border-color: #FDBA74; }
 
 .input-group input:focus,
-.input-group textarea:focus {
+.input-group textarea:focus,
+.input-group select:focus {
   border-color: var(--cp-input-focus);
   background: #fff;
-  box-shadow: 0 0 0 3px var(--cp-focus-ring);
+  box-shadow: none;
+  outline: none;
 }
 
 /* ── Submit Button ── */
@@ -472,11 +474,14 @@
    ACCESSIBILITY
    ============================================================ */
 .submit-btn:focus-visible,
-.input-group input:focus-visible,
-.input-group textarea:focus-visible,
 .method-content a:focus-visible {
   outline: 2.5px solid var(--cp-input-focus);
   outline-offset: 3px;
+}
+.input-group input:focus-visible,
+.input-group textarea:focus-visible,
+.input-group select:focus-visible {
+  outline: none;
 }
 
 @media (prefers-reduced-motion: reduce) {
